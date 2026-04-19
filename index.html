@@ -5,23 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nethinethera · Live Leaderboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "592e3747-c27d-49f1-a028-d5961d83381d",
-      safari_web_id: "web.onesignal.auto.220e9b0b-02d4-465b-a5d3-49d3d287ceee",
-      notifyButton: {
-        enable: true,
-      },
-    });
-  });
-</script>
-
 <style>
-/* (All your existing CSS remains exactly the same as provided) */
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#0a0a0a;--red:#c0392b;--red-dim:#7a1f15;--red-glow:rgba(192,57,43,0.18);
@@ -44,39 +28,187 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .btn svg{width:13px;height:13px;flex-shrink:0}
 .btn-red{background:rgba(192,57,43,0.7);border-color:rgba(192,57,43,0.5)}
 .btn-red:hover{background:rgba(192,57,43,0.9)}
+.btn-green{background:rgba(39,174,96,0.5);border-color:rgba(39,174,96,0.4)}
+.btn-green:hover{background:rgba(39,174,96,0.75)}
+.btn-green.active-notif{background:rgba(39,174,96,0.8);border-color:rgba(39,174,96,0.7);box-shadow:0 0 14px rgba(39,174,96,0.3)}
 .live-badge{display:flex;align-items:center;gap:6px;background:rgba(192,57,43,0.15);border:1px solid rgba(192,57,43,0.35);backdrop-filter:blur(8px);padding:5px 14px;border-radius:20px;font-size:10px;font-weight:600;color:var(--red);letter-spacing:1px;text-transform:uppercase}
 .pulse{width:7px;height:7px;background:var(--red);border-radius:50%;animation:pulse 1.4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.65)}}
+#notif-banner{display:none;margin:.8rem 1rem 0;background:linear-gradient(135deg,rgba(39,174,96,0.12) 0%,rgba(255,255,255,0.04) 100%);border:1px solid rgba(39,174,96,0.3);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:12px;padding:.8rem 1.1rem;font-size:12px;color:#6dca8a;line-height:1.6;animation:slidein .4s ease}
+#notif-banner.red{background:linear-gradient(135deg,rgba(192,57,43,0.12) 0%,rgba(255,255,255,0.04) 100%);border-color:rgba(192,57,43,0.3);color:#e57373}
+@keyframes slidein{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 .stats-bar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--glass-border);border-bottom:1px solid var(--glass-border)}
 .stat-cell{background:rgba(255,255,255,0.025);backdrop-filter:blur(10px);padding:.8rem .5rem;text-align:center;position:relative;overflow:hidden}
+.stat-cell::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)}
 .stat-cell .val{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px}
 .stat-cell .lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
 .section-label{font-size:9px;font-weight:600;color:var(--muted);letter-spacing:2px;text-transform:uppercase;padding:1.2rem 1.2rem .5rem}
 .podium{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:0 1rem 1rem}
-.pc{border-radius:16px;padding:1rem .7rem;text-align:center;position:relative;overflow:hidden}
-.pc.r1{background:linear-gradient(145deg,rgba(212,168,83,0.15) 0%,rgba(255,255,255,0.04) 50%,rgba(212,168,83,0.05) 100%);border:1px solid rgba(212,168,83,0.3)}
-.pc.r2{background:linear-gradient(145deg,rgba(155,163,175,0.12) 0%,rgba(255,255,255,0.04) 50%,rgba(155,163,175,0.04) 100%);border:1px solid rgba(155,163,175,0.25)}
-.pc.r3{background:linear-gradient(145deg,rgba(196,122,74,0.12) 0%,rgba(255,255,255,0.04) 50%,rgba(196,122,74,0.04) 100%);border:1px solid rgba(196,122,74,0.25)}
-.pc .logo{width:38px;height:38px;border-radius:50%;object-fit:cover;margin:0 auto 7px;display:block}
+.pc{border-radius:16px;padding:1rem .7rem;text-align:center;position:relative;overflow:hidden;transition:transform .3s ease,box-shadow .3s ease}
+.pc::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.07) 0%,transparent 100%);pointer-events:none;border-radius:16px 16px 0 0}
+.pc::after{content:'';position:absolute;inset:0;border-radius:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.12),inset 0 -1px 0 rgba(0,0,0,0.2);pointer-events:none}
+.pc:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.4)}
+.pc.r1{background:linear-gradient(145deg,rgba(212,168,83,0.15) 0%,rgba(255,255,255,0.04) 50%,rgba(212,168,83,0.05) 100%);border:1px solid rgba(212,168,83,0.3);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5)}
+.pc.r2{background:linear-gradient(145deg,rgba(155,163,175,0.12) 0%,rgba(255,255,255,0.04) 50%,rgba(155,163,175,0.04) 100%);border:1px solid rgba(155,163,175,0.25);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5)}
+.pc.r3{background:linear-gradient(145deg,rgba(196,122,74,0.12) 0%,rgba(255,255,255,0.04) 50%,rgba(196,122,74,0.04) 100%);border:1px solid rgba(196,122,74,0.25);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5)}
+.pc.maris-glow{box-shadow:0 0 30px rgba(212,168,83,0.25),0 0 60px rgba(212,168,83,0.1)!important}
+.pc .ico{font-size:22px;margin-bottom:6px}
+.pc .logo{width:38px;height:38px;border-radius:50%;object-fit:cover;margin:0 auto 7px;display:block;border:1px solid rgba(255,255,255,0.15);box-shadow:0 2px 10px rgba(0,0,0,0.4)}
+.pc .nm{font-size:10px;font-weight:600;color:var(--white);line-height:1.3;margin-bottom:8px;min-height:28px;display:flex;align-items:center;justify-content:center}
 .pc .sc{font-family:'DM Mono',monospace;font-size:20px;font-weight:500}
+.pc .pt{font-size:9px;color:var(--muted);margin-top:2px}
+.r1 .sc{color:var(--gold)}.r2 .sc{color:var(--silver)}.r3 .sc{color:var(--bronze)}
+#gap-analyser{margin:0 1rem 1rem;border-radius:16px;background:linear-gradient(135deg,rgba(212,168,83,0.08) 0%,rgba(255,255,255,0.03) 60%,rgba(192,57,43,0.05) 100%);border:1px solid rgba(212,168,83,0.2);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5);overflow:hidden;position:relative}
+#gap-analyser::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(212,168,83,0.3),transparent)}
+.ga-header{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.1rem .6rem;border-bottom:1px solid rgba(255,255,255,0.06)}
+.ga-title{display:flex;align-items:center;gap:8px;font-size:9px;font-weight:600;color:rgba(212,168,83,0.9);letter-spacing:2px;text-transform:uppercase}
+.ga-title-icon{font-size:14px}
+.ga-rank-badge{font-family:'DM Mono',monospace;font-size:10px;color:rgba(212,168,83,0.7);background:rgba(212,168,83,0.08);border:1px solid rgba(212,168,83,0.2);padding:3px 10px;border-radius:12px;letter-spacing:.5px}
+.ga-body{padding:.8rem 1.1rem 1rem}
+.ga-strip{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;gap:0;margin-bottom:.9rem}
+.ga-school{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:.65rem .8rem;text-align:center}
+.ga-school.ga-maris{background:linear-gradient(135deg,rgba(212,168,83,0.1) 0%,rgba(255,255,255,0.04) 100%);border-color:rgba(212,168,83,0.3);border-radius:12px;padding:.75rem .9rem;position:relative}
+.ga-school.ga-maris::before{content:'MSC';position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:8px;font-weight:700;letter-spacing:1.5px;color:rgba(212,168,83,0.9);background:#0a0a0a;padding:1px 8px;border-radius:8px;border:1px solid rgba(212,168,83,0.25)}
+.ga-school .gs-name{font-size:9px;font-weight:600;color:var(--white);line-height:1.3;margin-bottom:4px}
+.ga-school .gs-votes{font-family:'DM Mono',monospace;font-size:16px;font-weight:500;color:var(--white)}
+.ga-school .gs-rank{font-size:8px;color:var(--muted);margin-top:2px}
+.ga-maris .gs-votes{color:var(--gold);font-size:18px}
+.ga-gaps{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 .6rem;gap:6px}
+.ga-gap-item{display:flex;flex-direction:column;align-items:center;gap:2px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:5px 10px;min-width:72px;text-align:center}
+.ga-gap-item .gap-arrow{font-size:11px;color:var(--muted)}
+.ga-gap-item .gap-val{font-family:'DM Mono',monospace;font-size:13px;font-weight:500}
+.ga-gap-item .gap-lbl{font-size:7px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:1px}
+.gap-above .gap-val{color:#4caf50}.gap-below .gap-val{color:var(--red)}.ga-gap-item.gap-leading .gap-val{color:var(--gold)}
+.ga-progress{margin-top:.5rem}
+.ga-prog-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.ga-prog-label span{font-size:9px;color:var(--muted)}
+.ga-prog-label strong{font-size:9px;color:rgba(212,168,83,0.8);font-weight:600}
+.ga-prog-track{height:5px;background:rgba(255,255,255,0.07);border-radius:4px;overflow:hidden}
+.ga-prog-fill{height:5px;border-radius:4px;background:linear-gradient(90deg,var(--red-dim),var(--gold));transition:width 1s ease}
+.ga-status{margin-top:.75rem;padding:.6rem .85rem;border-radius:8px;font-size:11px;line-height:1.5;text-align:center;font-weight:500}
+.ga-status.leading{background:rgba(212,168,83,0.1);border:1px solid rgba(212,168,83,0.2);color:rgba(212,168,83,0.9)}
+.ga-status.close{background:rgba(39,174,96,0.08);border:1px solid rgba(39,174,96,0.2);color:#6dca8a}
+.ga-status.behind{background:rgba(192,57,43,0.08);border:1px solid rgba(192,57,43,0.2);color:#e57373}
 .list{padding:0 1rem;display:flex;flex-direction:column;gap:6px}
-.row{border-radius:10px;display:grid;grid-template-columns:28px auto 1fr auto;align-items:center;gap:8px;padding:.65rem .85rem;background:linear-gradient(135deg,rgba(255,255,255,0.04) 0%,rgba(255,255,255,0.02) 100%);border:1px solid var(--glass-border)}
-.footer{text-align:center;font-size:11px;color:var(--muted);padding:1.5rem}
+.row{border-radius:10px;display:grid;grid-template-columns:28px auto 1fr auto;align-items:center;gap:8px;padding:.65rem .85rem;position:relative;overflow:hidden;transition:transform .2s ease,box-shadow .2s ease,background .3s;background:linear-gradient(135deg,rgba(255,255,255,0.04) 0%,rgba(255,255,255,0.02) 100%);border:1px solid var(--glass-border);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.row::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);pointer-events:none}
+.row:hover{transform:translateX(3px);box-shadow:0 4px 20px rgba(0,0,0,0.25);background:rgba(255,255,255,0.06)}
+.row.last-place{background:linear-gradient(135deg,rgba(192,57,43,0.1) 0%,rgba(255,255,255,0.02) 100%);border-color:rgba(192,57,43,0.3)}
+.row.maris-row{border-color:rgba(212,168,83,0.3);background:linear-gradient(135deg,rgba(212,168,83,0.07) 0%,rgba(255,255,255,0.02) 100%)}
+.row-logo{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,0.12)}
+.rk{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);text-align:center;min-width:18px}
+.rn{font-size:12px;font-weight:500;color:var(--white);line-height:1.3}
+.rmu{font-size:9px;color:var(--muted);margin-top:1px}
+.rr{text-align:right}
+.rs{font-family:'DM Mono',monospace;font-size:14px;font-weight:500}
+.rb-wrap{height:3px;background:rgba(255,255,255,0.07);border-radius:2px;margin-top:4px;width:64px;margin-left:auto}
+.rb{height:3px;border-radius:2px;background:linear-gradient(90deg,var(--red-dim),var(--red));transition:width 1s ease}
+.last-tag{font-size:8px;color:var(--red);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-top:2px}
+.delta{font-size:9px;font-weight:600;color:#4caf50;margin-left:4px;animation:popin .4s ease}
+@keyframes popin{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+.footer{text-align:center;font-size:11px;color:var(--muted);padding:1.5rem;letter-spacing:.4px}
+.footer b{color:var(--red)}
+.loading{padding:3rem;text-align:center;color:var(--muted);font-size:13px}
+.err{margin:1rem;background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.25);backdrop-filter:blur(10px);border-radius:10px;padding:1rem 1.2rem;font-size:12px;color:#e57373;line-height:1.7}
+body.fullscreen #app{position:fixed;inset:0;z-index:100;overflow-y:auto}
+body.fullscreen .header{background:rgba(5,5,5,0.85);backdrop-filter:blur(40px) saturate(2);-webkit-backdrop-filter:blur(40px) saturate(2)}
+body.fullscreen .podium{gap:14px;padding:0 1.5rem 1.5rem}
+body.fullscreen .pc{padding:1.3rem 1rem}
+body.fullscreen .pc .sc{font-size:24px}
+body.fullscreen .list{padding:0 1.5rem;gap:8px}
+body.fullscreen #gap-analyser{margin:0 1.5rem 1.5rem}
+#alert-popup{display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:200;width:calc(100% - 2rem);max-width:380px;background:linear-gradient(135deg,rgba(212,168,83,0.18) 0%,rgba(10,10,10,0.95) 100%);border:1px solid rgba(212,168,83,0.4);backdrop-filter:blur(30px) saturate(1.8);-webkit-backdrop-filter:blur(30px) saturate(1.8);border-radius:16px;padding:1.2rem 1.4rem;box-shadow:0 20px 60px rgba(0,0,0,0.6);animation:popalert .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popalert{from{opacity:0;transform:translateX(-50%) translateY(30px) scale(.9)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
+#alert-popup .ap-icon{font-size:28px;margin-bottom:8px}
+#alert-popup .ap-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--gold);margin-bottom:4px}
+#alert-popup .ap-body{font-size:12px;color:#ccc;line-height:1.6}
+#alert-popup .ap-gap{font-family:'DM Mono',monospace;font-size:18px;color:var(--gold);margin:8px 0 4px;font-weight:500}
+#alert-popup .ap-close{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;line-height:1}
+#alert-popup .ap-close:hover{color:var(--white)}
+/* TEST MODE BANNER */
+#test-banner{background:linear-gradient(135deg,rgba(255,165,0,0.15) 0%,rgba(255,255,255,0.03) 100%);border-bottom:1px solid rgba(255,165,0,0.25);padding:.55rem 1.4rem;display:flex;align-items:center;justify-content:space-between;font-size:10px;color:rgba(255,165,0,0.85);letter-spacing:.5px}
+#test-banner span{font-weight:600;letter-spacing:1px;text-transform:uppercase}
+#test-banner .tb-right{display:flex;align-items:center;gap:10px}
+#test-banner button{background:rgba(255,165,0,0.15);border:1px solid rgba(255,165,0,0.3);color:rgba(255,165,0,0.9);padding:3px 10px;border-radius:10px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'Inter',sans-serif}
+#test-banner button:hover{background:rgba(255,165,0,0.25)}
+#poster-wrap{position:fixed;left:-9999px;top:0;width:900px;z-index:-1}
+#poster{width:900px;background:#0a0a0a;font-family:'Inter',sans-serif;color:#f0f0f0;padding-bottom:48px}
+#poster .ph{background:#111;border-bottom:3px solid #c0392b;padding:40px 52px 32px;display:flex;align-items:flex-end;justify-content:space-between}
+#poster .ph-title{font-family:'Bebas Neue',sans-serif;font-size:70px;letter-spacing:5px;line-height:1}
+#poster .ph-sub{font-size:12px;color:#555;letter-spacing:2.5px;text-transform:uppercase;margin-top:8px}
+#poster .ph-right{text-align:right}
+#poster .ph-date{font-family:'DM Mono',monospace;font-size:13px;color:#c0392b;letter-spacing:1px}
+#poster .ph-time{font-size:10px;color:#444;margin-top:5px}
+#poster .ps{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid #1e1e1e}
+#poster .ps-cell{padding:22px 0;text-align:center;border-right:1px solid #1e1e1e}
+#poster .ps-cell:last-child{border-right:none}
+#poster .ps-val{font-family:'Bebas Neue',sans-serif;font-size:38px;color:#f0f0f0;letter-spacing:2px}
+#poster .ps-lbl{font-size:10px;color:#444;text-transform:uppercase;letter-spacing:2px;margin-top:3px}
+#poster .p-sec{font-size:10px;color:#3a3a3a;letter-spacing:3px;text-transform:uppercase;padding:30px 52px 16px}
+#poster .podium{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;padding:0 44px 32px}
+#poster .pp{border-radius:12px;padding:28px 18px;text-align:center}
+#poster .pr1{background:#1a1500;border:1px solid #d4a853}#poster .pr2{background:#141618;border:1px solid #9ba3af}#poster .pr3{background:#1a1008;border:1px solid #c47a4a}
+#poster .pp-ico{font-size:34px;margin-bottom:12px}
+#poster .pp-logo{width:54px;height:54px;border-radius:50%;object-fit:cover;margin:0 auto 12px;display:block;border:2px solid #2a2a2a}
+#poster .pp-name{font-size:14px;font-weight:600;color:#f0f0f0;line-height:1.4;margin-bottom:6px}
+#poster .pp-mu{font-size:10px;color:#555;margin-bottom:14px;line-height:1.4}
+#poster .pp-score{font-family:'DM Mono',monospace;font-size:36px;font-weight:500}
+#poster .pr1 .pp-score{color:#d4a853}#poster .pr2 .pp-score{color:#9ba3af}#poster .pr3 .pp-score{color:#c47a4a}
+#poster .pp-pct{font-size:10px;color:#555;margin-top:5px}
+#poster .plist{padding:0 44px;display:flex;flex-direction:column;gap:7px}
+#poster .prow{display:grid;grid-template-columns:40px 46px 1fr auto;align-items:center;gap:14px;background:#141414;border:1px solid #1e1e1e;border-radius:8px;padding:14px 20px}
+#poster .prow.plast{border-color:#7a1f15;background:linear-gradient(90deg,rgba(192,57,43,.08) 0%,#141414 100%)}
+#poster .prk{font-family:'DM Mono',monospace;font-size:14px;color:#444;text-align:center}
+#poster .prlogo{width:40px;height:40px;border-radius:50%;object-fit:cover;border:1px solid #2a2a2a}
+#poster .prname{font-size:14px;font-weight:600;color:#f0f0f0}
+#poster .prmu{font-size:10px;color:#555;margin-top:3px}
+#poster .prr{text-align:right}
+#poster .prscore{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:#f0f0f0}
+#poster .prbar-w{height:4px;background:#1e1e1e;border-radius:2px;margin-top:6px;width:110px;margin-left:auto}
+#poster .prbar{height:4px;border-radius:2px;background:#c0392b}
+#poster .pltag{font-size:9px;color:#c0392b;text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-top:4px}
+#poster .pfooter{margin:40px 52px 0;border-top:1px solid #181818;padding-top:22px;display:flex;align-items:center;justify-content:space-between}
+#poster .pfooter-l{font-size:11px;color:#333}
+#poster .pfooter-r{font-family:'Bebas Neue',sans-serif;font-size:20px;color:#c0392b;letter-spacing:2px}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(20,20,20,0.92);border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(20px);color:#f0f0f0;padding:10px 22px;border-radius:24px;font-size:12px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap}
+#toast.show{opacity:1}
 </style>
 </head>
 <body>
 <div id="app">
+
+  <!-- TEST MODE BANNER -->
+  <div id="test-banner">
+    <div><span>⚠ Test Mode</span> — Alerts fire on every new vote to Maris Stella</div>
+    <div class="tb-right">
+      <span id="test-count">Triggers: 0</span>
+      <button onclick="disableTestMode()">Disable Test Mode</button>
+    </div>
+  </div>
+
   <div class="header">
     <div>
       <h1>NETHINETHERA</h1>
       <p>MPMU · Live School Leaderboard</p>
     </div>
     <div class="header-right">
-      <button class="btn btn-red" onclick="exportPoster()">Export</button>
+      <button class="btn btn-green" id="notif-btn" onclick="toggleNotifications()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span id="notif-label">Enable Alerts</span>
+      </button>
+      <button class="btn btn-red" onclick="exportPoster()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export
+      </button>
+      <button class="btn" id="fs-btn" onclick="toggleFullscreen()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+        Fullscreen
+      </button>
       <div class="live-badge"><div class="pulse"></div>LIVE</div>
     </div>
   </div>
 
+  <div id="notif-banner"></div>
   <div class="stats-bar">
     <div class="stat-cell"><div class="val" id="s-schools">—</div><div class="lbl">Schools</div></div>
     <div class="stat-cell"><div class="val" id="s-total">—</div><div class="lbl">Total Votes</div></div>
@@ -85,6 +217,17 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   <div id="board"><div class="loading">Connecting to live data…</div></div>
   <div class="footer">Auto-refresh every <b>10s</b> · next in <b><span id="cd">10</span>s</b></div>
 </div>
+
+<div id="alert-popup">
+  <button class="ap-close" onclick="closeAlert()">×</button>
+  <div class="ap-icon">🗳️</div>
+  <div class="ap-title" id="ap-title"></div>
+  <div class="ap-body" id="ap-body"></div>
+  <div class="ap-gap" id="ap-gap"></div>
+</div>
+
+<div id="poster-wrap"><div id="poster"></div></div>
+<div id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
@@ -111,13 +254,43 @@ const medal = r  => r===1?'🥇':r===2?'🥈':'🥉';
 
 let prev={}, lastData=[];
 
+/* ── GAP ANALYSER ── */
+function renderGapAnalyser(sorted){
+  const el=document.getElementById('gap-analyser');
+  if(!el) return;
+  const marisIdx=sorted.findIndex(s=>s.registered_candidate===MARIS);
+  if(marisIdx===-1){el.style.display='none';return;}
+  el.style.display='block';
+  const marisVotes=sorted[marisIdx].vote_count;
+  const marisRank=marisIdx+1;
+  const aboveEntry=marisIdx>0?sorted[marisIdx-1]:null;
+  const belowEntry=marisIdx<sorted.length-1?sorted[marisIdx+1]:null;
+  const aboveInfo=aboveEntry?info(aboveEntry.registered_candidate):null;
+  const belowInfo=belowEntry?info(belowEntry.registered_candidate):null;
+  const gapAbove=aboveEntry?aboveEntry.vote_count-marisVotes:0;
+  const gapBelow=belowEntry?marisVotes-belowEntry.vote_count:0;
+  let progressHtml='';
+  if(aboveEntry){
+    const target=aboveEntry.vote_count, start=belowEntry?belowEntry.vote_count:0;
+    const range=target-start||1;
+    const prog=Math.min(100,Math.round(((marisVotes-start)/range)*100));
+    progressHtml=`<div class="ga-progress"><div class="ga-prog-label"><span>Progress to overtake ${aboveInfo.name.split(',')[0]}</span><strong>${gapAbove.toLocaleString()} votes needed</strong></div><div class="ga-prog-track"><div class="ga-prog-fill" style="width:${prog}%"></div></div></div>`;
+  }
+  let statusClass='',statusMsg='';
+  if(marisRank===1){statusClass='leading';statusMsg=`🥇 Maris Stella is LEADING! ${gapBelow>0?'Ahead of '+belowInfo.name.split(',')[0]+' by '+gapBelow.toLocaleString()+' votes':''}`;}
+  else if(gapAbove<=30){statusClass='close';statusMsg=`🔥 Very close! Only ${gapAbove.toLocaleString()} votes behind ${aboveInfo.name.split(',')[0]}. Push now!`;}
+  else if(gapAbove<=100){statusClass='close';statusMsg=`📈 Getting there! ${gapAbove.toLocaleString()} votes to move up to rank ${marisRank-1}.`;}
+  else{statusClass='behind';statusMsg=`📊 ${gapAbove.toLocaleString()} votes behind ${aboveEntry?aboveInfo.name.split(',')[0]:'the leader'}. Keep voting!`;}
+  el.innerHTML=`<div class="ga-header"><div class="ga-title"><span class="ga-title-icon">📊</span> Maris Stella Gap Analyser</div><div class="ga-rank-badge">Rank #${marisRank} of ${sorted.length}</div></div><div class="ga-body"><div class="ga-strip"><div class="ga-school">${aboveEntry?`<div class="gs-name">${aboveInfo.name.split(',')[0]}</div><div class="gs-votes">${aboveEntry.vote_count.toLocaleString()}</div><div class="gs-rank">Rank #${marisRank-1}</div>`:`<div class="gs-name" style="color:var(--muted);font-size:8px;margin-top:8px">Leading — no one above</div>`}</div><div class="ga-gaps">${aboveEntry?`<div class="ga-gap-item gap-above"><div class="gap-arrow">▲</div><div class="gap-val">-${gapAbove.toLocaleString()}</div><div class="gap-lbl">to overtake</div></div>`:`<div class="ga-gap-item gap-leading"><div class="gap-arrow">★</div><div class="gap-val">#1</div><div class="gap-lbl">leading</div></div>`}${belowEntry?`<div class="ga-gap-item gap-below"><div class="gap-arrow">▼</div><div class="gap-val">+${gapBelow.toLocaleString()}</div><div class="gap-lbl">ahead of next</div></div>`:''}</div><div class="ga-school ga-maris"><div class="gs-name">Maris Stella College</div><div class="gs-votes">${marisVotes.toLocaleString()}</div><div class="gs-rank">Rank #${marisRank}</div></div></div>${progressHtml}<div class="ga-status ${statusClass}">${statusMsg}</div></div>`;
+}
+
 /* ── RENDER ── */
 function render(data){
   lastData=data;
   const sorted=[...data].sort((a,b)=>b.vote_count-a.vote_count);
   const total=sorted.reduce((s,x)=>s+x.vote_count,0);
   const maxV=sorted[0]?.vote_count||1;
-  const top3=sorted.slice(0,3);
+  const top3=sorted.slice(0,3),rest=sorted.slice(3);
 
   document.getElementById('s-schools').textContent=sorted.length;
   document.getElementById('s-total').textContent=fmt(total);
@@ -129,14 +302,66 @@ function render(data){
   podOrder.forEach((s,i)=>{
     if(!s){html+=`<div class="pc"></div>`;return;}
     const r=podRanks[i],sc=info(s.registered_candidate);
-    html+=`<div class="pc r${r}">${medal(r)} ${sc.logo?`<img class="logo" src="${sc.logo}" crossorigin="anonymous">`:''} <div class="sc">${s.vote_count.toLocaleString()}</div></div>`;
+    const pct=total>0?((s.vote_count/total)*100).toFixed(1):0;
+    const isMaris=s.registered_candidate===MARIS;
+    const d=prev[s.registered_candidate]!==undefined&&s.vote_count>prev[s.registered_candidate]?`<span class="delta">+${s.vote_count-prev[s.registered_candidate]}</span>`:'';
+    html+=`<div class="pc r${r}${isMaris?' maris-glow':''}"><div class="ico">${medal(r)}</div>${sc.logo?`<img class="logo" src="${sc.logo}" crossorigin="anonymous" onerror="this.style.display='none'">`:''}  <div class="nm">${sc.name}</div><div class="sc">${s.vote_count.toLocaleString()}${d}</div><div class="pt">${pct}% of votes</div></div>`;
   });
-  html+=`</div><div class="section-label">Full Rankings</div><div class="list">`;
-  sorted.forEach((s,i)=>{
-    const sc=info(s.registered_candidate);
-    html+=`<div class="row"><div>${i+1}</div>${sc.logo?`<img src="${sc.logo}" style="width:28px;height:28px;border-radius:50%" crossorigin="anonymous">`:''} <div>${sc.name}</div><div style="text-align:right">${s.vote_count.toLocaleString()}</div></div>`;
-  });
+  html+=`</div><div id="gap-analyser"></div>`;
+
+  if(rest.length){
+    html+=`<div class="section-label">Full Rankings</div><div class="list">`;
+    rest.forEach((s,i)=>{
+      const rank=i+4,isLast=rank===sorted.length,sc=info(s.registered_candidate);
+      const barW=Math.round((s.vote_count/maxV)*100);
+      const isMaris=s.registered_candidate===MARIS;
+      const d=prev[s.registered_candidate]!==undefined&&s.vote_count>prev[s.registered_candidate]?`<span class="delta">+${s.vote_count-prev[s.registered_candidate]}</span>`:'';
+      html+=`<div class="row${isLast?' last-place':''}${isMaris?' maris-row':''}"><div class="rk">${rank}</div>${sc.logo?`<img class="row-logo" src="${sc.logo}" crossorigin="anonymous" onerror="this.style.display='none'">`:'<div></div>'}<div><div class="rn">${sc.name}</div><div class="rmu">${sc.mu}</div></div><div class="rr"><div class="rs">${s.vote_count.toLocaleString()}${d}</div><div class="rb-wrap"><div class="rb" style="width:${barW}%"></div></div>${isLast?'<div class="last-tag">LAST</div>':''}</div></div>`;
+    });
+    html+=`</div>`;
+  }
   document.getElementById('board').innerHTML=html;
+  sorted.forEach(s=>{prev[s.registered_candidate]=s.vote_count;});
+  renderGapAnalyser(sorted);
+}
+
+/* ── FULLSCREEN ── */
+let isFS=false;
+function toggleFullscreen(){
+  isFS=!isFS;document.body.classList.toggle('fullscreen',isFS);
+  const btn=document.getElementById('fs-btn');
+  if(isFS){btn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="10" y1="14" x2="3" y2="21"/><line x1="21" y1="3" x2="14" y2="10"/></svg> Exit`;document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen().catch(()=>{});}
+  else{btn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg> Fullscreen`;document.exitFullscreen&&document.exitFullscreen().catch(()=>{});}
+}
+document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&isFS){isFS=false;document.body.classList.remove('fullscreen')}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&isFS)toggleFullscreen();});
+
+/* ── POSTER ── */
+function buildPoster(data){
+  const sorted=[...data].sort((a,b)=>b.vote_count-a.vote_count);
+  const total=sorted.reduce((s,x)=>s+x.vote_count,0);
+  const maxV=sorted[0]?.vote_count||1;
+  const top3=sorted.slice(0,3),rest=sorted.slice(3);
+  const now=new Date();
+  const dateStr=now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const timeStr=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const podOrder=top3.length>=2?[top3[1],top3[0],top3[2]]:[...top3];
+  const podRanks=top3.length>=2?[2,1,3]:[1,2,3];
+  let pods='';
+  podOrder.forEach((s,i)=>{if(!s){pods+=`<div></div>`;return;}const r=podRanks[i],sc=info(s.registered_candidate);const pct=total>0?((s.vote_count/total)*100).toFixed(1):0;pods+=`<div class="pp pr${r}"><div class="pp-ico">${medal(r)}</div>${sc.logo?`<img class="pp-logo" src="${sc.logo}" crossorigin="anonymous" onerror="this.style.display='none'">`:''}  <div class="pp-name">${sc.name}</div><div class="pp-mu">${sc.mu}</div><div class="pp-score">${s.vote_count.toLocaleString()}</div><div class="pp-pct">${pct}% of total votes</div></div>`;});
+  let rows='';
+  rest.forEach((s,i)=>{const rank=i+4,isLast=rank===sorted.length,sc=info(s.registered_candidate);const barW=Math.round((s.vote_count/maxV)*100);rows+=`<div class="prow${isLast?' plast':''}"><div class="prk">${rank}</div>${sc.logo?`<img class="prlogo" src="${sc.logo}" crossorigin="anonymous" onerror="this.style.display='none'">`:'<div></div>'}<div><div class="prname">${sc.name}</div><div class="prmu">${sc.mu}</div></div><div class="prr"><div class="prscore">${s.vote_count.toLocaleString()}</div><div class="prbar-w"><div class="prbar" style="width:${barW}%"></div></div>${isLast?'<div class="pltag">Last Place</div>':''}</div></div>`;});
+  document.getElementById('poster').innerHTML=`<div class="ph"><div><div class="ph-title">NETHINETHERA</div><div class="ph-sub">Most Popular Media Unit · Live Vote Results</div></div><div class="ph-right"><div class="ph-date">${dateStr}</div><div class="ph-time">Snapshot at ${timeStr}</div></div></div><div class="ps"><div class="ps-cell"><div class="ps-val">${sorted.length}</div><div class="ps-lbl">Schools Competing</div></div><div class="ps-cell"><div class="ps-val">${total.toLocaleString()}</div><div class="ps-lbl">Total Votes Cast</div></div><div class="ps-cell"><div class="ps-val">${sorted[0]?info(sorted[0].registered_candidate).name.split(',')[0]:'—'}</div><div class="ps-lbl">Current Leader</div></div></div><div class="p-sec">Top 3 Schools</div><div class="podium">${pods}</div>${rest.length?`<div class="p-sec">Full Rankings</div><div class="plist">${rows}</div>`:''}<div class="pfooter"><div class="pfooter-l">isipathanamedia.online · ICMU Nethinethera</div><div class="pfooter-r">MPMU 2025</div></div>`;
+}
+
+function toast(msg,ms=2800){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),ms);}
+
+async function exportPoster(){
+  if(!lastData.length){toast('No data loaded yet!');return;}
+  toast('Generating poster…',5000);buildPoster(lastData);
+  await new Promise(r=>setTimeout(r,900));
+  try{const canvas=await html2canvas(document.getElementById('poster'),{scale:2,useCORS:true,allowTaint:false,backgroundColor:'#0a0a0a',logging:false,width:900});const link=document.createElement('a');link.download=`nethinethera-${new Date().toISOString().slice(0,10)}.png`;link.href=canvas.toDataURL('image/png');link.click();toast('Poster downloaded!');}
+  catch(e){toast('Export failed: '+e.message);}
 }
 
 /* ── FETCH ── */
@@ -147,12 +372,13 @@ async function fetchData(){
     const data=await res.json();
     if(data&&data.length) render(data);
   }catch(e){
-    document.getElementById('board').innerHTML=`<div class="err">Could not fetch scores.</div>`;
+    document.getElementById('board').innerHTML=`<div class="err"><strong>Could not fetch scores.</strong><br>${e.message}</div>`;
   }
 }
 
-let secs=10;
-setInterval(()=>{secs--;document.getElementById('cd').textContent=secs;if(secs<=0){secs=10;fetchData();}},1000);
+// Timer set to 60 seconds to save battery
+let secs=60;
+setInterval(()=>{secs--;document.getElementById('cd').textContent=secs;if(secs<=0){secs=60;fetchData();}},1000);
 fetchData();
 </script>
 </body>
