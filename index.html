@@ -391,7 +391,7 @@ async function fetchData(){
 
 // Timer set to 60 seconds to save battery
 let secs=10;
-setInterval(()=>{secs--;document.getElementById('cd').textContent=secs;if(secs<=0){secs=60;fetchData();}},1000);
+setInterval(()=>{secs--;document.getElementById('cd').textContent=secs;if(secs<=0){secs=10;fetchData();}},1000);
 fetchData();
 </script>
 </body>
