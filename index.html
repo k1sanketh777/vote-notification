@@ -231,6 +231,26 @@ body.fullscreen::before{background:radial-gradient(ellipse 70% 60% at 15% 15%,rg
 #alert-popup .ap-close{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;line-height:1}
 #alert-popup .ap-close:hover{color:var(--white)}
 
+/* PERF: promote animated elements to their own layer */
+.pc,.row{will-change:transform}
+body::before{will-change:opacity}
+
+/* MIDNIGHT CELEBRATION */
+#celebration{display:none;position:fixed;inset:0;z-index:500;pointer-events:none}
+#celebration.show{display:block}
+#cel-overlay{position:absolute;inset:0;background:rgba(0,0,0,0);animation:cel-fade 1.2s ease forwards}
+@keyframes cel-fade{0%{background:rgba(0,0,0,0)}30%{background:rgba(0,0,0,0.85)}100%{background:rgba(0,0,0,0.7)}}
+#cel-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;animation:cel-pop 0.8s cubic-bezier(.34,1.56,.64,1) .4s both}
+@keyframes cel-pop{from{opacity:0;transform:translate(-50%,-50%) scale(.4)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+#cel-msg .cel-emoji{font-size:72px;display:block;margin-bottom:16px;animation:cel-bounce 0.6s ease infinite alternate 1.5s}
+@keyframes cel-bounce{from{transform:translateY(0)}to{transform:translateY(-12px)}}
+#cel-msg .cel-title{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:4px;color:#d4a853;line-height:1;text-shadow:0 0 40px rgba(212,168,83,0.6)}
+#cel-msg .cel-sub{font-size:14px;color:rgba(255,255,255,0.8);margin-top:10px;letter-spacing:1px}
+#cel-msg .cel-votes{font-family:'DM Mono',monospace;font-size:28px;color:#d4a853;margin-top:8px}
+#cel-close{pointer-events:all;margin-top:24px;background:rgba(212,168,83,0.2);border:1px solid rgba(212,168,83,0.4);color:#d4a853;padding:10px 28px;border-radius:24px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:'Inter',sans-serif}
+#cel-close:hover{background:rgba(212,168,83,0.35)}
+#confetti-canvas{position:absolute;inset:0;width:100%;height:100%}
+
 /* POSTER */
 #poster-wrap{position:fixed;left:-9999px;top:0;width:900px;z-index:-1}
 #poster{width:900px;background:#0a0a0a;font-family:'Inter',sans-serif;color:#f0f0f0;padding-bottom:48px}
@@ -306,11 +326,11 @@ body.fullscreen::before{background:radial-gradient(ellipse 70% 60% at 15% 15%,rg
   <div class="stats-bar">
     <div class="stat-cell"><div class="val" id="s-schools">—</div><div class="lbl">Schools</div></div>
     <div class="stat-cell"><div class="val" id="s-total">—</div><div class="lbl">Total Votes</div></div>
-    <div class="stat-cell"><div class="val" id="s-midnight" style="font-size:16px;letter-spacing:0">--:--:--</div><div class="lbl">Until Midnight</div></div>
+    <div class="stat-cell"><div class="val" id="s-midnight" style="font-family:'DM Mono',monospace;letter-spacing:1px">--:--:--</div><div class="lbl">Until Midnight</div></div>
   </div>
 
   <div id="board"><div class="loading">Connecting to live data…</div></div>
-  <div class="footer">Auto-refresh every <b>10s</b> · next in <b><span id="cd">10</span>s</b></div>
+  <div class="footer"><span id="rt-status">Connecting…</span></div>
 </div>
 
 <div id="alert-popup">
@@ -319,6 +339,18 @@ body.fullscreen::before{background:radial-gradient(ellipse 70% 60% at 15% 15%,rg
   <div class="ap-title" id="ap-title"></div>
   <div class="ap-body" id="ap-body"></div>
   <div class="ap-gap" id="ap-gap"></div>
+</div>
+
+<div id="celebration">
+  <canvas id="confetti-canvas"></canvas>
+  <div id="cel-overlay"></div>
+  <div id="cel-msg">
+    <span class="cel-emoji">🎉</span>
+    <div class="cel-title">MARIS STELLA WON!</div>
+    <div class="cel-sub">Maris Stella College, Negombo</div>
+    <div class="cel-votes" id="cel-votes"></div>
+    <button id="cel-close" onclick="document.getElementById('celebration').classList.remove('show')">Close</button>
+  </div>
 </div>
 
 <div id="poster-wrap"><div id="poster"></div></div>
@@ -617,25 +649,21 @@ async function exportPoster(){
   catch(e){ toast('Export failed: '+e.message); }
 }
 
-/* ── FETCH ── */
-async function fetchData(){
-  try{
-    const res=await fetch(API,{headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'}});
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const data=await res.json();
-    if(data&&data.length) render(data);
-  }catch(e){
-    document.getElementById('board').innerHTML=`<div class="err"><strong>Could not fetch scores.</strong><br>${e.message}</div>`;
-  }
+/* ── PERFORMANCE: throttle renders ── */
+let renderPending=false;
+function scheduleRender(data){
+  lastData=data;
+  if(renderPending) return;
+  renderPending=true;
+  requestAnimationFrame(()=>{ renderPending=false; render(lastData); });
 }
 
 /* ── MIDNIGHT COUNTDOWN ── */
 function updateMidnight(){
   const now=new Date();
-  const midnight=new Date();
-  midnight.setHours(24,0,0,0);
+  const midnight=new Date(); midnight.setHours(24,0,0,0);
   const diff=midnight-now;
-  if(diff<=0){document.getElementById('s-midnight').textContent='00:00:00';return;}
+  if(diff<=0){ document.getElementById('s-midnight').textContent='00:00:00'; checkMidnightCelebration(); return; }
   const h=String(Math.floor(diff/3600000)).padStart(2,'0');
   const m=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
   const s=String(Math.floor((diff%60000)/1000)).padStart(2,'0');
@@ -644,7 +672,124 @@ function updateMidnight(){
 updateMidnight();
 setInterval(updateMidnight,1000);
 
-fetchData();
+/* ── MIDNIGHT CELEBRATION ── */
+let celebrationFired=false;
+function checkMidnightCelebration(){
+  if(celebrationFired||!lastData.length) return;
+  const sorted=[...lastData].sort((a,b)=>b.vote_count-a.vote_count);
+  if(sorted[0].registered_candidate!==MARIS) return; // MSC didn't win, stay quiet
+  celebrationFired=true;
+  const votes=sorted[0].vote_count;
+  document.getElementById('cel-votes').textContent=votes.toLocaleString()+' votes';
+  document.getElementById('celebration').classList.add('show');
+  launchConfetti();
+  playSurpriseSong();
+}
+
+/* ── CONFETTI ── */
+function launchConfetti(){
+  const canvas=document.getElementById('confetti-canvas');
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+  const pieces=[];
+  const colors=['#d4a853','#c0392b','#f0f0f0','#9ba3af','#4caf50','#e74c3c','#f39c12'];
+  for(let i=0;i<180;i++){
+    pieces.push({
+      x:Math.random()*canvas.width, y:-20-Math.random()*canvas.height*0.5,
+      w:6+Math.random()*8, h:10+Math.random()*14,
+      color:colors[Math.floor(Math.random()*colors.length)],
+      rot:Math.random()*360, rotSpeed:(Math.random()-0.5)*6,
+      vx:(Math.random()-0.5)*4, vy:2+Math.random()*4,
+      alpha:1
+    });
+  }
+  let frame=0;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    let alive=false;
+    pieces.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy; p.rot+=p.rotSpeed;
+      if(frame>180) p.alpha=Math.max(0,p.alpha-0.008);
+      if(p.y<canvas.height+40&&p.alpha>0) alive=true;
+      ctx.save();
+      ctx.globalAlpha=p.alpha;
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.color;
+      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      ctx.restore();
+    });
+    frame++;
+    if(alive) requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  draw();
+}
+
+/* ── SURPRISE SONG (YouTube audio at midnight) ── */
+function playSurpriseSong(){
+  // Hidden YouTube iframe autoplay — browser allows this after user interaction
+  // Using "We Are The Champions" — perfect for a win 🏆
+  const yt=document.createElement('iframe');
+  yt.src='https://www.youtube.com/embed/d5GkgVhFeZY?autoplay=1&start=0&controls=0';
+  yt.allow='autoplay';
+  yt.style.cssText='position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;bottom:0;left:0';
+  document.body.appendChild(yt);
+}
+
+/* ── INITIAL FETCH ── */
+async function fetchAll(){
+  try{
+    const res=await fetch(API,{headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const data=await res.json();
+    if(data&&data.length) render(data);
+    document.getElementById('rt-status').textContent='🟢 Realtime · Updates are instant';
+  }catch(e){
+    document.getElementById('board').innerHTML=`<div class="err"><strong>Could not fetch scores.</strong><br>${e.message}</div>`;
+  }
+}
+
+/* ── SUPABASE REALTIME ── */
+function initRealtime(){
+  const wsUrl=`wss://osxijjbjgxvaeurpghtv.supabase.co/realtime/v1/websocket?apikey=${KEY}&vsn=1.0.0`;
+  let ws,ping;
+
+  function connect(){
+    ws=new WebSocket(wsUrl);
+    ws.onopen=()=>{
+      ws.send(JSON.stringify({topic:'realtime:public:mpmu_votes',event:'phx_join',payload:{config:{postgres_changes:[{event:'*',schema:'public',table:'mpmu_votes'}]}},ref:'1'}));
+      ping=setInterval(()=>ws.readyState===1&&ws.send(JSON.stringify({topic:'phoenix',event:'heartbeat',payload:{},ref:'hb'})),25000);
+      document.getElementById('rt-status').textContent='🟢 Realtime · Updates are instant';
+    };
+    ws.onmessage=e=>{
+      try{
+        const msg=JSON.parse(e.data);
+        if(msg.event==='phx_reply'&&msg.payload?.status==='ok'){ fetchAll(); return; }
+        if(msg.event==='postgres_changes'){
+          const {record,old_record,type}=msg.payload?.data||{};
+          if(!record&&!old_record) return;
+          if(type==='UPDATE'||type==='INSERT'){
+            const idx=lastData.findIndex(s=>s.registered_candidate===record.registered_candidate);
+            if(idx!==-1) lastData[idx]={...lastData[idx],vote_count:record.vote_count};
+            else lastData.push({registered_candidate:record.registered_candidate,vote_count:record.vote_count});
+            scheduleRender(lastData);
+            document.getElementById('rt-status').textContent='🟢 Realtime · '+new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+          }
+          if(type==='DELETE'&&old_record){
+            lastData=lastData.filter(s=>s.registered_candidate!==old_record.registered_candidate);
+            scheduleRender(lastData);
+          }
+        }
+      }catch(_){}
+    };
+    ws.onerror=()=>{ document.getElementById('rt-status').textContent='⚠ Realtime error — reconnecting…'; };
+    ws.onclose=()=>{ clearInterval(ping); document.getElementById('rt-status').textContent='⚠ Reconnecting…'; setTimeout(connect,3000); };
+  }
+  connect();
+}
+
+fetchAll().then(()=>initRealtime());
 </script>
 </body>
 </html>
