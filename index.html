@@ -759,7 +759,7 @@ function initRealtime(){
     ws=new WebSocket(wsUrl);
     ws.onopen=()=>{
       ws.send(JSON.stringify({topic:'realtime:public:mpmu_votes',event:'phx_join',payload:{config:{postgres_changes:[{event:'*',schema:'public',table:'mpmu_votes'}]}},ref:'1'}));
-      ping=setInterval(()=>ws.readyState===1&&ws.send(JSON.stringify({topic:'phoenix',event:'heartbeat',payload:{},ref:'hb'})),25000);
+      ping=setInterval(()=>ws.readyState===1&&ws.send(JSON.stringify({topic:'phoenix',event:'heartbeat',payload:{},ref:'hb'})),5000);
       document.getElementById('rt-status').textContent='🟢 Realtime · Updates are instant';
     };
     ws.onmessage=e=>{
