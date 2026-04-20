@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nethinethera · Live Leaderboard</title>
+<link rel="icon" type="image/png" href="https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/1.png">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -59,25 +60,56 @@ body::before{
 .stat-cell .val{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px}
 .stat-cell .lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
 
+/* ── COUNTDOWN ANIMATION ── */
+#s-midnight{
+  font-family:'DM Mono',monospace;
+  letter-spacing:2px;
+  transition:color .3s ease;
+  display:inline-block;
+}
+.countdown-tick{
+  animation:ctick .15s ease-out;
+}
+@keyframes ctick{
+  0%{transform:scale(1.15);color:#d4a853}
+  100%{transform:scale(1);color:inherit}
+}
+.countdown-urgent{
+  color:#c0392b !important;
+  animation:urgentpulse 1s ease-in-out infinite;
+}
+@keyframes urgentpulse{
+  0%,100%{text-shadow:0 0 0 transparent}
+  50%{text-shadow:0 0 20px rgba(192,57,43,0.8)}
+}
+
 /* SECTION LABEL */
 .section-label{font-size:9px;font-weight:600;color:var(--muted);letter-spacing:2px;text-transform:uppercase;padding:1.2rem 1.2rem .5rem}
 
-/* PODIUM */
-.podium{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:0 1rem 1rem}
-.pc{border-radius:16px;padding:1rem .7rem;text-align:center;position:relative;overflow:hidden;transition:transform .3s ease,box-shadow .3s ease}
+/* PODIUM - 3 column layout: 2nd | 1st | 3rd */
+.podium{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:0 1rem 1rem;align-items:end}
+.pc{border-radius:16px;padding:1rem .7rem;text-align:center;position:relative;overflow:hidden;transition:transform .3s ease,box-shadow .3s ease;background:linear-gradient(135deg,rgba(255,255,255,0.04) 0%,rgba(255,255,255,0.02) 100%);border:1px solid var(--glass-border);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5)}
 .pc::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.07) 0%,transparent 100%);pointer-events:none;border-radius:16px 16px 0 0}
 .pc::after{content:'';position:absolute;inset:0;border-radius:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.12),inset 0 -1px 0 rgba(0,0,0,0.2);pointer-events:none}
 .pc:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.4)}
-.pc.r1{background:linear-gradient(145deg,rgba(212,168,83,0.15) 0%,rgba(255,255,255,0.04) 50%,rgba(212,168,83,0.05) 100%);border:1px solid rgba(212,168,83,0.3);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5)}
-.pc.r2{background:linear-gradient(145deg,rgba(155,163,175,0.12) 0%,rgba(255,255,255,0.04) 50%,rgba(155,163,175,0.04) 100%);border:1px solid rgba(155,163,175,0.25);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5)}
-.pc.r3{background:linear-gradient(145deg,rgba(196,122,74,0.12) 0%,rgba(255,255,255,0.04) 50%,rgba(196,122,74,0.04) 100%);border:1px solid rgba(196,122,74,0.25);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5)}
+/* 1st place - full size */
+.pc.r1{background:linear-gradient(145deg,rgba(212,168,83,0.15) 0%,rgba(255,255,255,0.04) 50%,rgba(212,168,83,0.05) 100%);border:1px solid rgba(212,168,83,0.3);padding:1.3rem .9rem}
+/* 2nd place - slightly smaller */
+.pc.r2{background:linear-gradient(145deg,rgba(155,163,175,0.12) 0%,rgba(255,255,255,0.04) 50%,rgba(155,163,175,0.04) 100%);border:1px solid rgba(155,163,175,0.25);transform:scale(0.93);transform-origin:bottom center}
+.pc.r2:hover{transform:scale(0.93) translateY(-3px)}
+/* 3rd place - even smaller */
+.pc.r3{background:linear-gradient(145deg,rgba(196,122,74,0.12) 0%,rgba(255,255,255,0.04) 50%,rgba(196,122,74,0.04) 100%);border:1px solid rgba(196,122,74,0.25);transform:scale(0.86);transform-origin:bottom center}
+.pc.r3:hover{transform:scale(0.86) translateY(-3px)}
 .pc.maris-glow{box-shadow:0 0 30px rgba(212,168,83,0.25),0 0 60px rgba(212,168,83,0.1)!important}
-.pc .ico{font-size:22px;margin-bottom:6px}
-.pc .logo{width:38px;height:38px;border-radius:50%;object-fit:cover;margin:0 auto 7px;display:block;border:1px solid rgba(255,255,255,0.15);box-shadow:0 2px 10px rgba(0,0,0,0.4)}
+.pc .ico{font-size:22px;margin-bottom:4px}
+.pc .logo{width:44px;height:44px;border-radius:50%;object-fit:cover;margin:0 auto 7px;display:block;border:2px solid rgba(255,255,255,0.2);box-shadow:0 4px 14px rgba(0,0,0,0.5)}
 .pc .nm{font-size:10px;font-weight:600;color:var(--white);line-height:1.3;margin-bottom:8px;min-height:28px;display:flex;align-items:center;justify-content:center}
 .pc .sc{font-family:'DM Mono',monospace;font-size:20px;font-weight:500}
 .pc .pt{font-size:9px;color:var(--muted);margin-top:2px}
 .r1 .sc{color:var(--gold)}.r2 .sc{color:var(--silver)}.r3 .sc{color:var(--bronze)}
+.r1 .logo{border-color:rgba(212,168,83,0.5);box-shadow:0 0 16px rgba(212,168,83,0.3)}
+.r2 .logo{border-color:rgba(155,163,175,0.4)}
+.r3 .logo{border-color:rgba(196,122,74,0.4)}
 
 /* ── GAP ANALYSER ── */
 #gap-analyser{
@@ -115,12 +147,12 @@ body::before{
 }
 .ga-body{padding:.8rem 1.1rem 1rem}
 
-/* above / maris / below strip */
+/* Gap analyser 3-column: left=school above, middle=stats, right=Maris Stella */
 .ga-strip{
   display:grid;
   grid-template-columns:1fr auto 1fr;
-  align-items:stretch;
-  gap:0;
+  align-items:center;
+  gap:8px;
   margin-bottom:.9rem;
 }
 .ga-school{
@@ -129,6 +161,9 @@ body::before{
   border-radius:10px;
   padding:.65rem .8rem;
   text-align:center;
+}
+.ga-school.ga-above {
+  /* Left box - school above */
 }
 .ga-school.ga-maris{
   background:linear-gradient(135deg,rgba(212,168,83,0.1) 0%,rgba(255,255,255,0.04) 100%);
@@ -146,15 +181,17 @@ body::before{
   padding:1px 8px;border-radius:8px;
   border:1px solid rgba(212,168,83,0.25);
 }
+.ga-school .gs-logo{width:32px;height:32px;border-radius:50%;object-fit:cover;margin:0 auto 5px;display:block;border:1px solid rgba(255,255,255,0.15);box-shadow:0 2px 8px rgba(0,0,0,0.4)}
+.ga-maris .gs-logo{border-color:rgba(212,168,83,0.4);box-shadow:0 0 10px rgba(212,168,83,0.2)}
 .ga-school .gs-name{font-size:9px;font-weight:600;color:var(--white);line-height:1.3;margin-bottom:4px}
 .ga-school .gs-votes{font-family:'DM Mono',monospace;font-size:16px;font-weight:500;color:var(--white)}
 .ga-school .gs-rank{font-size:8px;color:var(--muted);margin-top:2px}
 .ga-maris .gs-votes{color:var(--gold);font-size:18px}
 
-/* gap arrows in the middle */
+/* gap stats in the middle column */
 .ga-gaps{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:0 .6rem;gap:6px;
+  padding:0 .4rem;gap:5px;
 }
 .ga-gap-item{
   display:flex;flex-direction:column;align-items:center;gap:2px;
@@ -231,19 +268,187 @@ body.fullscreen::before{background:radial-gradient(ellipse 70% 60% at 15% 15%,rg
 #alert-popup .ap-close{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;line-height:1}
 #alert-popup .ap-close:hover{color:var(--white)}
 
-/* PERF: promote animated elements to their own layer */
+/* PERF */
 .pc,.row{will-change:transform}
 body::before{will-change:opacity}
 
+/* ── MIDNIGHT FINALE OVERLAY ── */
+#finale-overlay{
+  display:none;
+  position:fixed;inset:0;z-index:900;
+  background:transparent;
+  pointer-events:none;
+}
+#finale-overlay.active{
+  display:block;
+  pointer-events:all;
+}
+/* The black fade is handled by a pseudo-element with opacity transition */
+#finale-overlay::after{
+  content:'';
+  position:absolute;inset:0;z-index:1;
+  background:#000;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 1s ease;
+}
+/* Keep fading class but make it very subtle — we want to see the beautiful night sky */
+#finale-overlay.fading::after{
+  opacity:0;
+}
+
+/* Animated dark background stars */
+#finale-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 50%,#0d0515 0%,#020008 60%,#000 100%);
+  overflow:hidden;
+}
+#finale-bg canvas{position:absolute;inset:0;width:100%;height:100%}
+
+/* Floating particles */
+.finale-particle{
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+  animation:floatup linear infinite;
+}
+@keyframes floatup{
+  0%{transform:translateY(100vh) scale(0);opacity:0}
+  10%{opacity:1}
+  90%{opacity:.5}
+  100%{transform:translateY(-10vh) scale(1);opacity:0}
+}
+
+/* Big centered countdown */
+#finale-countdown-wrap{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  text-align:center;
+  z-index:10;
+}
+.finale-label{
+  font-size:12px;font-weight:600;letter-spacing:4px;text-transform:uppercase;
+  color:rgba(212,168,83,0.6);margin-bottom:20px;
+  animation:fadeInUp .8s ease both;
+}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.finale-time{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(140px,40vw,320px);
+  letter-spacing:8px;
+  line-height:1;
+  background:linear-gradient(135deg,#fff 0%,#d4a853 40%,#c0392b 80%,#fff 100%);
+  background-size:200% 200%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:gradientShift 1s ease infinite,finaleScale .5s cubic-bezier(.34,1.56,.64,1);
+  filter:drop-shadow(0 0 60px rgba(212,168,83,0.8));
+  display:block;
+  transition:all 0.15s ease;
+}
+@keyframes gradientShift{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@keyframes finaleScale{
+  0%{transform:scale(1.3);filter:drop-shadow(0 0 80px rgba(212,168,83,0.9))}
+  100%{transform:scale(1);filter:drop-shadow(0 0 40px rgba(212,168,83,0.5))}
+}
+@keyframes numberPop{
+  0%{transform:scale(1.4);filter:drop-shadow(0 0 120px rgba(192,57,43,1))}
+  60%{transform:scale(0.95);filter:drop-shadow(0 0 60px rgba(212,168,83,0.8))}
+  100%{transform:scale(1);filter:drop-shadow(0 0 40px rgba(212,168,83,0.5))}
+}
+.finale-time.number-pop{
+  animation:numberPop 0.5s cubic-bezier(.34,1.56,.64,1),gradientShift 1s ease infinite!important;
+}
+.finale-sub{
+  font-size:14px;color:rgba(255,255,255,0.5);letter-spacing:2px;
+  margin-top:16px;
+  animation:fadeInUp .8s ease .3s both;
+}
+
+/* Rings animation */
+.finale-rings{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.finale-ring{
+  position:absolute;border-radius:50%;border:1px solid rgba(212,168,83,0.15);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  animation:ringExpand 4s ease-out infinite;
+}
+.finale-ring:nth-child(1){width:300px;height:300px;animation-delay:0s}
+.finale-ring:nth-child(2){width:500px;height:500px;animation-delay:1s}
+.finale-ring:nth-child(3){width:700px;height:700px;animation-delay:2s}
+.finale-ring:nth-child(4){width:900px;height:900px;animation-delay:3s}
+@keyframes ringExpand{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}
+  20%{opacity:.5}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1.5)}
+}
+
+/* SHOW RESULTS BUTTON */
+#show-results-btn{
+  display:none;
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  text-align:center;z-index:20;
+}
+#show-results-btn.visible{display:block;animation:btnAppear 1.2s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes btnAppear{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(0.3) rotate(-10deg)}
+  60%{opacity:1;transform:translate(-50%,-50%) scale(1.1) rotate(2deg)}
+  100%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+}
+.results-btn-inner{
+  cursor:pointer;
+  background:linear-gradient(135deg,rgba(212,168,83,0.2) 0%,rgba(192,57,43,0.15) 100%);
+  border:2px solid rgba(212,168,83,0.6);
+  color:#d4a853;
+  padding:20px 52px;
+  border-radius:50px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:32px;
+  letter-spacing:4px;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  backdrop-filter:blur(20px);
+  box-shadow:0 0 40px rgba(212,168,83,0.2),0 0 80px rgba(212,168,83,0.1);
+  transition:all .3s ease;
+  animation:btnGlow 2s ease-in-out infinite;
+}
+@keyframes btnGlow{
+  0%,100%{box-shadow:0 0 40px rgba(212,168,83,0.2),0 0 80px rgba(212,168,83,0.1)}
+  50%{box-shadow:0 0 60px rgba(212,168,83,0.5),0 0 120px rgba(212,168,83,0.2)}
+}
+.results-btn-inner:hover{
+  background:linear-gradient(135deg,rgba(212,168,83,0.4) 0%,rgba(192,57,43,0.3) 100%);
+  transform:scale(1.05);
+  box-shadow:0 0 80px rgba(212,168,83,0.6),0 0 160px rgba(212,168,83,0.3);
+}
+.results-btn-inner::before{
+  content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:linear-gradient(45deg,transparent 30%,rgba(255,255,255,0.15) 50%,transparent 70%);
+  animation:btnShine 3s ease-in-out infinite;
+}
+@keyframes btnShine{
+  0%{transform:rotate(0deg)}
+  100%{transform:rotate(360deg)}
+}
+.results-btn-icon{font-size:14px;color:rgba(212,168,83,0.7);letter-spacing:2px;margin-top:8px;display:block}
+
 /* MIDNIGHT CELEBRATION */
-#celebration{display:none;position:fixed;inset:0;z-index:500;pointer-events:none}
+#celebration{display:none;position:fixed;inset:0;z-index:950;pointer-events:none}
 #celebration.show{display:block}
 #cel-overlay{position:absolute;inset:0;background:rgba(0,0,0,0);animation:cel-fade 1.2s ease forwards}
 @keyframes cel-fade{0%{background:rgba(0,0,0,0)}30%{background:rgba(0,0,0,0.85)}100%{background:rgba(0,0,0,0.7)}}
 #cel-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;animation:cel-pop 0.8s cubic-bezier(.34,1.56,.64,1) .4s both}
 @keyframes cel-pop{from{opacity:0;transform:translate(-50%,-50%) scale(.4)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
-#cel-msg .cel-emoji{font-size:72px;display:block;margin-bottom:16px;animation:cel-bounce 0.6s ease infinite alternate 1.5s}
-@keyframes cel-bounce{from{transform:translateY(0)}to{transform:translateY(-12px)}}
+#cel-msg .cel-logo{width:100px;height:100px;border-radius:50%;object-fit:cover;margin:0 auto 16px;display:block;border:3px solid rgba(212,168,83,0.6);box-shadow:0 0 40px rgba(212,168,83,0.4),0 0 80px rgba(212,168,83,0.2);animation:cel-bounce 0.6s ease infinite alternate 1.5s}
+@keyframes cel-bounce{from{transform:translateY(0) scale(1)}to{transform:translateY(-12px) scale(1.05)}}
 #cel-msg .cel-title{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:4px;color:#d4a853;line-height:1;text-shadow:0 0 40px rgba(212,168,83,0.6)}
 #cel-msg .cel-sub{font-size:14px;color:rgba(255,255,255,0.8);margin-top:10px;letter-spacing:1px}
 #cel-msg .cel-votes{font-family:'DM Mono',monospace;font-size:28px;color:#d4a853;margin-top:8px}
@@ -333,6 +538,30 @@ body::before{will-change:opacity}
   <div class="footer"><span id="rt-status">Connecting…</span></div>
 </div>
 
+<!-- FINALE OVERLAY -->
+<div id="finale-overlay">
+  <div id="finale-bg">
+    <canvas id="star-canvas"></canvas>
+  </div>
+  <div class="finale-rings">
+    <div class="finale-ring"></div>
+    <div class="finale-ring"></div>
+    <div class="finale-ring"></div>
+    <div class="finale-ring"></div>
+  </div>
+  <div id="finale-countdown-wrap">
+    <div class="finale-label">SECONDS REMAINING</div>
+    <span class="finale-time" id="finale-time-display">10</span>
+    <div class="finale-sub">Voting closes at midnight</div>
+  </div>
+  <div id="show-results-btn">
+    <div class="results-btn-inner" onclick="showCelebration()">
+      🏆 REVEAL RESULTS
+      <span class="results-btn-icon">◆ CLICK TO UNVEIL ◆</span>
+    </div>
+  </div>
+</div>
+
 <div id="alert-popup">
   <button class="ap-close" onclick="closeAlert()">×</button>
   <div class="ap-icon">🎉</div>
@@ -345,7 +574,7 @@ body::before{will-change:opacity}
   <canvas id="confetti-canvas"></canvas>
   <div id="cel-overlay"></div>
   <div id="cel-msg">
-    <span class="cel-emoji">🎉</span>
+    <img class="cel-logo" src="https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/1.png" crossorigin="anonymous" alt="Maris Stella College">
     <div class="cel-title">MARIS STELLA WON!</div>
     <div class="cel-sub">Maris Stella College, Negombo</div>
     <div class="cel-votes" id="cel-votes"></div>
@@ -363,16 +592,16 @@ const KEY     = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
 const MARIS   = 59;
 
 const SCHOOLS = {
-  23:{name:"Muslim Ladies College",       mu:"Media Unit of Muslim Ladies College",      logo:"https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/7.png"},
-  19:{name:"Mahinda Rajapaksha Nat. School", mu:"Mahindians Media & Broadcasting Unit", logo:"https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/9.png"},
-  24:{name:"Yasodara Balika Vidyalaya",   mu:"Media Unit of Yasodara Vidyalaya",         logo:"https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/6.png"},
-  21:{name:"D.S. Senanayake College",     mu:"Media Circle of DS Senanayake College",    logo:"https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/8.png"},
-  51:{name:"St. Aloysius College, Galle", mu:"Aloysian Mass Media Unit",                 logo:"https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/4.png"},
-  16:{name:"Negombo South Int. School",   mu:"Media Unit of NSIS Nittambuwa",            logo:"https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/10.png"},
-  59:{name:"Maris Stella College",        mu:"Educational Media Unit",                   logo:"https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/1.png"},
-  58:{name:"Galahitiyawa Central College",mu:"Parakum Sihanada Media Unit",              logo:"https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/2.png"},
-  57:{name:"Devi Balika Vidyalaya",       mu:"Media Unit of Devi Balika Vidyalaya",      logo:"https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/3.png"},
-  33:{name:"Anula Vidyalaya, Nugegoda",   mu:"Media Unit of Anula Vidyalaya",            logo:"https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/5.png"},
+  23:{name:"Muslim Ladies College",         mu:"Media Unit of Muslim Ladies College",      logo:"https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/7.png"},
+  19:{name:"Mahinda Rajapaksha Nat. School", mu:"Mahindians Media & Broadcasting Unit",   logo:"https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/9.png"},
+  24:{name:"Yasodara Balika Vidyalaya",     mu:"Media Unit of Yasodara Vidyalaya",         logo:"https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/6.png"},
+  21:{name:"D.S. Senanayake College",       mu:"Media Circle of DS Senanayake College",    logo:"https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/8.png"},
+  51:{name:"St. Aloysius College, Galle",   mu:"Aloysian Mass Media Unit",                 logo:"https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/4.png"},
+  16:{name:"Negombo South Int. School",     mu:"Media Unit of NSIS Nittambuwa",            logo:"https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/10.png"},
+  59:{name:"Maris Stella College",          mu:"Educational Media Unit",                   logo:"https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/1.png"},
+  58:{name:"Galahitiyawa Central College",  mu:"Parakum Sihanada Media Unit",              logo:"https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/2.png"},
+  57:{name:"Devi Balika Vidyalaya",         mu:"Media Unit of Devi Balika Vidyalaya",      logo:"https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/3.png"},
+  33:{name:"Anula Vidyalaya, Nugegoda",     mu:"Media Unit of Anula Vidyalaya",            logo:"https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/5.png"},
 };
 
 const info = id => SCHOOLS[id]||{name:'School #'+id,mu:'',logo:''};
@@ -380,6 +609,118 @@ const fmt  = n  => n>=1000?(n/1000).toFixed(1)+'k':n.toLocaleString();
 const medal= r  => r===1?'🥇':r===2?'🥈':'🥉';
 
 let prev={}, lastData=[], prevMarisRank=null, notifEnabled=false, swReg=null;
+let finaleActive=false, resultsShown=false;
+let ytPlayer=null;
+
+/* ── STAR FIELD ANIMATION ── */
+function initStarField(){
+  const canvas=document.getElementById('star-canvas');
+  if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  let W=canvas.width=window.innerWidth, H=canvas.height=window.innerHeight;
+  const stars=[];
+  for(let i=0;i<300;i++){
+    stars.push({
+      x:Math.random()*W, y:Math.random()*H,
+      r:Math.random()*2+0.2,
+      a:Math.random(),
+      speed:Math.random()*0.5+0.1,
+      twinkle:Math.random()*Math.PI*2,
+      color: Math.random()>0.85 ? `hsl(${40+Math.random()*20},80%,80%)` : '#fff'
+    });
+  }
+  // shooting stars
+  const shoots=[];
+  const shootColors=['rgba(255,255,220,','rgba(212,168,83,','rgba(200,180,255,','rgba(180,220,255,'];
+  function addShoot(){
+    const col=shootColors[Math.floor(Math.random()*shootColors.length)];
+    shoots.push({
+      x:Math.random()*W, y:Math.random()*H*0.6,
+      vx:5+Math.random()*10, vy:2+Math.random()*6,
+      life:1, maxLife:1,
+      col, len:14+Math.random()*10, width:1+Math.random()*1.5
+    });
+  }
+  // Fire several right away, then every 600ms
+  for(let i=0;i<3;i++) setTimeout(addShoot, i*200);
+  setInterval(addShoot, 600);
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // deep night sky gradient
+    const grd=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,W*0.9);
+    grd.addColorStop(0,'rgba(8,3,22,1)');
+    grd.addColorStop(0.4,'rgba(3,0,12,1)');
+    grd.addColorStop(1,'rgba(0,0,0,1)');
+    ctx.fillStyle=grd;
+    ctx.fillRect(0,0,W,H);
+
+    // nebula glow patches
+    const nebula=ctx.createRadialGradient(W*0.25,H*0.35,0,W*0.25,H*0.35,W*0.45);
+    nebula.addColorStop(0,'rgba(120,0,150,0.12)');
+    nebula.addColorStop(1,'transparent');
+    ctx.fillStyle=nebula; ctx.fillRect(0,0,W,H);
+    const nebula2=ctx.createRadialGradient(W*0.75,H*0.55,0,W*0.75,H*0.55,W*0.35);
+    nebula2.addColorStop(0,'rgba(180,80,0,0.09)');
+    nebula2.addColorStop(1,'transparent');
+    ctx.fillStyle=nebula2; ctx.fillRect(0,0,W,H);
+    const nebula3=ctx.createRadialGradient(W*0.5,H*0.2,0,W*0.5,H*0.2,W*0.3);
+    nebula3.addColorStop(0,'rgba(0,40,120,0.08)');
+    nebula3.addColorStop(1,'transparent');
+    ctx.fillStyle=nebula3; ctx.fillRect(0,0,W,H);
+
+    // stars with twinkle
+    stars.forEach(s=>{
+      s.twinkle+=s.speed*0.04;
+      const alpha=0.25+0.75*((Math.sin(s.twinkle)+1)/2);
+      ctx.beginPath();
+      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=s.color.replace(')',`,${alpha})`).replace('rgba','').startsWith('#')
+        ? `rgba(255,255,255,${alpha})` : `rgba(255,255,255,${alpha})`;
+      // Use the star's color
+      if(s.color!=='#fff'){
+        ctx.fillStyle=`hsla(45,80%,80%,${alpha})`;
+      } else {
+        ctx.fillStyle=`rgba(255,255,255,${alpha})`;
+      }
+      ctx.fill();
+      // glow halo for bigger stars
+      if(s.r>1.4){
+        ctx.beginPath();
+        ctx.arc(s.x,s.y,s.r*3,0,Math.PI*2);
+        ctx.fillStyle=`rgba(200,180,255,${alpha*0.12})`;
+        ctx.fill();
+      }
+    });
+
+    // shooting stars with glowing trails
+    for(let i=shoots.length-1;i>=0;i--){
+      const sh=shoots[i];
+      sh.x+=sh.vx; sh.y+=sh.vy; sh.life-=0.02;
+      if(sh.life<=0||sh.x>W+50||sh.y>H+50){shoots.splice(i,1);continue;}
+      // main trail
+      const grad=ctx.createLinearGradient(sh.x,sh.y,sh.x-sh.vx*sh.len,sh.y-sh.vy*sh.len);
+      grad.addColorStop(0,sh.col+`${sh.life})`);
+      grad.addColorStop(0.4,sh.col+`${sh.life*0.5})`);
+      grad.addColorStop(1,'transparent');
+      ctx.strokeStyle=grad;
+      ctx.lineWidth=sh.width;
+      ctx.beginPath();
+      ctx.moveTo(sh.x,sh.y);
+      ctx.lineTo(sh.x-sh.vx*sh.len,sh.y-sh.vy*sh.len);
+      ctx.stroke();
+      // bright head glow
+      ctx.beginPath();
+      ctx.arc(sh.x,sh.y,sh.width*1.5,0,Math.PI*2);
+      ctx.fillStyle=sh.col+`${sh.life})`;
+      ctx.fill();
+    }
+
+    if(finaleActive) requestAnimationFrame(draw);
+  }
+  draw();
+  window.addEventListener('resize',()=>{W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;});
+}
 
 /* ── GAP ANALYSER ── */
 function renderGapAnalyser(sorted){
@@ -398,7 +739,6 @@ function renderGapAnalyser(sorted){
   const gapAbove = aboveEntry ? aboveEntry.vote_count - marisVotes : 0;
   const gapBelow = belowEntry ? marisVotes - belowEntry.vote_count : 0;
 
-  // progress to overtake the school above (if not already leading)
   let progressHtml = '';
   if(aboveEntry){
     const target  = aboveEntry.vote_count;
@@ -416,7 +756,6 @@ function renderGapAnalyser(sorted){
       </div>`;
   }
 
-  // status message
   let statusClass='', statusMsg='';
   if(marisRank===1){
     statusClass='leading';
@@ -432,6 +771,10 @@ function renderGapAnalyser(sorted){
     statusMsg=`📊 ${gapAbove.toLocaleString()} votes behind ${aboveInfo ? aboveInfo.name.split(',')[0] : 'the leader'}. Keep voting!`;
   }
 
+  // Maris info
+  const marisInfo = info(MARIS);
+  const aboveLogo = aboveEntry ? info(aboveEntry.registered_candidate).logo : '';
+
   document.getElementById('gap-analyser').innerHTML = `
     <div class="ga-header">
       <div class="ga-title"><span class="ga-title-icon">📊</span> Maris Stella Gap Analyser</div>
@@ -440,17 +783,18 @@ function renderGapAnalyser(sorted){
     <div class="ga-body">
       <div class="ga-strip">
 
-        <!-- school above -->
-        <div class="ga-school">
+        <!-- LEFT: school above Maris Stella -->
+        <div class="ga-school ga-above">
           ${aboveEntry
-            ? `<div class="gs-name">${aboveInfo.name.split(',')[0]}</div>
+            ? `${aboveLogo?`<img class="gs-logo" src="${aboveLogo}" crossorigin="anonymous" onerror="this.style.display='none'">`:'' }
+               <div class="gs-name">${aboveInfo.name}</div>
                <div class="gs-votes">${aboveEntry.vote_count.toLocaleString()}</div>
                <div class="gs-rank">Rank #${marisRank-1}</div>`
             : `<div class="gs-name" style="color:var(--muted);font-size:8px;margin-top:8px">Leading — no one above</div>`
           }
         </div>
 
-        <!-- gap pills in the middle -->
+        <!-- MIDDLE: gap stats -->
         <div class="ga-gaps">
           ${aboveEntry
             ? `<div class="ga-gap-item gap-above">
@@ -474,8 +818,9 @@ function renderGapAnalyser(sorted){
           }
         </div>
 
-        <!-- Maris Stella -->
+        <!-- RIGHT: Maris Stella -->
         <div class="ga-school ga-maris">
+          ${marisInfo.logo?`<img class="gs-logo" src="${marisInfo.logo}" crossorigin="anonymous" onerror="this.style.display='none'">`:'' }
           <div class="gs-name">Maris Stella College</div>
           <div class="gs-votes">${marisVotes.toLocaleString()}</div>
           <div class="gs-rank">Rank #${marisRank}</div>
@@ -499,9 +844,9 @@ function render(data){
   document.getElementById('s-schools').textContent=sorted.length;
   document.getElementById('s-total').textContent=fmt(total);
 
-
   checkMarisPosition(sorted);
 
+  // Podium order: [2nd, 1st, 3rd] for left/center/right display
   const podOrder=top3.length>=2?[top3[1],top3[0],top3[2]]:[...top3];
   const podRanks=top3.length>=2?[2,1,3]:[1,2,3];
 
@@ -522,7 +867,7 @@ function render(data){
   });
   html+=`</div>`;
 
-  // Gap analyser slot (renders after podium, before rest of list)
+  // Gap analyser slot
   html+=`<div id="gap-analyser"></div>`;
 
   if(rest.length){
@@ -548,8 +893,6 @@ function render(data){
 
   document.getElementById('board').innerHTML=html;
   sorted.forEach(s=>{prev[s.registered_candidate]=s.vote_count;});
-
-  // Now render gap analyser into the slot
   renderGapAnalyser(sorted);
 }
 
@@ -559,7 +902,6 @@ async function registerSW(){
   try{ const r=await navigator.serviceWorker.register('./sw.js'); await navigator.serviceWorker.ready; return r; }
   catch(e){ return null; }
 }
-
 async function toggleNotifications(){
   if(notifEnabled){ disableNotifications(); return; }
   if(!('Notification' in window)){ toast('Notifications not supported'); return; }
@@ -639,8 +981,6 @@ function buildPoster(data){
   document.getElementById('poster').innerHTML=`<div class="ph"><div><div class="ph-title">NETHINETHERA</div><div class="ph-sub">Most Popular Media Unit · Live Vote Results</div></div><div class="ph-right"><div class="ph-date">${dateStr}</div><div class="ph-time">Snapshot at ${timeStr}</div></div></div><div class="ps"><div class="ps-cell"><div class="ps-val">${sorted.length}</div><div class="ps-lbl">Schools Competing</div></div><div class="ps-cell"><div class="ps-val">${total.toLocaleString()}</div><div class="ps-lbl">Total Votes Cast</div></div><div class="ps-cell"><div class="ps-val">${sorted[0]?info(sorted[0].registered_candidate).name.split(',')[0]:'—'}</div><div class="ps-lbl">Current Leader</div></div></div><div class="p-sec">Top 3 Schools</div><div class="podium">${pods}</div>${rest.length?`<div class="p-sec">Full Rankings</div><div class="plist">${rows}</div>`:''}<div class="pfooter"><div class="pfooter-l">isipathanamedia.online · ICMU Nethinethera</div><div class="pfooter-r">MPMU 2025</div></div>`;
 }
 
-function toast(msg,ms=2800){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),ms); }
-
 async function exportPoster(){
   if(!lastData.length){toast('No data loaded yet!');return;}
   toast('Generating poster…',5000); buildPoster(lastData);
@@ -658,28 +998,162 @@ function scheduleRender(data){
   requestAnimationFrame(()=>{ renderPending=false; render(lastData); });
 }
 
-/* ── MIDNIGHT COUNTDOWN ── */
+/* ── MIDNIGHT COUNTDOWN with beautiful animation ── */
+let finaleTriggered=false;
 function updateMidnight(){
   const now=new Date();
-  const midnight=new Date(); midnight.setHours(23,59,0,0);
+  const midnight=new Date('2026-04-20T19:55:00');
   const diff=midnight-now;
-  if(diff<=0){ document.getElementById('s-midnight').textContent='00:00:00'; checkMidnightCelebration(); return; }
+
+  if(diff<=0){
+    document.getElementById('s-midnight').textContent='00:00:00';
+    if(!finaleTriggered){ finaleTriggered=true; triggerFinale(); }
+    return;
+  }
+
+  const totalSec=Math.floor(diff/1000);
   const h=String(Math.floor(diff/3600000)).padStart(2,'0');
   const m=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
   const s=String(Math.floor((diff%60000)/1000)).padStart(2,'0');
-  document.getElementById('s-midnight').textContent=`${h}:${m}:${s}`;
+  const timeStr=`${h}:${m}:${s}`;
+
+  // Per-digit animation: only animate digits that actually changed
+  const el=document.getElementById('s-midnight');
+  const newChars=timeStr.split('');
+  const oldSpans=el.querySelectorAll('span[data-ci]');
+
+  if(oldSpans.length!==newChars.length){
+    // First render or length changed: build spans fresh
+    el.innerHTML=newChars.map((c,i)=>`<span data-ci="${i}">${c}</span>`).join('');
+  } else {
+    oldSpans.forEach((span,i)=>{
+      if(span.textContent!==newChars[i]){
+        span.textContent=newChars[i];
+        span.classList.remove('countdown-tick');
+        void span.offsetWidth; // reflow to restart animation
+        span.classList.add('countdown-tick');
+      }
+    });
+  }
+
+  // Urgent styling when under 10 min
+  if(totalSec<=600){
+    el.classList.add('countdown-urgent');
+    el.style.color='#c0392b';
+  } else {
+    el.classList.remove('countdown-urgent');
+    el.style.color='';
+  }
+
+  // TRIGGER FINALE at exactly 10 seconds left
+  if(totalSec<=10&&!finaleActive){
+    triggerFinaleCountdown();
+  }
+
+  // Update finale display if active — show only seconds during 10s countdown
+  if(finaleActive){
+    const fd=document.getElementById('finale-time-display');
+    if(fd){
+      // Show big dramatic single-digit seconds countdown
+      const secsLeft=Math.max(0,Math.ceil(diff/1000));
+      const newNum=secsLeft>0?String(secsLeft):'0';
+      if(fd.textContent!==newNum){
+        fd.textContent=newNum;
+        fd.classList.remove('number-pop');
+        void fd.offsetWidth;
+        fd.classList.add('number-pop');
+      }
+    }
+  }
 }
 updateMidnight();
 setInterval(updateMidnight,1000);
 
+/* ── FINALE: 1 minute countdown screen ── */
+function triggerFinaleCountdown(){
+  finaleActive=true;
+  const overlay=document.getElementById('finale-overlay');
+  overlay.classList.add('active');
+
+  // Fade in the dark bg
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      overlay.classList.add('fading');
+    });
+  });
+
+  // Init star field
+  initStarField();
+
+  // Play music
+  playFinaleMusic();
+
+  // Spawn floating particles
+  spawnParticles();
+}
+
+/* ── TRIGGER FINALE at midnight (0 seconds) — auto-show celebration, no button ── */
+function triggerFinale(){
+  const wrap=document.getElementById('finale-countdown-wrap');
+  // Hide the countdown wrap
+  if(wrap) wrap.style.display='none';
+  // Hide the results button (never shown)
+  const btnWrap=document.getElementById('show-results-btn');
+  if(btnWrap) btnWrap.style.display='none';
+  // Auto-trigger celebration — song is already playing from the 10s countdown
+  setTimeout(()=>{
+    const overlay=document.getElementById('finale-overlay');
+    if(overlay) overlay.style.display='none';
+    checkMidnightCelebration(true);
+    // DO NOT start the song again — it's already playing from the 10s countdown
+  }, 600);
+}
+
+/* ── SHOW CELEBRATION after button click (kept as fallback) ── */
+function showCelebration(){
+  const overlay=document.getElementById('finale-overlay');
+  overlay.style.display='none';
+  checkMidnightCelebration(true);
+  // Song is already playing — do NOT restart
+}
+
+/* ── FLOATING PARTICLES ── */
+function spawnParticles(){
+  const overlay=document.getElementById('finale-overlay');
+  const colors=['rgba(212,168,83,0.6)','rgba(192,57,43,0.5)','rgba(255,255,255,0.3)','rgba(150,50,200,0.4)'];
+  for(let i=0;i<20;i++){
+    const p=document.createElement('div');
+    p.className='finale-particle';
+    const size=Math.random()*4+2;
+    p.style.cssText=`
+      width:${size}px;height:${size}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      left:${Math.random()*100}%;
+      animation-duration:${6+Math.random()*10}s;
+      animation-delay:${Math.random()*5}s;
+      box-shadow:0 0 ${size*3}px ${colors[Math.floor(Math.random()*colors.length)]};
+    `;
+    overlay.appendChild(p);
+  }
+}
+
+/* ── FINALE MUSIC: plays Final Song.mp3 when 10-second countdown begins ── */
+let finaleSongAudio = null;
+function playFinaleMusic(){
+  if(finaleSongAudio) return; // already playing
+  finaleSongAudio = new Audio('Final Song.mp3');
+  finaleSongAudio.volume = 1;
+  finaleSongAudio.loop = false;
+  finaleSongAudio.play().catch(()=>{});
+}
+
 /* ── MIDNIGHT CELEBRATION ── */
 let celebrationFired=false;
-function checkMidnightCelebration(){
-  if(celebrationFired||!lastData.length) return;
+function checkMidnightCelebration(force=false){
+  if(celebrationFired||(!lastData.length&&!force)) return;
   const sorted=[...lastData].sort((a,b)=>b.vote_count-a.vote_count);
-  if(sorted[0].registered_candidate!==MARIS) return; // MSC didn't win, stay quiet
   celebrationFired=true;
-  const votes=sorted[0].vote_count;
+  const votes=sorted[0]?.vote_count||0;
   document.getElementById('cel-votes').textContent=votes.toLocaleString()+' votes';
   document.getElementById('celebration').classList.add('show');
   launchConfetti();
@@ -693,7 +1167,7 @@ function launchConfetti(){
   canvas.width=window.innerWidth; canvas.height=window.innerHeight;
   const pieces=[];
   const colors=['#d4a853','#c0392b','#f0f0f0','#9ba3af','#4caf50','#e74c3c','#f39c12'];
-  for(let i=0;i<180;i++){
+  for(let i=0;i<250;i++){
     pieces.push({
       x:Math.random()*canvas.width, y:-20-Math.random()*canvas.height*0.5,
       w:6+Math.random()*8, h:10+Math.random()*14,
@@ -726,15 +1200,15 @@ function launchConfetti(){
   draw();
 }
 
-/* ── SURPRISE SONG (YouTube audio at midnight) ── */
 function playSurpriseSong(){
-  // Hidden YouTube iframe autoplay — browser allows this after user interaction
-  // Using "We Are The Champions" — perfect for a win 🏆
-  const yt=document.createElement('iframe');
-  yt.src='https://www.youtube.com/embed/d5GkgVhFeZY?autoplay=1&start=0&controls=0';
-  yt.allow='autoplay';
-  yt.style.cssText='position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;bottom:0;left:0';
-  document.body.appendChild(yt);
+  // Final Song.mp3 is already playing from the 10-second countdown — do nothing
+}
+
+/* ── PLAY FINAL SONG only if not already playing ── */
+let championsAudio = null;
+function playChampionsSongIfMarisWon(){
+  // Final Song.mp3 was started during the 10-second countdown via playFinaleMusic()
+  // Do not start it again here
 }
 
 /* ── INITIAL FETCH ── */
@@ -754,12 +1228,11 @@ async function fetchAll(){
 function initRealtime(){
   const wsUrl=`wss://osxijjbjgxvaeurpghtv.supabase.co/realtime/v1/websocket?apikey=${KEY}&vsn=1.0.0`;
   let ws,ping;
-
   function connect(){
     ws=new WebSocket(wsUrl);
     ws.onopen=()=>{
       ws.send(JSON.stringify({topic:'realtime:public:mpmu_votes',event:'phx_join',payload:{config:{postgres_changes:[{event:'*',schema:'public',table:'mpmu_votes'}]}},ref:'1'}));
-      ping=setInterval(()=>ws.readyState===1&&ws.send(JSON.stringify({topic:'phoenix',event:'heartbeat',payload:{},ref:'hb'})),5000);
+      ping=setInterval(()=>ws.readyState===1&&ws.send(JSON.stringify({topic:'phoenix',event:'heartbeat',payload:{},ref:'hb'})),25000);
       document.getElementById('rt-status').textContent='🟢 Realtime · Updates are instant';
     };
     ws.onmessage=e=>{
@@ -788,6 +1261,8 @@ function initRealtime(){
   }
   connect();
 }
+
+function toast(msg,ms=2800){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),ms); }
 
 fetchAll().then(()=>initRealtime());
 </script>
