@@ -208,7 +208,6 @@ body::before{
 /* FOOTER */
 .footer{text-align:center;font-size:11px;color:var(--muted);padding:1.5rem;letter-spacing:.4px}
 .footer b{color:var(--red)}
-#rt-status{color:var(--muted);font-size:11px;letter-spacing:.4px;transition:color .3s}
 .loading{padding:3rem;text-align:center;color:var(--muted);font-size:13px}
 .err{margin:1rem;background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.25);backdrop-filter:blur(10px);border-radius:10px;padding:1rem 1.2rem;font-size:12px;color:#e57373;line-height:1.7}
 
@@ -307,11 +306,11 @@ body.fullscreen::before{background:radial-gradient(ellipse 70% 60% at 15% 15%,rg
   <div class="stats-bar">
     <div class="stat-cell"><div class="val" id="s-schools">—</div><div class="lbl">Schools</div></div>
     <div class="stat-cell"><div class="val" id="s-total">—</div><div class="lbl">Total Votes</div></div>
-    <div class="stat-cell"><div class="val" id="s-time">—</div><div class="lbl">Updated</div></div>
+    <div class="stat-cell"><div class="val" id="s-midnight" style="font-size:16px;letter-spacing:0">--:--:--</div><div class="lbl">Until Midnight</div></div>
   </div>
 
   <div id="board"><div class="loading">Connecting to live data…</div></div>
-  <div class="footer"><span id="rt-status">Connecting to realtime stream…</span></div>
+  <div class="footer">Auto-refresh every <b>10s</b> · next in <b><span id="cd">10</span>s</b></div>
 </div>
 
 <div id="alert-popup">
@@ -467,7 +466,7 @@ function render(data){
 
   document.getElementById('s-schools').textContent=sorted.length;
   document.getElementById('s-total').textContent=fmt(total);
-  document.getElementById('s-time').textContent=new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+
 
   checkMarisPosition(sorted);
 
@@ -618,128 +617,34 @@ async function exportPoster(){
   catch(e){ toast('Export failed: '+e.message); }
 }
 
-const SUPABASE_URL = 'https://osxijjbjgxvaeurpghtv.supabase.co';
-
-function setStatus(msg, ok=true){
-  const el = document.getElementById('rt-status');
-  if(el) el.innerHTML = msg;
-}
-
-/* ── INITIAL FETCH ── */
-async function fetchAll(){
+/* ── FETCH ── */
+async function fetchData(){
   try{
-    const res = await fetch(
-      SUPABASE_URL+'/rest/v1/mpmu_votes?select=registered_candidate,vote_count&order=vote_count.desc',
-      {headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'}}
-    );
+    const res=await fetch(API,{headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'}});
     if(!res.ok) throw new Error('HTTP '+res.status);
-    const data = await res.json();
-    if(data && data.length){ render(data); }
-  } catch(e){
+    const data=await res.json();
+    if(data&&data.length) render(data);
+  }catch(e){
     document.getElementById('board').innerHTML=`<div class="err"><strong>Could not fetch scores.</strong><br>${e.message}</div>`;
-    setStatus('⚠ Could not connect — retrying…', false);
-    setTimeout(initRealtime, 5000);
   }
 }
 
-/* ── SUPABASE REALTIME via WebSocket ── */
-function initRealtime(){
-  const wsUrl = `wss://osxijjbjgxvaeurpghtv.supabase.co/realtime/v1/websocket?apikey=${KEY}&vsn=1.0.0`;
-  let ws, pingInterval, reconnectTimeout;
-
-  function connect(){
-    setStatus('Connecting to realtime stream…');
-    ws = new WebSocket(wsUrl);
-
-    ws.onopen = () => {
-      // Join the realtime channel for mpmu_votes table
-      ws.send(JSON.stringify({
-        topic: 'realtime:public:mpmu_votes',
-        event: 'phx_join',
-        payload: {
-          config: {
-            broadcast: {self: false},
-            presence: {key: ''},
-            postgres_changes: [{event: '*', schema: 'public', table: 'mpmu_votes'}]
-          }
-        },
-        ref: '1'
-      }));
-
-      // Heartbeat every 25s to keep connection alive
-      pingInterval = setInterval(() => {
-        if(ws.readyState === WebSocket.OPEN){
-          ws.send(JSON.stringify({topic:'phoenix',event:'heartbeat',payload:{},ref:'hb'}));
-        }
-      }, 25000);
-
-      setStatus('🟢 Realtime · Updates are instant');
-    };
-
-    ws.onmessage = (e) => {
-      try{
-        const msg = JSON.parse(e.data);
-
-        // Channel joined — do initial fetch
-        if(msg.event === 'phx_reply' && msg.payload?.status === 'ok'){
-          fetchAll();
-          return;
-        }
-
-        // A row was inserted or updated in mpmu_votes
-        if(msg.event === 'postgres_changes'){
-          const change = msg.payload?.data;
-          if(!change) return;
-
-          const {record, old_record, type} = change;
-
-          // Update our in-memory data and re-render
-          if(type === 'UPDATE' || type === 'INSERT'){
-            const candidate = record.registered_candidate;
-            const newVotes  = record.vote_count;
-
-            // Find and update in lastData
-            const idx = lastData.findIndex(s => s.registered_candidate === candidate);
-            if(idx !== -1){
-              lastData[idx] = {...lastData[idx], vote_count: newVotes};
-            } else {
-              lastData.push({registered_candidate: candidate, vote_count: newVotes});
-            }
-
-            render(lastData);
-
-            // Flash the updated time
-            const now = new Date();
-            setStatus(`🟢 Realtime · Last update ${now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}`);
-          }
-
-          if(type === 'DELETE'){
-            const candidate = old_record?.registered_candidate;
-            if(candidate){
-              lastData = lastData.filter(s => s.registered_candidate !== candidate);
-              render(lastData);
-            }
-          }
-        }
-      } catch(err){ /* ignore parse errors */ }
-    };
-
-    ws.onerror = () => {
-      setStatus('⚠ Realtime error — reconnecting…', false);
-    };
-
-    ws.onclose = () => {
-      clearInterval(pingInterval);
-      setStatus('⚠ Connection lost — reconnecting in 3s…', false);
-      reconnectTimeout = setTimeout(connect, 3000);
-    };
-  }
-
-  connect();
+/* ── MIDNIGHT COUNTDOWN ── */
+function updateMidnight(){
+  const now=new Date();
+  const midnight=new Date();
+  midnight.setHours(24,0,0,0);
+  const diff=midnight-now;
+  if(diff<=0){document.getElementById('s-midnight').textContent='00:00:00';return;}
+  const h=String(Math.floor(diff/3600000)).padStart(2,'0');
+  const m=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+  const s=String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+  document.getElementById('s-midnight').textContent=`${h}:${m}:${s}`;
 }
+updateMidnight();
+setInterval(updateMidnight,1000);
 
-// Boot: fetch first, then open realtime socket
-fetchAll().then(() => initRealtime());
+fetchData();
 </script>
 </body>
 </html>
