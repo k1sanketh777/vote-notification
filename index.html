@@ -1002,11 +1002,12 @@ function scheduleRender(data){
 let finaleTriggered=false;
 function updateMidnight(){
   const now=new Date();
-  const midnight=new Date();midnight.setHours(24,0,0,0);
+  const midnight=new Date(2025,3,23,23,59,0,0); // April 23rd 11:59:00 PM
   const diff=midnight-now;
 
   if(diff<=0){
     document.getElementById('s-midnight').textContent='00:00:00';
+    clearInterval(midnightInterval);
     if(!finaleTriggered){ finaleTriggered=true; triggerFinale(); }
     return;
   }
@@ -1023,14 +1024,13 @@ function updateMidnight(){
   const oldSpans=el.querySelectorAll('span[data-ci]');
 
   if(oldSpans.length!==newChars.length){
-    // First render or length changed: build spans fresh
     el.innerHTML=newChars.map((c,i)=>`<span data-ci="${i}">${c}</span>`).join('');
   } else {
     oldSpans.forEach((span,i)=>{
       if(span.textContent!==newChars[i]){
         span.textContent=newChars[i];
         span.classList.remove('countdown-tick');
-        void span.offsetWidth; // reflow to restart animation
+        void span.offsetWidth;
         span.classList.add('countdown-tick');
       }
     });
@@ -1054,8 +1054,7 @@ function updateMidnight(){
   if(finaleActive){
     const fd=document.getElementById('finale-time-display');
     if(fd){
-      // Show big dramatic single-digit seconds countdown
-      const secsLeft=Math.max(0,Math.ceil(diff/1000));
+      const secsLeft=Math.min(10,Math.max(0,Math.ceil(diff/1000)));
       const newNum=secsLeft>0?String(secsLeft):'0';
       if(fd.textContent!==newNum){
         fd.textContent=newNum;
@@ -1067,7 +1066,7 @@ function updateMidnight(){
   }
 }
 updateMidnight();
-setInterval(updateMidnight,1000);
+const midnightInterval=setInterval(updateMidnight,1000);
 
 /* ── FINALE: 1 minute countdown screen ── */
 function triggerFinaleCountdown(){
