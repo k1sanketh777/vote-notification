@@ -998,6 +998,24 @@ function scheduleRender(data){
   requestAnimationFrame(()=>{ renderPending=false; render(lastData); });
 }
 
+// Simple check to enforce visibility schedule
+  function enforceVisibility() {
+    const targetDate = new Date("2026-04-23T23:59:00");
+    const now = new Date();
+    const overlay = document.getElementById('finale-overlay');
+    
+    if (overlay) {
+      if (now < targetDate) {
+        overlay.classList.remove('active');
+        overlay.style.display = 'none';
+      }
+    }
+  }
+  
+  // Run once on load and every second to ensure it stays hidden
+  window.addEventListener('load', enforceVisibility);
+  setInterval(enforceVisibility, 1000);
+
 /* ── MIDNIGHT COUNTDOWN with beautiful animation ── */
 let finaleTriggered=false;
 function updateMidnight(){
