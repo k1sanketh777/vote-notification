@@ -531,7 +531,7 @@ body::before{will-change:opacity}
   <div class="stats-bar">
     <div class="stat-cell"><div class="val" id="s-schools">—</div><div class="lbl">Schools</div></div>
     <div class="stat-cell"><div class="val" id="s-total">—</div><div class="lbl">Total Votes</div></div>
-    <div class="stat-cell"><div class="val" id="s-midnight" style="font-family:'DM Mono',monospace;letter-spacing:1px">--:--:--</div><div class="lbl">Until Midnight</div></div>
+    <div class="stat-cell"><div class="val" id="s-midnight" style="font-family:'DM Mono',monospace;letter-spacing:1px">--:--:--</div><div class="lbl">Until Apr 23</div></div>
   </div>
 
   <div id="board"><div class="loading">Connecting to live data…</div></div>
@@ -1065,8 +1065,8 @@ function updateMidnight(){
     }
   }
 }
-updateMidnight();
 const midnightInterval=setInterval(updateMidnight,1000);
+updateMidnight();
 
 /* ── FINALE: 1 minute countdown screen ── */
 function triggerFinaleCountdown(){
