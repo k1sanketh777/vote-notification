@@ -590,6 +590,7 @@ body::before{will-change:opacity}
 const API     = 'https://osxijjbjgxvaeurpghtv.supabase.co/rest/v1/mpmu_votes?select=registered_candidate,vote_count&order=vote_count.desc';
 const KEY     = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zeGlqamJqZ3h2YWV1cnBnaHR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3NTA4NDgsImV4cCI6MjA4NzMyNjg0OH0.8SxJtzpnr0snvzXke_bIwkcVpwUfMxRfb0Y407Z0UE4';
 const MARIS   = 59;
+const ENABLE_FINALE_OVERLAY = false; // Set to true to re-enable the overlay trigger
 
 const SCHOOLS = {
   23:{name:"Muslim Ladies College",         mu:"Media Unit of Muslim Ladies College",      logo:"https://osxijjbjgxvaeurpghtv.supabase.co/storage/v1/object/public/mpmu-logos/logos/7.png"},
@@ -783,7 +784,6 @@ function renderGapAnalyser(sorted){
     <div class="ga-body">
       <div class="ga-strip">
 
-        <!-- LEFT: school above Maris Stella -->
         <div class="ga-school ga-above">
           ${aboveEntry
             ? `${aboveLogo?`<img class="gs-logo" src="${aboveLogo}" crossorigin="anonymous" onerror="this.style.display='none'">`:'' }
@@ -794,7 +794,6 @@ function renderGapAnalyser(sorted){
           }
         </div>
 
-        <!-- MIDDLE: gap stats -->
         <div class="ga-gaps">
           ${aboveEntry
             ? `<div class="ga-gap-item gap-above">
@@ -818,7 +817,6 @@ function renderGapAnalyser(sorted){
           }
         </div>
 
-        <!-- RIGHT: Maris Stella -->
         <div class="ga-school ga-maris">
           ${marisInfo.logo?`<img class="gs-logo" src="${marisInfo.logo}" crossorigin="anonymous" onerror="this.style.display='none'">`:'' }
           <div class="gs-name">Maris Stella College</div>
@@ -1064,7 +1062,7 @@ function updateMidnight(){
   }
 
   // TRIGGER FINALE at exactly 10 seconds left
-  if(totalSec<=10&&!finaleActive){
+  if(ENABLE_FINALE_OVERLAY && totalSec<=10&&!finaleActive){
     triggerFinaleCountdown();
   }
 
