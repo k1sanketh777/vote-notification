@@ -1,0 +1,846 @@
+@font-face {
+    font-family: "GreaterTheory";
+    src: url("assets/fonts/GreaterTheory.otf") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap");
+
+
+html,
+body {
+    font-family: "Roboto", sans-serif;
+    background-color: #061B31;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    background-color: #05080d;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.hero-bg {
+    line-height: 0;
+}
+
+.hero-image {
+    display: block;
+}
+
+.hero-overlay {
+    line-height: normal;
+    box-sizing: border-box;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.hero-inner {
+    margin-top: 0;
+    width: min(100%, 1200px);
+    max-width: calc(100% - 32px);
+    padding: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translateY(-12vh);
+}
+
+.hero-title {
+    font-family: "GreaterTheory", serif;
+    font-size: clamp(2.2rem, 4.4vw, 3rem);
+    letter-spacing: 0pt;
+    margin-bottom: 0.55rem;
+    text-shadow: 0 2px 6px rgba(2, 10, 23, 0.45);
+    white-space: normal;
+    width: 100%;
+    text-align: center;
+}
+
+.hero-subtitle {
+    font-size: clamp(0.5rem, 1.7vw, 1rem);
+    letter-spacing: 0em;
+    margin-bottom: 2.1rem;
+    white-space: normal;
+    width: 100%;
+    text-align: center;
+}
+
+.top-nav-glass {
+    background: rgba(90, 108, 128, 0.32);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 10px 20px rgba(4, 15, 30, 0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: background-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+header {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    /* This creates the 'safe zone' from the screen edges */
+    padding: 30px 60px !important; 
+    z-index: 100 !important;
+    box-sizing: border-box !important;
+}
+
+.social-glass {
+    background: rgba(127, 147, 170, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 0 8px 18px rgba(6, 22, 41, 0.35);
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
+    transition: transform 0.35s ease, box-shadow 0.35s ease, background-color 0.35s ease;
+    width: 196px;
+    height: 44px;
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 999px;
+}
+
+.social-glass img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+
+}
+
+.social-glass:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(6, 22, 41, 0.45);
+}
+
+nav a,
+.stat-item,
+.count {
+    transition: all 0.3s ease;
+}
+
+.reveal-up {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+.reveal-up.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.about-section {
+    margin-top: 0;
+    padding: 0 0 4rem;
+    position: relative;
+    z-index: 30;
+}
+
+.about-wrap {
+    max-width: 980px;
+}
+
+.about-title {
+    font-family: "GreaterTheory", serif;
+    font-size: clamp(2.2rem, 3.25vw, 2.8rem);
+    letter-spacing: 0.06em;
+    margin-bottom: 1rem;
+}
+
+.about-text {
+    max-width: 700px;
+    margin: 0 auto 2.8rem;
+    font-size: 0.6rem;
+    line-height: 1.45;
+}
+
+.stats-row {
+    margin-top: 2.2rem;
+}
+
+.stat-number {
+    font-size: clamp(2.8rem, 4.1vw, 4rem);
+    line-height: 1;
+    margin-bottom: 0.45rem;
+}
+
+.stat-label {
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+}
+
+.showcase-section {
+    padding: 2rem 0 3rem;
+    background: radial-gradient(circle at top, rgba(29, 75, 130, 0.38), rgba(6, 27, 49, 0.92) 35%, #061b31 100%);
+}
+
+.showcase-wrap {
+    max-width: 1240px;
+}
+
+.showcase-title {
+    font-family: "GreaterTheory", serif;
+    font-size: clamp(2rem, 3vw, 2.5rem);
+    margin-bottom: 1.8rem;
+    letter-spacing: 0.05em;
+}
+
+.service-grid {
+    display: grid;
+    gap: 14px;
+}
+
+.service-grid {
+    grid-template-columns: repeat(auto-fit, 282px);
+    justify-content: center;
+}
+
+.service-card,
+.team-card {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    min-height: 210px;
+    transition: transform 0.3s ease;
+}
+
+.service-card:hover,
+.team-card:hover {
+    transform: translateY(-4px);
+}
+
+.service-card::before,
+.team-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 4px solid #870000;
+    border-radius: 8px;
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 0.6s ease;
+    pointer-events: none;
+}
+
+.service-card:hover::before,
+.team-card:hover::before {
+    clip-path: inset(0 0 0 0);
+}
+
+.service-card {
+    width: 282px;
+    height: 364px;
+    min-height: 364px;
+}
+
+.service-card img,
+.team-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: saturate(0.7) contrast(1.05);
+}
+
+.service-overlay,
+.team-overlay {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 0.85rem 0.7rem 0.7rem;
+    background: linear-gradient(to top, rgba(3, 10, 20, 0.86) 10%, rgba(3, 10, 20, 0));
+}
+
+.service-overlay h3,
+.team-overlay h3 {
+    font-size: 0.98rem;
+    line-height: 1.2;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.service-overlay p,
+.team-overlay p {
+    font-size: 0.58rem;
+    line-height: 1.2;
+    opacity: 0.9;
+    text-transform: uppercase;
+}
+
+.service-overlay h3 {
+    font-family: "Roboto", sans-serif;
+    font-size: 12pt;
+    font-weight: 900;
+    line-height: 1.1;
+    white-space: nowrap;
+}
+
+.service-overlay p {
+    font-family: "Roboto", sans-serif;
+    font-size: 7pt;
+    font-weight: 400;
+    line-height: 1.25;
+    text-transform: none;
+    opacity: 0.95;
+}
+
+.service-placeholder {
+    background: #cfcfd2;
+}
+
+.announcing-card .service-overlay {
+    background: linear-gradient(to top, rgba(3, 10, 20, 0.9) 15%, rgba(3, 10, 20, 0.45));
+}
+
+.announcing-card .announcing-title {
+    font-family: "Roboto", sans-serif;
+    font-size: 20pt;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 0.3rem;
+}
+
+.announcing-card .announcing-text {
+    font-family: "Roboto", sans-serif;
+    font-size: 6pt;
+    font-weight: 400;
+    line-height: 1.25;
+    text-transform: none;
+    opacity: 0.95;
+}
+
+.team-heading {
+    margin-top: 2.8rem;
+}
+
+.team-card {
+    flex: 0 0 282px;
+    width: 282px;
+    height: 364px;
+    min-height: 364px;
+    margin: 0;
+}
+
+.team-carousel-wrap {
+    overflow: hidden;
+}
+
+.team-carousel {
+    display: flex;
+    transition: transform 0.45s ease;
+    will-change: transform;
+}
+
+.team-slide {
+    width: 100%;
+    flex: 0 0 100%;
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    padding: 0 4px;
+    flex-wrap: wrap;
+}
+
+.team-slide.team-slide-main {
+    flex-wrap: nowrap !important;
+    overflow-x: hidden;
+}
+
+.team-slide-main > .team-card,
+.team-slide-main > .team-card-main {
+    flex: 0 0 392px;
+    width: 392px;
+    height: 382px;
+    min-height: 382px;
+}
+
+.team-slide:not(.team-slide-main) > .team-card {
+    width: 290px;
+    height: 364px;
+    min-height: 364px;
+}
+
+.team-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.team-dots .dot {
+    width: 7px;
+    height: 7px;
+    border: 0;
+    cursor: pointer;
+    padding: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.team-dots .dot.active {
+    width: 12px;
+    border-radius: 999px;
+    background: #f5a623;
+}
+
+/* --- BASE CSS (Do not modify above here) --- */
+
+/* Add these short base overrides just before your first media query */
+.service-grid {
+    flex-wrap: wrap; /* Prevents overflow-x garbage */
+}
+
+.team-slide {
+    flex-wrap: wrap; /* Allow cards inside each slide to wrap on desktop */
+}
+
+.team-dots .dot {
+    opacity: 0.7;
+    transition: opacity 0.3s ease, background 0.3s ease;
+}
+
+.team-dots .dot:hover {
+    opacity: 1;
+}
+
+/* --- THE ENTIRE FIXED RESPONSIVE SECTION --- */
+@media (max-width: 900px) {
+    /* 1. Reset Global Container Limits */
+    html,
+    body,
+    header,
+    .hero-overlay,
+    .showcase-wrap,
+    .team-carousel-wrap {
+        width: 100% !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
+        max-width: 100% !important;
+    }
+
+    /* 2. Modified Header: Restore Spacing & Clean Up Position */
+    header {
+        position: relative !important;
+        top: 0 !important;
+        padding: 20px !important;
+        margin-bottom: -10px;
+    }
+
+    /* Target the container wrapping the nav/button */
+    header .flex.items-center.relative {
+        flex-direction: column-reverse; /* Reverses nav order to match image */
+        align-items: flex-end;
+        gap: 0;
+        min-height: 120px; /* Space for the stacked elements */
+    }
+
+    /* Main Menu: The vertical text pill */
+    #mainNav {
+        display: flex !important; /* Forces visibility */
+        flex-direction: column !important;
+        align-items: flex-end !important;
+        padding: 30px !important;
+        width: 200px !important;
+        margin-top: -15px; /* Pushes it closer to the bottom of the button row */
+        margin-right: -10px;
+        position: static !important;
+    }
+
+    #mainNav a {
+        font-size: 11pt !important;
+        line-height: 1.5;
+    }
+
+    /* Button Row: Separate from nav */
+    #menuToggle {
+        display: flex !important;
+        margin-bottom: -10px;
+        order: -1; /* Pushes button row to the very top */
+    }
+
+    /* 3. Hero Adjustments */
+    .hero-inner {
+        transform: translateY(0) !important;
+        margin-top: -60px; /* Balance the header reset */
+        padding-bottom: 2rem;
+    }
+
+    .hero-title {
+        font-size: 20pt !important; /* Smaller text size from image */
+        margin-bottom: 0.75rem;
+    }
+
+    .hero-subtitle {
+        font-size: 7.5pt !important; /* Matching image proportion */
+        margin-bottom: 2rem;
+    }
+
+    .social-glass {
+        width: 160px; /* Proportional shrink */
+    }
+
+    /* 4. About Adjustments */
+    .about-section {
+        margin-top: 0 !important; /* Prevent overlapping logic from script */
+        padding-top: 1rem;
+    }
+
+    .about-wrap {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .about-title {
+        font-size: 24pt !important;
+    }
+
+    .about-text {
+        font-size: 6.5pt !important;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+    }
+
+    .stats-row {
+        gap: 2rem;
+        flex-direction: row !important; /* Ensure they stay as a row as in reference */
+        justify-content: center !important;
+    }
+
+    .stat-number {
+        font-size: 28pt !important;
+    }
+
+    .stat-label {
+        font-size: 6.5pt !important;
+    }
+
+    /* 5. Showcase Adjustments */
+    .showcase-title {
+        font-size: 20pt !important;
+        margin-bottom: 2rem;
+    }
+
+    .service-grid {
+        grid-template-columns: 1fr; /* Single column stack */
+        gap: 1rem;
+        padding: 0 15px;
+    }
+
+    .service-card {
+        height: auto;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        border-radius: 8px;
+    }
+
+    .service-overlay h3 {
+        font-size: 11pt !important;
+    }
+
+    .service-overlay p {
+        font-size: 6.5pt !important;
+    }
+
+    /* 6. Team Grid: One horizontal row of cards */
+    .team-carousel-wrap {
+        padding: 0 15px;
+        margin-top: 1.5rem;
+    }
+
+    .team-carousel {
+        display: flex;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        transform: none !important; /* Don't apply script transforms */
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        width: 100%;
+        gap: 1rem;
+    }
+
+    .team-slide {
+        display: flex;
+        flex-direction: row !important; /* Keep cards side-by-side */
+        flex-wrap: nowrap !important;
+        width: auto !important;
+        padding: 0 !important;
+        gap: 1rem;
+        flex: none;
+        scroll-snap-align: start;
+    }
+
+    .team-card {
+        width: min(280px, 88vw) !important;
+        max-width: 280px !important;
+        min-width: min(280px, 88vw) !important;
+        height: auto !important;
+        min-height: 360px !important;
+        margin: 0 !important;
+        flex: 0 0 auto;
+    }
+
+    .team-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .team-overlay h3 {
+        font-size: 11pt !important;
+    }
+
+    .team-overlay p {
+        font-size: 6.5pt !important;
+    }
+
+    /* Center and scale overrides from your non-media CSS must be reset */
+    .team-slide-main .team-card {
+        transform: none !important;
+        transition: none !important;
+        z-index: auto !important;
+    }
+
+    /* Dot styling */
+    .team-dots {
+        margin-top: 1rem;
+        gap: 8px;
+    }
+
+    .team-dots .dot {
+        width: 6px;
+        height: 6px;
+    }
+
+    .team-dots .dot.active {
+        width: 10px;
+    }
+
+    /* 7. Footer Adjustments */
+    .site-footer {
+        padding-top: 1.5rem;
+    }
+
+    .footer-top {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .footer-brand-row img {
+        width: 48px;
+        height: 48px;
+    }
+
+    .footer-brand-row h3 {
+        font-size: 16pt !important;
+    }
+
+    .footer-brand-row p {
+        font-size: 6pt !important;
+    }
+
+    .footer-creators h4,
+    .footer-contact h4 {
+        font-size: 12pt !important;
+        margin-bottom: 0.35rem;
+    }
+
+    .footer-creators p {
+        font-size: 6.5pt !important;
+    }
+
+    .footer-socials {
+        justify-content: flex-start;
+        margin-bottom: 1rem;
+        gap: 10px;
+    }
+
+    .footer-socials a {
+        width: 32px;
+        height: 32px;
+    }
+
+    .footer-socials img {
+        width: 12px;
+        height: 12px;
+    }
+
+    .contact-item {
+        width: 100%; /* Spans full width like image */
+        font-size: 7.5pt !important;
+        min-height: 28px;
+    }
+
+    .contact-item img {
+        width: 12px;
+        height: 12px;
+    }
+
+    .footer-copy {
+        font-size: 5.5pt !important;
+        margin-top: 1rem;
+    }
+}
+
+
+
+/* --- Desktop Defaults (Outside Media Query) --- */
+.menu-btn {
+    display: none; /* Always hide hamburger on desktop */
+}
+
+
+.site-footer {
+    background: #05080d;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 2.25rem 0 0;
+    margin-bottom: 0;
+}
+
+.footer-wrap {
+    max-width: 1240px;
+}
+
+.footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2.5rem;
+}
+
+.footer-brand-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 1.6rem;
+}
+
+.footer-brand-row img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+}
+
+.footer-brand-row h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.footer-brand-row p {
+    margin-top: 0.25rem;
+    font-size: 0.72rem;
+    opacity: 0.8;
+}
+
+.footer-creators h4,
+.footer-contact h4 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.55rem;
+}
+
+.footer-creators p {
+    font-size: 0.7rem;
+    line-height: 1.2;
+    opacity: 0.88;
+}
+
+.footer-socials {
+    display: flex;
+    justify-content: flex-end;
+    gap: 9px;
+    margin-bottom: 1.3rem;
+}
+
+.footer-socials a {
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+}
+
+.footer-socials img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+
+}
+
+.footer-socials img {
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
+}
+
+.contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.contact-item {
+    width: 280px;
+    min-height: 34px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    padding: 0.4rem 0.65rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: #fff;
+    font-size: 0.88rem;
+}
+
+.contact-item img {
+    width: 16px;
+    height: 16px;
+}
+
+.footer-copy {
+    margin: 1.7rem 0 0;
+    padding-bottom: 0.35rem;
+    text-align: center;
+    font-size: 0.62rem;
+    opacity: 0.65;
+}
+
+@media (max-width: 900px) {
+    .footer-top {
+        flex-direction: column;
+    }
+
+    .footer-contact {
+        width: 100%;
+    }
+
+    .footer-socials {
+        justify-content: flex-start;
+    }
+}
