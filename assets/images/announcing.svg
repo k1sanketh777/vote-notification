@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 360" role="img" aria-label="Announcing image placeholder">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0e1e34"/>
+      <stop offset="100%" stop-color="#183556"/>
+    </linearGradient>
+  </defs>
+  <rect width="360" height="360" rx="24" fill="url(#bg)"/>
+  <text x="50%" y="48%" fill="#ffffff" font-family="Roboto, sans-serif" font-size="28" font-weight="700" text-anchor="middle">Announcing</text>
+  <text x="50%" y="62%" fill="#b3c6de" font-family="Roboto, sans-serif" font-size="16" text-anchor="middle">Media Unit</text>
+</svg>
