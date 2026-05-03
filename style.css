@@ -420,7 +420,7 @@ nav a,
 }
 
 /* --- MOBILE RESPONSIVE SECTION (max-width: 900px) --- */
-@media (max-width: 900px) {
+@media (max-width: 1200px) {
 
     /* =============================================
        1. GLOBAL RESETS
