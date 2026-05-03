@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("resize", updateAboutOverlap);
 
   const revealTargets = document.querySelectorAll(
-    "#about .about-title, #about .about-text, #about .stats-row .stat-item, .showcase-title, .service-card, .team-slide .team-card, .team-dots, .site-footer .footer-brand, .site-footer .footer-contact, .footer-copy",
+    "#about .about-title, #about .about-text, #about .stats-row .stat-item, .showcase-title, .service-card, .desktop-carousel .team-slide .team-card, .mobile-snap-card, .team-dots, .site-footer .footer-brand, .site-footer .footer-contact, .footer-copy",
   );
   revealTargets.forEach((element) => element.classList.add("reveal-up"));
 
@@ -106,28 +106,62 @@ document.addEventListener("DOMContentLoaded", () => {
     aboutObserver.observe(aboutSection);
   }
 
-  const teamCarousel = document.querySelector(".team-carousel");
-  const slides = document.querySelectorAll(".team-slide");
-  const dots = document.querySelectorAll(".team-dots .dot");
+  // Desktop carousel
+  const teamCarousel = document.querySelector(".desktop-carousel");
+  const slides = document.querySelectorAll(".desktop-carousel .team-slide");
+  const dots = document.querySelectorAll(".desktop-dots .dot");
 
   if (teamCarousel && slides.length && dots.length) {
     const setActiveSlide = (index) => {
       const safeIndex = Math.max(0, Math.min(index, slides.length - 1));
       teamCarousel.style.transform = `translateX(-${safeIndex * 100}%)`;
-
-      dots.forEach((dot, dotIndex) => {
-        dot.classList.toggle("active", dotIndex === safeIndex);
-      });
+      dots.forEach((dot, i) => dot.classList.toggle("active", i === safeIndex));
     };
-
     dots.forEach((dot) => {
+      dot.addEventListener("click", () => setActiveSlide(Number(dot.dataset.slide || 0)));
+    });
+    setActiveSlide(0);
+  }
+
+  // Mobile snap-scroll carousel
+  const snapTrack = document.getElementById("mobileSnapTrack");
+  const snapCards = snapTrack ? snapTrack.querySelectorAll(".mobile-snap-card") : [];
+  const snapDots = document.querySelectorAll("#mobileSnapDots .dot");
+
+  if (snapTrack && snapCards.length) {
+    // Mark first card active on load
+    snapCards[0].classList.add("is-active");
+
+    // IntersectionObserver: card is "active" when it's ≥60% visible in the track
+    const snapObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.intersectionRatio >= 0.6) {
+            // Remove active from all
+            snapCards.forEach((c) => c.classList.remove("is-active"));
+            entry.target.classList.add("is-active");
+
+            // Sync dots
+            const idx = Number(entry.target.dataset.index || 0);
+            snapDots.forEach((d, i) => d.classList.toggle("active", i === idx));
+          }
+        });
+      },
+      { root: snapTrack, threshold: 0.6 }
+    );
+
+    snapCards.forEach((card) => snapObserver.observe(card));
+
+    // Dot click: scroll to card
+    snapDots.forEach((dot) => {
       dot.addEventListener("click", () => {
-        const slideIndex = Number(dot.dataset.slide || 0);
-        setActiveSlide(slideIndex);
+        const idx = Number(dot.dataset.card || 0);
+        const target = snapTrack.querySelector(`.mobile-snap-card[data-index="${idx}"]`);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+        }
       });
     });
-
-    setActiveSlide(0);
   }
 });
 
