@@ -419,284 +419,418 @@ nav a,
     opacity: 1;
 }
 
-/* --- THE ENTIRE FIXED RESPONSIVE SECTION --- */
+/* --- MOBILE RESPONSIVE SECTION (max-width: 900px) --- */
 @media (max-width: 900px) {
-    /* 1. Reset Global Container Limits */
-    html,
-    body,
-    header,
-    .hero-overlay,
-    .showcase-wrap,
-    .team-carousel-wrap {
-        width: 100% !important;
+
+    /* =============================================
+       1. GLOBAL RESETS
+    ============================================= */
+    html, body {
         overflow-x: hidden !important;
+        max-width: 100vw !important;
+        width: 100% !important;
         box-sizing: border-box !important;
-        max-width: 100% !important;
     }
 
-    /* 2. Modified Header: Restore Spacing & Clean Up Position */
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    /* =============================================
+       2. HEADER — logo left, hamburger right, flat row
+    ============================================= */
     header {
-        position: relative !important;
+        position: absolute !important;
         top: 0 !important;
-        padding: 20px !important;
-        margin-bottom: -10px;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        padding: 16px 20px !important;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        margin-bottom: 0 !important;
+        z-index: 100 !important;
     }
 
-    /* Target the container wrapping the nav/button */
+    /* Logo + text: keep as-is, just slightly smaller */
+    header .flex.items-center.gap-3 img {
+        height: 32px !important;
+    }
+
+    header .flex.items-center.gap-3 .text-\[11px\] {
+        font-size: 9px !important;
+    }
+
+    /* Right side: only show the hamburger button, hide nav by default */
     header .flex.items-center.relative {
-        flex-direction: column-reverse; /* Reverses nav order to match image */
-        align-items: flex-end;
-        gap: 0;
-        min-height: 120px; /* Space for the stacked elements */
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 0 !important;
+        min-height: unset !important;
     }
 
-    /* Main Menu: The vertical text pill */
+    /* Show the hamburger button */
+    #menuToggle {
+        display: flex !important;
+        order: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Nav: hidden by default, shown as dropdown when toggled */
     #mainNav {
-        display: flex !important; /* Forces visibility */
+        display: none !important;
+        position: absolute !important;
+        top: 60px !important;
+        right: 16px !important;
         flex-direction: column !important;
         align-items: flex-end !important;
-        padding: 30px !important;
-        width: 200px !important;
-        margin-top: -15px; /* Pushes it closer to the bottom of the button row */
-        margin-right: -10px;
-        position: static !important;
+        gap: 0 !important;
+        padding: 16px 20px !important;
+        width: auto !important;
+        margin: 0 !important;
+        background: rgba(6, 27, 49, 0.97) !important;
+        border: 1px solid rgba(255,255,255,0.15) !important;
+        border-radius: 12px !important;
+        backdrop-filter: blur(12px) !important;
+        z-index: 200 !important;
+    }
+
+    #mainNav.active {
+        display: flex !important;
     }
 
     #mainNav a {
-        font-size: 11pt !important;
-        line-height: 1.5;
+        font-size: 13px !important;
+        line-height: 2.2 !important;
+        padding: 0 !important;
     }
 
-    /* Button Row: Separate from nav */
-    #menuToggle {
+    /* =============================================
+       3. HERO — full width image, centered text overlay
+    ============================================= */
+    .hero-bg {
+        position: relative !important;
+        width: 100% !important;
+    }
+
+    .hero-image {
+        width: 100% !important;
+        height: auto !important;
+        display: block !important;
+    }
+
+    .hero-overlay {
+        position: absolute !important;
+        inset: 0 !important;
         display: flex !important;
-        margin-bottom: -10px;
-        order: -1; /* Pushes button row to the very top */
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 0 20px !important;
     }
 
-    /* 3. Hero Adjustments */
     .hero-inner {
-        transform: translateY(0) !important;
-        margin-top: -60px; /* Balance the header reset */
-        padding-bottom: 2rem;
+        transform: translateY(8%) !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
     }
 
     .hero-title {
-        font-size: 20pt !important; /* Smaller text size from image */
-        margin-bottom: 0.75rem;
+        font-size: clamp(1.35rem, 6vw, 1.7rem) !important;
+        line-height: 1.15 !important;
+        margin-bottom: 0.5rem !important;
+        text-align: center !important;
+        white-space: normal !important;
     }
 
     .hero-subtitle {
-        font-size: 7.5pt !important; /* Matching image proportion */
-        margin-bottom: 2rem;
+        font-size: clamp(0.55rem, 2.5vw, 0.75rem) !important;
+        margin-bottom: 1.2rem !important;
+        text-align: center !important;
     }
 
     .social-glass {
-        width: 160px; /* Proportional shrink */
+        width: 140px !important;
+        height: 36px !important;
+        gap: 8px !important;
     }
 
-    /* 4. About Adjustments */
+    .social-glass img {
+        width: 18px !important;
+        height: 18px !important;
+    }
+
+    /* =============================================
+       4. ABOUT SECTION — centered, no overlap offset
+    ============================================= */
     .about-section {
-        margin-top: 0 !important; /* Prevent overlapping logic from script */
-        padding-top: 1rem;
+        margin-top: 0 !important;
+        padding: 2.5rem 0 2rem !important;
+        position: relative !important;
+        z-index: 30 !important;
     }
 
     .about-wrap {
-        padding-left: 20px;
-        padding-right: 20px;
+        padding-left: 24px !important;
+        padding-right: 24px !important;
+        max-width: 100% !important;
     }
 
     .about-title {
-        font-size: 24pt !important;
+        font-size: clamp(1.6rem, 7vw, 2rem) !important;
+        margin-bottom: 1rem !important;
     }
 
     .about-text {
-        font-size: 6.5pt !important;
-        line-height: 1.6;
-        margin-bottom: 2rem;
+        font-size: clamp(0.62rem, 2.4vw, 0.75rem) !important;
+        line-height: 1.65 !important;
+        margin-bottom: 1.8rem !important;
+        max-width: 100% !important;
+        text-align: center !important;
     }
 
+    /* Stats: 3 items in a row, evenly spaced */
     .stats-row {
-        gap: 2rem;
-        flex-direction: row !important; /* Ensure they stay as a row as in reference */
-        justify-content: center !important;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-around !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        flex-wrap: nowrap !important;
+        margin-top: 1.2rem !important;
+    }
+
+    .stat-item {
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
     }
 
     .stat-number {
-        font-size: 28pt !important;
+        font-size: clamp(1.6rem, 7vw, 2.2rem) !important;
+        line-height: 1 !important;
+        margin-bottom: 0.3rem !important;
     }
 
     .stat-label {
-        font-size: 6.5pt !important;
+        font-size: clamp(0.42rem, 1.8vw, 0.55rem) !important;
+        letter-spacing: 0.02em !important;
+        text-align: center !important;
     }
 
-    /* 5. Showcase Adjustments */
+    /* =============================================
+       5. WHAT WE DO — 2-column grid of cards
+    ============================================= */
+    .showcase-section {
+        padding: 1.5rem 0 2rem !important;
+        overflow-x: hidden !important;
+        max-width: 100vw !important;
+    }
+
+    .showcase-wrap {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+    }
+
     .showcase-title {
-        font-size: 20pt !important;
-        margin-bottom: 2rem;
+        font-size: clamp(1.4rem, 6.5vw, 1.9rem) !important;
+        margin-bottom: 1.2rem !important;
+        padding: 0 16px !important;
     }
 
+    /* 2-column grid matching the design */
     .service-grid {
-        grid-template-columns: 1fr; /* Single column stack */
-        gap: 1rem;
-        padding: 0 15px;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+        padding: 0 16px !important;
+        justify-content: center !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        max-width: 100vw !important;
     }
 
     .service-card {
-        height: auto;
-        width: 100%;
-        max-width: 100%;
-        box-sizing: border-box;
-        border-radius: 8px;
+        width: 100% !important;
+        min-width: 0 !important;         /* kills the 282px base min */
+        max-width: 100% !important;
+        height: 0 !important;
+        padding-bottom: 130% !important;
+        min-height: unset !important;    /* kills the 364px base min-height */
+        position: relative !important;
+        box-sizing: border-box !important;
+        border-radius: 8px !important;
+    }
+
+    .service-card img {
+        position: absolute !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+
+    .service-overlay {
+        position: absolute !important;
+        inset: auto 0 0 0 !important;
     }
 
     .service-overlay h3 {
-        font-size: 11pt !important;
+        font-size: clamp(0.6rem, 2.8vw, 0.85rem) !important;
+        white-space: normal !important;
     }
 
     .service-overlay p {
-        font-size: 6.5pt !important;
+        font-size: clamp(0.45rem, 1.8vw, 0.6rem) !important;
     }
 
-    /* 6. Team Grid: One horizontal row of cards */
+    /* =============================================
+       6. OUR TEAM — handled by .mobile-snap-track below
+    ============================================= */
+    .team-heading {
+        margin-top: 2rem !important;
+    }
+
     .team-carousel-wrap {
-        padding: 0 15px;
-        margin-top: 1.5rem;
-    }
-
-    .team-carousel {
-        display: flex;
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
-        transform: none !important; /* Don't apply script transforms */
-        overflow-x: auto !important;
-        overflow-y: hidden !important;
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
-        width: 100%;
-        gap: 1rem;
-    }
-
-    .team-slide {
-        display: flex;
-        flex-direction: row !important; /* Keep cards side-by-side */
-        flex-wrap: nowrap !important;
-        width: auto !important;
+        overflow-x: hidden !important;
+        overflow-y: visible !important;
+        width: 100% !important;
+        max-width: 100vw !important;
         padding: 0 !important;
-        gap: 1rem;
-        flex: none;
-        scroll-snap-align: start;
     }
 
-    .team-card {
-        width: min(280px, 88vw) !important;
-        max-width: 280px !important;
-        min-width: min(280px, 88vw) !important;
-        height: auto !important;
-        min-height: 360px !important;
-        margin: 0 !important;
-        flex: 0 0 auto;
-    }
-
-    .team-card img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .team-overlay h3 {
-        font-size: 11pt !important;
-    }
-
-    .team-overlay p {
-        font-size: 6.5pt !important;
-    }
-
-    /* Center and scale overrides from your non-media CSS must be reset */
-    .team-slide-main .team-card {
-        transform: none !important;
-        transition: none !important;
-        z-index: auto !important;
-    }
-
-    /* Dot styling */
-    .team-dots {
-        margin-top: 1rem;
-        gap: 8px;
-    }
-
-    .team-dots .dot {
-        width: 6px;
-        height: 6px;
-    }
-
-    .team-dots .dot.active {
-        width: 10px;
-    }
-
-    /* 7. Footer Adjustments */
+    /* =============================================
+       7. FOOTER — two-column layout matching design
+    ============================================= */
     .site-footer {
-        padding-top: 1.5rem;
+        padding-top: 1.5rem !important;
     }
 
+    .footer-wrap {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+        max-width: 100% !important;
+    }
+
+    /* Top row: brand left, socials+contact right */
     .footer-top {
-        flex-direction: column;
-        gap: 1.5rem;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: flex-start !important;
+        gap: 1rem !important;
+    }
+
+    .footer-brand {
+        flex: 1 1 0 !important;
+        min-width: 0 !important;
+    }
+
+    .footer-brand-row {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        margin-bottom: 1rem !important;
     }
 
     .footer-brand-row img {
-        width: 48px;
-        height: 48px;
+        width: 36px !important;
+        height: 36px !important;
+        flex-shrink: 0 !important;
     }
 
     .footer-brand-row h3 {
-        font-size: 16pt !important;
+        font-size: 0.72rem !important;
+        line-height: 1.2 !important;
+        font-weight: 700 !important;
     }
 
     .footer-brand-row p {
-        font-size: 6pt !important;
+        font-size: 0.55rem !important;
+        opacity: 0.8 !important;
     }
 
-    .footer-creators h4,
-    .footer-contact h4 {
-        font-size: 12pt !important;
-        margin-bottom: 0.35rem;
+    .footer-creators h4 {
+        font-size: 0.78rem !important;
+        font-weight: 700 !important;
+        margin-bottom: 0.3rem !important;
     }
 
     .footer-creators p {
-        font-size: 6.5pt !important;
+        font-size: 0.6rem !important;
+        line-height: 1.4 !important;
+        opacity: 0.85 !important;
     }
 
+    .footer-contact {
+        flex: 1 1 0 !important;
+        min-width: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-end !important;
+    }
+
+    /* Socials row: right-aligned */
     .footer-socials {
-        justify-content: flex-start;
-        margin-bottom: 1rem;
-        gap: 10px;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: flex-end !important;
+        gap: 6px !important;
+        margin-bottom: 0.8rem !important;
+        width: 100% !important;
     }
 
     .footer-socials a {
-        width: 32px;
-        height: 32px;
+        width: 28px !important;
+        height: 28px !important;
+        border-radius: 999px !important;
     }
 
     .footer-socials img {
-        width: 12px;
-        height: 12px;
+        width: 12px !important;
+        height: 12px !important;
+    }
+
+    .footer-contact h4 {
+        font-size: 0.78rem !important;
+        font-weight: 700 !important;
+        margin-bottom: 0.4rem !important;
+        width: 100% !important;
+        text-align: left !important;
+    }
+
+    .contact-list {
+        width: 100% !important;
+        gap: 6px !important;
     }
 
     .contact-item {
-        width: 100%; /* Spans full width like image */
-        font-size: 7.5pt !important;
-        min-height: 28px;
+        width: 100% !important;
+        min-height: 26px !important;
+        font-size: 0.6rem !important;
+        padding: 0.3rem 0.5rem !important;
+        box-sizing: border-box !important;
     }
 
     .contact-item img {
-        width: 12px;
-        height: 12px;
+        width: 11px !important;
+        height: 11px !important;
     }
 
     .footer-copy {
-        font-size: 5.5pt !important;
-        margin-top: 1rem;
+        font-size: 0.5rem !important;
+        margin-top: 1rem !important;
+        opacity: 0.6 !important;
     }
 }
 
@@ -831,16 +965,138 @@ nav a,
     opacity: 0.65;
 }
 
+/* footer-specific mobile styles merged into main mobile block above */
+
+/* =============================================
+   DUAL CAROUSEL: Desktop shows desktop-carousel,
+   Mobile shows mobile-snap-track
+============================================= */
+
+/* Desktop: show desktop carousel + its dots, hide mobile snap track */
+.mobile-snap-track,
+.mobile-dots {
+    display: none !important;
+}
+
+.desktop-carousel {
+    display: flex;
+}
+
+.desktop-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+/* ---- MOBILE SNAP CAROUSEL ---- */
 @media (max-width: 900px) {
-    .footer-top {
-        flex-direction: column;
+
+    /* Hide desktop carousel & its dots */
+    .desktop-carousel,
+    .desktop-dots {
+        display: none !important;
     }
 
-    .footer-contact {
-        width: 100%;
+    /* Show mobile snap track & dots */
+    .mobile-snap-track {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        overflow-x: scroll !important;
+        overflow-y: visible !important;
+        scroll-snap-type: x mandatory !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+        /*
+         * Side padding = 50% - (half the widest card width)
+         * Widest card = officer = min(382px, 76vw)
+         * So half = min(191px, 38vw)
+         * padding = calc(50% - min(191px, 38vw))
+         * This guarantees card #1 AND last card snap to dead center.
+         * scroll-padding must match exactly.
+         */
+        padding-top: 20px !important;
+        padding-bottom: 20px !important;
+        padding-left: calc(50% - min(191px, 38vw)) !important;
+        padding-right: calc(50% - min(191px, 38vw)) !important;
+        scroll-padding-left: calc(50% - min(191px, 38vw)) !important;
+        scroll-padding-right: calc(50% - min(191px, 38vw)) !important;
+        gap: 14px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
 
-    .footer-socials {
-        justify-content: flex-start;
+    .mobile-snap-track::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    /* Every card snaps to center */
+    .mobile-snap-card {
+        flex: 0 0 auto !important;
+        scroll-snap-align: center !important;
+        scroll-snap-stop: always !important;
+        position: relative !important;
+        border-radius: 8px !important;
+        overflow: hidden !important;
+        background: rgba(255, 255, 255, 0.06) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        /* Default: shrunk + blurred (side card state) */
+        transform: scale(0.82) !important;
+        filter: blur(1.5px) brightness(0.6) !important;
+        transition: transform 0.35s ease, filter 0.35s ease, box-shadow 0.35s ease !important;
+        box-shadow: none !important;
+        /* Prevent hover from applying on mobile */
+        cursor: grab !important;
+    }
+
+    /* Center (active) card: full size, sharp, elevated */
+    .mobile-snap-card.is-active {
+        transform: scale(1) !important;
+        filter: none !important;
+        box-shadow: 0 12px 36px rgba(0,0,0,0.55) !important;
+    }
+
+    /* Officer cards: 382w x 394h scaled to mobile */
+    .mobile-snap-officer {
+        width: min(382px, 76vw) !important;
+        height: min(394px, 78.8vw) !important;
+    }
+
+    /* Member cards: 282w x 366h scaled to mobile */
+    .mobile-snap-member {
+        width: min(282px, 56vw) !important;
+        height: min(366px, 73.2vw) !important;
+    }
+
+    .mobile-snap-card img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        display: block !important;
+    }
+
+    .mobile-snap-card .team-overlay {
+        position: absolute !important;
+        inset: auto 0 0 0 !important;
+    }
+
+    .mobile-snap-card .team-overlay h3 {
+        font-size: clamp(0.7rem, 3vw, 0.9rem) !important;
+    }
+
+    .mobile-snap-card .team-overlay p {
+        font-size: clamp(0.5rem, 2vw, 0.62rem) !important;
+    }
+
+    /* Mobile dots */
+    .mobile-dots {
+        display: flex !important;
+        justify-content: center !important;
+        gap: 5px !important;
+        margin-top: 10px !important;
+        flex-wrap: wrap !important;
+        padding: 0 12px !important;
     }
 }
