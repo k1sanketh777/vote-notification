@@ -18,11 +18,18 @@ body {
 }
 
 html {
-    background-color: #05080d;
+    overflow: hidden;
+    height: 100%;
+}
+
+body {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    height: 100%;
 }
 
 html {
-    scroll-behavior: smooth;
+    background-color: #05080d;
 }
 
 .hero-bg {
@@ -183,12 +190,14 @@ nav a,
 }
 
 .showcase-section {
-    padding: 2rem 0 3rem;
+    padding: 2rem 0 0;
     background: radial-gradient(circle at top, rgba(29, 75, 130, 0.38), rgba(6, 27, 49, 0.92) 35%, #061b31 100%);
 }
 
 .showcase-wrap {
     max-width: 1240px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .showcase-title {
@@ -339,12 +348,18 @@ nav a,
 
 .team-carousel-wrap {
     overflow: hidden;
+    padding: 0;
+    box-sizing: border-box;
+    height: 400px;
+    width: 100%;
 }
 
 .team-carousel {
     display: flex;
+    flex-wrap: nowrap;
     transition: transform 0.45s ease;
     will-change: transform;
+    height: 100%;
 }
 
 .team-slide {
@@ -352,26 +367,30 @@ nav a,
     flex: 0 0 100%;
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 18px;
-    padding: 0 4px;
-    flex-wrap: wrap;
+    padding: 8px 12px;
+    flex-wrap: nowrap;
+    box-sizing: border-box;
 }
 
 .team-slide.team-slide-main {
     flex-wrap: nowrap !important;
-    overflow-x: hidden;
 }
 
 .team-slide-main > .team-card,
 .team-slide-main > .team-card-main {
-    flex: 0 0 392px;
-    width: 392px;
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    max-width: 392px;
     height: 382px;
     min-height: 382px;
 }
 
 .team-slide:not(.team-slide-main) > .team-card {
-    width: 290px;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 290px;
     height: 364px;
     min-height: 364px;
 }
@@ -384,35 +403,31 @@ nav a,
 }
 
 .team-dots .dot {
-    width: 7px;
-    height: 7px;
+    width: 9px;
+    height: 9px;
     border: 0;
     cursor: pointer;
     padding: 0;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.9);
+    opacity: 0.7;
+    transition: opacity 0.3s ease, background 0.3s ease, width 0.3s ease;
 }
 
 .team-dots .dot.active {
-    width: 12px;
+    width: 20px;
     border-radius: 999px;
     background: #f5a623;
+    opacity: 1;
 }
 
-/* --- BASE CSS (Do not modify above here) --- */
-
-/* Add these short base overrides just before your first media query */
+/* --- BASE CSS overrides --- */
 .service-grid {
-    flex-wrap: wrap; /* Prevents overflow-x garbage */
+    flex-wrap: wrap;
 }
 
 .team-slide {
-    flex-wrap: wrap; /* Allow cards inside each slide to wrap on desktop */
-}
-
-.team-dots .dot {
-    opacity: 0.7;
-    transition: opacity 0.3s ease, background 0.3s ease;
+    flex-wrap: nowrap;
 }
 
 .team-dots .dot:hover {
@@ -420,7 +435,7 @@ nav a,
 }
 
 /* --- MOBILE RESPONSIVE SECTION (max-width: 900px) --- */
-@media (max-width: 1200px) {
+@media (max-width: 900px) {
 
     /* =============================================
        1. GLOBAL RESETS
@@ -842,11 +857,43 @@ nav a,
 }
 
 
+.team-bg-section {
+    position: relative;
+    background-image: url('assets/images/teambg.png');
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    width: 100%;
+    padding-bottom: 2rem;
+    margin-bottom: 0;
+}
+
+.team-bg-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(6, 27, 49, 0.6);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.team-bg-section > * {
+    position: relative;
+    z-index: 1;
+}
+
+.team-inner-wrap {
+    max-width: 1240px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 .site-footer {
-    background: #05080d;
+    background: #0D0D0D;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     padding: 2.25rem 0 0;
     margin-bottom: 0;
+    position: relative;
 }
 
 .footer-wrap {
@@ -871,6 +918,10 @@ nav a,
     width: 56px;
     height: 56px;
     object-fit: contain;
+}
+
+.site-footer p {
+    color: #fff;
 }
 
 .footer-brand-row h3 {
@@ -959,10 +1010,14 @@ nav a,
 
 .footer-copy {
     margin: 1.7rem 0 0;
-    padding-bottom: 0.35rem;
+    padding: 0.75rem 1rem;
     text-align: center;
     font-size: 0.62rem;
     opacity: 0.65;
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    background: #05080d;
 }
 
 /* footer-specific mobile styles merged into main mobile block above */
