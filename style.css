@@ -630,7 +630,7 @@ nav a,
     }
 
     .stat-number {
-        font-size: clamp(1.6rem, 7vw, 2.2rem) !important;
+        font-size: clamp(1.9rem, 7vw, 2.2rem) !important;
         line-height: 1 !important;
         margin-bottom: 0.3rem !important;
     }
