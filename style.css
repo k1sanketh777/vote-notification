@@ -132,6 +132,12 @@ header {
     box-shadow: 0 10px 20px rgba(6, 22, 41, 0.45);
 }
 
+
+.social-glass a :hover {
+    transform: translateY(-4px);
+    transition-duration: 250ms;
+}
+
 nav a,
 .stat-item,
 .count {
@@ -168,9 +174,9 @@ nav a,
 }
 
 .about-text {
-    max-width: 700px;
+    max-width: 1200px;
     margin: 0 auto 2.8rem;
-    font-size: 0.6rem;
+    font-size: 16px;
     line-height: 1.45;
 }
 
@@ -471,11 +477,18 @@ nav a,
 
     /* Logo + text: keep as-is, just slightly smaller */
     header .flex.items-center.gap-3 img {
-        height: 32px !important;
+        height: 48px !important;
     }
 
-    header .flex.items-center.gap-3 .text-\[11px\] {
-        font-size: 9px !important;
+    header .flex.items-center.gap-3 .strong  {
+        font-size: 16px !important;
+    }
+
+    header .flex.items-center.gap-3 .opacity-80 {
+        margin-top: 0%;
+        font-weight: 100;
+        font-size: 14px;
+        opacity: 0.75 !important;
     }
 
     /* Right side: only show the hamburger button, hide nav by default */
@@ -531,9 +544,11 @@ nav a,
     }
 
     .hero-image {
+        margin-top: 220px;
         width: 100% !important;
         height: auto !important;
         display: block !important;
+        transform: scale(2.0);
     }
 
     .hero-overlay {
@@ -547,7 +562,8 @@ nav a,
     }
 
     .hero-inner {
-        transform: translateY(8%) !important;
+        margin-bottom: 60px !important;
+        transform: translateY(-20%) !important;
         width: 100% !important;
         max-width: 100% !important;
         padding: 0 !important;
@@ -581,6 +597,7 @@ nav a,
         width: 18px !important;
         height: 18px !important;
     }
+
 
     /* =============================================
        4. ABOUT SECTION — centered, no overlap offset
@@ -717,6 +734,7 @@ nav a,
     }
 
     .team-carousel-wrap {
+        height: 444px;
         overflow-x: hidden !important;
         overflow-y: visible !important;
         width: 100% !important;
@@ -864,7 +882,7 @@ nav a,
     background-position: center top;
     background-repeat: no-repeat;
     width: 100%;
-    padding-bottom: 2rem;
+    padding-bottom: 1rem;
     margin-bottom: 0;
 }
 
@@ -1010,14 +1028,14 @@ nav a,
 
 .footer-copy {
     margin: 1.7rem 0 0;
-    padding: 0.75rem 1rem;
+    padding: 1rem 1rem;
     text-align: center;
     font-size: 0.62rem;
-    opacity: 0.65;
+    opacity: 1;
     width: 100%;
     box-sizing: border-box;
     display: block;
-    background: #05080d;
+    background: #0D0D0D;
 }
 
 /* footer-specific mobile styles merged into main mobile block above */
