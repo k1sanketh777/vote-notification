@@ -32,13 +32,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const progress = Math.min(elapsed / duration, 1);
         const eased = 1 - Math.pow(1 - progress, 3);
         const value = Math.floor(target * eased);
+        const suffix = counter.dataset.suffix || "+";
 
-        counter.innerText = `${value}+`;
+        counter.innerText = `${value}${suffix}`;
 
         if (progress < 1) {
           requestAnimationFrame(animateCount);
         } else {
-          counter.innerText = `${target}+`;
+          counter.innerText = `${target}${suffix}`;
         }
       };
 
@@ -214,4 +215,45 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
+    // Smooth scroll with custom easing for all anchor links
+    const easeInOutCubic = (t) =>
+        t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+    const smoothScrollTo = (targetY, duration = 900) => {
+        // scroll on body (since html is overflow:hidden, body scrolls)
+        const scroller = document.scrollingElement || document.body;
+        const startY = scroller.scrollTop;
+        const distance = targetY - startY;
+        const startTime = performance.now();
+
+        const step = (now) => {
+            const elapsed = now - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = easeInOutCubic(progress);
+            scroller.scrollTop = startY + distance * eased;
+            if (progress < 1) requestAnimationFrame(step);
+        };
+
+        requestAnimationFrame(step);
+    };
+
+    document.querySelectorAll('a[href^="#"]').forEach((link) => {
+        link.addEventListener('click', (e) => {
+            const id = link.getAttribute('href').slice(1);
+            const target = document.getElementById(id);
+            if (!target) return;
+            e.preventDefault();
+
+            // Close mobile nav if open
+            if (nav) nav.classList.remove('active');
+
+            // Offset for fixed header height
+            const headerHeight = document.querySelector('header')?.offsetHeight || 0;
+            const scroller = document.scrollingElement || document.body;
+            const targetY = target.getBoundingClientRect().top + scroller.scrollTop - headerHeight;
+
+            smoothScrollTo(targetY, 900);
+        });
+    });
 });
