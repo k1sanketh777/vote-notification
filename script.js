@@ -13,6 +13,26 @@ window.tailwind.config = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+  // 1. Menu Toggle Logic (Consolidated)
+  const menuToggle = document.getElementById('menuToggle');
+  const mainNav = document.getElementById('mainNav');
+
+  if (menuToggle && mainNav) {
+      menuToggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = mainNav.classList.toggle('active');
+          menuToggle.classList.toggle('active', isOpen);
+      });
+
+      document.addEventListener('click', (e) => {
+          if (!mainNav.contains(e.target) && !menuToggle.contains(e.target)) {
+              mainNav.classList.remove('active');
+              menuToggle.classList.remove('active');
+          }
+      });
+  }
+
+  // 2. Counter Logic with Easing
   const counts = document.querySelectorAll(".count");
   let countersAnimated = false;
 
@@ -70,10 +90,13 @@ document.addEventListener("DOMContentLoaded", () => {
   updateAboutOverlap();
   window.addEventListener("resize", updateAboutOverlap);
 
+  // 3. Reveal Elements with Smooth Intersection Observer
   const revealTargets = document.querySelectorAll(
     "#about .about-title, #about .about-text, #about .stats-row .stat-item, .showcase-title, .service-card, .desktop-carousel .team-slide .team-card, .mobile-snap-card, .team-dots, .site-footer .footer-brand, .site-footer .footer-contact, .footer-copy",
   );
-  revealTargets.forEach((element) => element.classList.add("reveal-up"));
+  revealTargets.forEach((element) => {
+    element.classList.add("reveal-up");
+  });
 
   const revealObserver = new IntersectionObserver(
     (entries, observer) => {
@@ -107,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
     aboutObserver.observe(aboutSection);
   }
 
-  // Desktop carousel
+  // 4. Desktop Carousel
   const teamCarousel = document.querySelector(".desktop-carousel");
   const slides = document.querySelectorAll(".desktop-carousel .team-slide");
   const dots = document.querySelectorAll(".desktop-dots .dot");
@@ -124,25 +147,41 @@ document.addEventListener("DOMContentLoaded", () => {
     setActiveSlide(0);
   }
 
-  // Mobile snap-scroll carousel
+  // 5. Team Carousel Pop-up / Scroll Effect
+  const teamContainer = document.querySelector('.team-carousel');
+  const mainTeamCards = document.querySelectorAll('.team-slide-main .team-card');
+
+  if (teamContainer && mainTeamCards.length) {
+      const handleTeamScroll = () => {
+          const containerCenter = teamContainer.scrollLeft + (teamContainer.offsetWidth / 2);
+          mainTeamCards.forEach(card => {
+              const cardCenter = card.offsetLeft + (card.offsetWidth / 2);
+              const distance = Math.abs(containerCenter - cardCenter);
+              if (distance < card.offsetWidth / 2) {
+                  card.classList.add('is-center');
+              } else {
+                  card.classList.remove('is-center');
+              }
+          });
+      };
+      teamContainer.addEventListener('scroll', handleTeamScroll);
+      handleTeamScroll();
+  }
+
+  // 6. Mobile Snap-scroll Carousel
   const snapTrack = document.getElementById("mobileSnapTrack");
   const snapCards = snapTrack ? snapTrack.querySelectorAll(".mobile-snap-card") : [];
   const snapDots = document.querySelectorAll("#mobileSnapDots .dot");
 
   if (snapTrack && snapCards.length) {
-    // Mark first card active on load
     snapCards[0].classList.add("is-active");
 
-    // IntersectionObserver: card is "active" when it's ≥60% visible in the track
     const snapObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.intersectionRatio >= 0.6) {
-            // Remove active from all
             snapCards.forEach((c) => c.classList.remove("is-active"));
             entry.target.classList.add("is-active");
-
-            // Sync dots
             const idx = Number(entry.target.dataset.index || 0);
             snapDots.forEach((d, i) => d.classList.toggle("active", i === idx));
           }
@@ -153,7 +192,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     snapCards.forEach((card) => snapObserver.observe(card));
 
-    // Dot click: scroll to card
     snapDots.forEach((dot) => {
       dot.addEventListener("click", () => {
         const idx = Number(dot.dataset.card || 0);
@@ -164,96 +202,45 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
-});
 
-document.addEventListener("DOMContentLoaded", () => {
-    // 1. Menu Toggle Logic
-    const menuToggle = document.getElementById('menuToggle');
-    const mainNav = document.getElementById('mainNav');
+  // 7. Smooth Scrolling Navigation (Eased Cubic-Bezier)
+  const easeInOutCubic = (t) =>
+      t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
-    if (menuToggle && mainNav) {
-        menuToggle.addEventListener('click', () => {
-            mainNav.classList.toggle('active');
-        });
-    }
+  const smoothScrollTo = (targetY, duration = 900) => {
+      const scroller = document.scrollingElement || document.body;
+      const startY = scroller.scrollTop;
+      const distance = targetY - startY;
+      const startTime = performance.now();
 
-    // 2. Team Carousel Pop-up Logic
-    const teamContainer = document.querySelector('.team-carousel');
-    const mainTeamCards = document.querySelectorAll('.team-slide-main .team-card');
+      const step = (now) => {
+          const elapsed = now - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = easeInOutCubic(progress);
+          scroller.scrollTop = startY + distance * eased;
+          if (progress < 1) requestAnimationFrame(step);
+      };
 
-    if (teamContainer && mainTeamCards.length) {
-        const handleTeamScroll = () => {
-            const containerCenter = teamContainer.scrollLeft + (teamContainer.offsetWidth / 2);
-            mainTeamCards.forEach(card => {
-                const cardCenter = card.offsetLeft + (card.offsetWidth / 2);
-                const distance = Math.abs(containerCenter - cardCenter);
-                if (distance < card.offsetWidth / 2) {
-                    card.classList.add('is-center');
-                } else {
-                    card.classList.remove('is-center');
-                }
-            });
-        };
-        teamContainer.addEventListener('scroll', handleTeamScroll);
-        handleTeamScroll();
-    }
-});
+      requestAnimationFrame(step);
+  };
 
-document.addEventListener("DOMContentLoaded", () => {
-    const toggle = document.getElementById('menuToggle');
-    const nav = document.getElementById('mainNav');
+  document.querySelectorAll('a[href^="#"]').forEach((link) => {
+      link.addEventListener('click', (e) => {
+          const id = link.getAttribute('href').slice(1);
+          const target = document.getElementById(id);
+          if (!target) return;
+          e.preventDefault();
 
-    if (toggle && nav) {
-        toggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            nav.classList.toggle('active');
-        });
+          if (mainNav) {
+              mainNav.classList.remove('active');
+              if (menuToggle) menuToggle.classList.remove('active');
+          }
 
-        document.addEventListener('click', (e) => {
-            if (!nav.contains(e.target) && !toggle.contains(e.target)) {
-                nav.classList.remove('active');
-            }
-        });
-    }
+          const headerHeight = document.querySelector('header')?.offsetHeight || 0;
+          const scroller = document.scrollingElement || document.body;
+          const targetY = target.getBoundingClientRect().top + scroller.scrollTop - headerHeight;
 
-    // Smooth scroll with custom easing for all anchor links
-    const easeInOutCubic = (t) =>
-        t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-
-    const smoothScrollTo = (targetY, duration = 900) => {
-        // scroll on body (since html is overflow:hidden, body scrolls)
-        const scroller = document.scrollingElement || document.body;
-        const startY = scroller.scrollTop;
-        const distance = targetY - startY;
-        const startTime = performance.now();
-
-        const step = (now) => {
-            const elapsed = now - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const eased = easeInOutCubic(progress);
-            scroller.scrollTop = startY + distance * eased;
-            if (progress < 1) requestAnimationFrame(step);
-        };
-
-        requestAnimationFrame(step);
-    };
-
-    document.querySelectorAll('a[href^="#"]').forEach((link) => {
-        link.addEventListener('click', (e) => {
-            const id = link.getAttribute('href').slice(1);
-            const target = document.getElementById(id);
-            if (!target) return;
-            e.preventDefault();
-
-            // Close mobile nav if open
-            if (nav) nav.classList.remove('active');
-
-            // Offset for fixed header height
-            const headerHeight = document.querySelector('header')?.offsetHeight || 0;
-            const scroller = document.scrollingElement || document.body;
-            const targetY = target.getBoundingClientRect().top + scroller.scrollTop - headerHeight;
-
-            smoothScrollTo(targetY, 900);
-        });
-    });
+          smoothScrollTo(targetY, 900);
+      });
+  });
 });
