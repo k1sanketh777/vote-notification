@@ -71,7 +71,7 @@ html {
     text-align: center;
 }
 
-.-subtitle {
+.hero-subtitle {
     font-size: clamp(0.5rem, 1.7vw, 1rem);
     letter-spacing: 0em;
     margin-bottom: 2.1rem;
@@ -341,7 +341,7 @@ nav a,
 }
 
 .team-heading {
-    margin-top: 2.8rem;
+    margin-top: 0;
 }
 
 .team-card {
@@ -460,7 +460,7 @@ nav a,
     /* =============================================
        2. HEADER — logo left, hamburger right, flat row
     ============================================= */
-    header {
+    .header {
         position: absolute !important;
         top: 0 !important;
         left: 0 !important;
@@ -506,52 +506,134 @@ nav a,
         margin: 0 !important;
     }
 
-    /* Nav: hidden by default, shown as dropdown when toggled */
+    /* ---- Hamburger → X animation ---- */
+    #menuToggle {
+        position: relative !important;
+        overflow: visible !important;
+    }
+
+    /* All three bars share a transition */
+    #menuToggle span {
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                    opacity   0.25s ease !important;
+        transform-origin: center !important;
+        display: block !important;
+    }
+
+    /* When active: top bar rotates to / , middle fades out, bottom rotates to \ */
+    #menuToggle.active span:nth-child(1) {
+        transform: translateY(6.5px) rotate(45deg) !important;
+    }
+    #menuToggle.active span:nth-child(2) {
+        opacity: 0 !important;
+        transform: scaleX(0) !important;
+    }
+    #menuToggle.active span:nth-child(3) {
+        transform: translateY(-6.5px) rotate(-45deg) !important;
+    }
+
+    /* ---- Dropdown nav: always in the DOM, animated via clip-path ---- */
     #mainNav {
-        display: none !important;
-        position: absolute !important;
-        top: 60px !important;
-        right: 16px !important;
-        flex-direction: column !important;
-        align-items: flex-end !important;
-        gap: 0 !important;
-        padding: 16px 20px !important;
-        width: auto !important;
-        margin: 0 !important;
-        background: rgba(6, 27, 49, 0.97) !important;
-        border: 1px solid rgba(255,255,255,0.15) !important;
-        border-radius: 12px !important;
-        backdrop-filter: blur(12px) !important;
-        z-index: 200 !important;
-    }
-
-    #mainNav.active {
+        /* Keep it in flow so clip-path can animate from/to */
         display: flex !important;
+        position: absolute !important;
+        top: 68px !important;
+        right: 16px !important;
+        width: 160px !important;
+        height: auto !important;
+        padding: 10px 0 !important;
+        margin: 0 !important;
+
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        align-items: center !important;
+        gap: 0 !important;
+        z-index: 200 !important;
+
+        /* Glassmorphism */
+        background: rgba(127, 147, 170, 0.28) !important;
+        border: 1px solid rgba(255, 255, 255, 0.22) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        border-radius: 12px 12px 12px 44px !important;
+        box-shadow: 0 8px 24px rgba(6, 22, 41, 0.45) !important;
+
+        /* Closed state — clipped to top edge, invisible, non-interactive */
+        clip-path: inset(0 0 100% 0 round 12px) !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        transition:
+            clip-path 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+            opacity   0.28s ease !important;
     }
 
+    /* Open state */
+    #mainNav.active {
+        clip-path: inset(0 0 0% 0 round 12px) !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+    }
+
+    /* Individual link stagger using CSS animation-delay */
     #mainNav a {
+        width: 100% !important;
+        text-align: center !important;
         font-size: 13px !important;
-        line-height: 2.2 !important;
-        padding: 0 !important;
+        line-height: 1 !important;
+        padding: 13px 0 !important;
+        margin: 0 !important;
+        border: none !important;
+        opacity: 0 !important;
+        transform: translateY(-6px) !important;
+        transition: opacity 0.22s ease, transform 0.22s ease,
+                    color 0.2s ease !important;
+    }
+
+    #mainNav.active a {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+    }
+
+    /* Stagger each link's entry */
+    #mainNav.active a:nth-child(1) { transition-delay: 0.08s !important; }
+    #mainNav.active a:nth-child(2) { transition-delay: 0.13s !important; }
+    #mainNav.active a:nth-child(3) { transition-delay: 0.18s !important; }
+    #mainNav.active a:nth-child(4) { transition-delay: 0.23s !important; }
+
+    /* Hover accent inside open menu */
+    #mainNav a:hover {
+        color: #f5a623 !important;
     }
 
     /* =============================================
-       3.  — full width image, centered text overlay
+       3. HERO — full width image, centered text overlay
     ============================================= */
-    .-bg {
+    .hero-bg {
         position: relative !important;
         width: 100% !important;
+        margin-top: 0 !important;
     }
 
-    .-image {
-        margin-top: 200px;
+    /* Hero: bg image fills exactly the viewport so only the hero is seen on first load */
+    .hero-bg {
+        height: 100svh !important;
+        overflow: hidden !important;
+    }
+
+    .hero-image {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
         width: 100% !important;
-        height: auto !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        object-position: center top !important;
         display: block !important;
-        transform: scale(2.0);
+        transform: none !important;
     }
 
     .hero-overlay {
+        margin-top: 0 !important;
         position: absolute !important;
         inset: 0 !important;
         display: flex !important;
@@ -562,8 +644,7 @@ nav a,
     }
 
     .hero-inner {
-        margin-bottom: 60px !important;
-        transform: translateY(-20%) !important;
+        transform: translateY(-10%) !important;
         width: 100% !important;
         max-width: 100% !important;
         padding: 0 !important;
@@ -621,7 +702,7 @@ nav a,
     }
 
     .about-text {
-        font-size: clamp(0.62rem, 2.4vw, 0.75rem) !important;
+        font-size: clamp(0.62rem, 2.4vw, 0.70rem) !important;
         line-height: 1.65 !important;
         margin-bottom: 1.8rem !important;
         max-width: 100% !important;
@@ -743,128 +824,133 @@ nav a,
     }
 
     /* =============================================
-       7. FOOTER — two-column layout matching design
+       7. FOOTER — single left-aligned column, bigger tap targets
     ============================================= */
     .site-footer {
         padding-top: 1.5rem !important;
     }
 
     .footer-wrap {
-        padding-left: 16px !important;
-        padding-right: 16px !important;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
         max-width: 100% !important;
     }
 
-    /* Top row: brand left, socials+contact right */
+    /* Stack brand and contact vertically, both left-aligned */
     .footer-top {
         display: flex !important;
-        flex-direction: row !important;
-        justify-content: space-between !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
         align-items: flex-start !important;
-        gap: 1rem !important;
+        gap: 1.6rem !important;
     }
 
     .footer-brand {
-        flex: 1 1 0 !important;
-        min-width: 0 !important;
+        width: 100% !important;
     }
 
     .footer-brand-row {
         display: flex !important;
         align-items: center !important;
-        gap: 8px !important;
-        margin-bottom: 1rem !important;
+        gap: 12px !important;
+        margin-bottom: 1.2rem !important;
     }
 
     .footer-brand-row img {
-        width: 36px !important;
-        height: 36px !important;
+        width: 44px !important;
+        height: 44px !important;
         flex-shrink: 0 !important;
     }
 
     .footer-brand-row h3 {
-        font-size: 0.72rem !important;
+        font-size: 1rem !important;
         line-height: 1.2 !important;
         font-weight: 700 !important;
     }
 
     .footer-brand-row p {
-        font-size: 0.55rem !important;
+        font-size: 0.7rem !important;
         opacity: 0.8 !important;
     }
 
     .footer-creators h4 {
-        font-size: 0.78rem !important;
+        font-size: 0.9rem !important;
         font-weight: 700 !important;
-        margin-bottom: 0.3rem !important;
+        margin-bottom: 0.4rem !important;
+        text-align: left !important;
     }
 
     .footer-creators p {
-        font-size: 0.6rem !important;
-        line-height: 1.4 !important;
+        font-size: 0.75rem !important;
+        line-height: 1.6 !important;
         opacity: 0.85 !important;
+        text-align: left !important;
     }
 
     .footer-contact {
-        flex: 1 1 0 !important;
-        min-width: 0 !important;
+        width: 100% !important;
         display: flex !important;
         flex-direction: column !important;
-        align-items: flex-end !important;
+        align-items: flex-start !important;
     }
 
-    /* Socials row: right-aligned */
+    /* Socials row: left-aligned, larger hit areas */
     .footer-socials {
         display: flex !important;
         flex-direction: row !important;
-        justify-content: flex-end !important;
-        gap: 6px !important;
-        margin-bottom: 0.8rem !important;
+        justify-content: flex-start !important;
+        gap: 10px !important;
+        margin-bottom: 1rem !important;
         width: 100% !important;
     }
 
     .footer-socials a {
-        width: 28px !important;
-        height: 28px !important;
+        width: 44px !important;
+        height: 44px !important;
         border-radius: 999px !important;
     }
 
     .footer-socials img {
-        width: 12px !important;
-        height: 12px !important;
+        width: 18px !important;
+        height: 18px !important;
     }
 
     .footer-contact h4 {
-        font-size: 0.78rem !important;
+        font-size: 0.9rem !important;
         font-weight: 700 !important;
-        margin-bottom: 0.4rem !important;
+        margin-bottom: 0.6rem !important;
         width: 100% !important;
         text-align: left !important;
     }
 
     .contact-list {
         width: 100% !important;
-        gap: 6px !important;
+        gap: 10px !important;
     }
 
     .contact-item {
         width: 100% !important;
-        min-height: 26px !important;
-        font-size: 0.6rem !important;
-        padding: 0.3rem 0.5rem !important;
+        min-height: 48px !important;
+        font-size: 0.88rem !important;
+        padding: 0.6rem 0.85rem !important;
         box-sizing: border-box !important;
     }
 
     .contact-item img {
-        width: 11px !important;
-        height: 11px !important;
+        width: 18px !important;
+        height: 18px !important;
     }
 
     .footer-copy {
-        font-size: 0.5rem !important;
-        margin-top: 1rem !important;
-        opacity: 0.6 !important;
+        font-size: 0.58rem !important;
+        margin-top: 1.2rem !important;
+        opacity: 0.7 !important;
+        text-align: left !important;
+        padding-left: 20px !important;
     }
+        width: 100% !important;
+    }
+
 }
 
 
@@ -882,6 +968,7 @@ nav a,
     background-position: center top;
     background-repeat: no-repeat;
     width: 100%;
+    padding-top: 70px;
     padding-bottom: 1rem;
     margin-bottom: 0;
 }
@@ -1093,9 +1180,9 @@ nav a,
         padding-top: 20px !important;
         padding-bottom: 20px !important;
         padding-left: calc(50% - min(191px, 38vw)) !important;
-        padding-right: calc(50% - min(191px, 38vw)) !important;
+        padding-right: 0 !important;
         scroll-padding-left: calc(50% - min(191px, 38vw)) !important;
-        scroll-padding-right: calc(50% - min(191px, 38vw)) !important;
+        scroll-padding-right: calc(50% - min(141px, 28vw)) !important;
         gap: 14px !important;
         width: 100% !important;
         box-sizing: border-box !important;
@@ -1163,6 +1250,17 @@ nav a,
         font-size: clamp(0.5rem, 2vw, 0.62rem) !important;
     }
 
+    /* 
+     * Last card is a MEMBER card (width: min(282px, 56vw), half = min(141px, 28vw)).
+     * ::after must give enough room for it to snap to dead center.
+     */
+    .mobile-snap-track::after {
+        content: '';
+        display: block;
+        flex: 0 0 calc(50% - min(141px, 28vw));
+        min-width: calc(50% - min(141px, 28vw));
+    }
+
     /* Mobile dots */
     .mobile-dots {
         display: flex !important;
@@ -1171,5 +1269,13 @@ nav a,
         margin-top: 10px !important;
         flex-wrap: wrap !important;
         padding: 0 12px !important;
+    }
+
+    .team-bg-section {
+        padding-top: 35px !important;
+    }
+
+    .team-heading {
+        margin-top: 0 !important;
     }
 }
