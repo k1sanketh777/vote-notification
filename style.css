@@ -60,7 +60,7 @@ html {
 
 .hero-inner {
     margin-top: 0;
-    margin-bottom: 60px;
+    margin-bottom: 280px;
     width: min(100%, 1200px);
     max-width: calc(100% - 32px);
     padding: 0;
