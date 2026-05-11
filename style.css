@@ -216,7 +216,7 @@ nav a,
 
 .about-wrap {
     margin-bottom: 0;
-    max-width: 980px;
+    max-width: 1078px;
 }
 
 .about-title {
@@ -227,10 +227,11 @@ nav a,
 }
 
 .about-text {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto 2.8rem;
     font-size: 16px;
     line-height: 1.45;
+    text-align: justify;
 }
 
 .stats-row {
@@ -1435,4 +1436,54 @@ nav a,
     width: 500px;
     height: 500px;
     object-fit: contain;
+}
+
+/* =============================================
+   CAROUSEL EDGE ARROWS
+============================================= */
+.team-carousel-wrap {
+    position: relative;
+}
+
+.carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, background 0.2s ease, transform 0.25s ease;
+}
+
+.carousel-arrow-left  { left: 12px; }
+.carousel-arrow-right { right: 12px; }
+
+/* Show left arrow when hovering left 20% of the wrap */
+.team-carousel-wrap:hover .carousel-arrow-left.edge-active,
+.team-carousel-wrap:hover .carousel-arrow-right.edge-active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.carousel-arrow:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* Hide on mobile */
+@media (max-width: 767px) {
+    .carousel-arrow { display: none !important; }
 }
