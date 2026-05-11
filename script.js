@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 1. Menu Toggle Logic (Consolidated)
   const menuToggle = document.getElementById('menuToggle');
   const mainNav = document.getElementById('mainNav');
+  const header = document.querySelector('header');
 
   if (menuToggle && mainNav) {
       menuToggle.addEventListener('click', (e) => {
@@ -72,19 +73,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const aboutSection = document.querySelector("#about");
 
   const updateAboutOverlap = () => {
-    if (!heroSection || !socialBox || !aboutSection) {
-      return;
+    // Overlap removed — about section sits naturally below hero
+    if (aboutSection) {
+      aboutSection.style.marginTop = '0px';
     }
-
-    const heroRect = heroSection.getBoundingClientRect();
-    const socialRect = socialBox.getBoundingClientRect();
-    const desiredGap = 370;
-    const overlapAmount = Math.max(
-      0,
-      Math.round(heroRect.bottom - (socialRect.bottom + desiredGap)),
-    );
-
-    aboutSection.style.marginTop = `-${overlapAmount}px`;
   };
 
   updateAboutOverlap();
@@ -130,6 +122,19 @@ document.addEventListener("DOMContentLoaded", () => {
     aboutObserver.observe(aboutSection);
   }
 
+  // About section scroll reveal
+  if (aboutSection) {
+    const revealAbout = () => {
+      const rect = aboutSection.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.88) {
+        aboutSection.classList.add('is-visible');
+        document.body.removeEventListener('scroll', revealAbout);
+      }
+    };
+    document.body.addEventListener('scroll', revealAbout, { passive: true });
+    revealAbout();
+  }
+
   // 4. Desktop Carousel
   const teamCarousel = document.querySelector(".desktop-carousel");
   const slides = document.querySelectorAll(".desktop-carousel .team-slide");
@@ -170,35 +175,66 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 6. Mobile Snap-scroll Carousel
   const snapTrack = document.getElementById("mobileSnapTrack");
-  const snapCards = snapTrack ? snapTrack.querySelectorAll(".mobile-snap-card") : [];
-  const snapDots = document.querySelectorAll("#mobileSnapDots .dot");
+  const snapCards = snapTrack ? Array.from(snapTrack.querySelectorAll(".mobile-snap-card")) : [];
+  const snapDots = Array.from(document.querySelectorAll("#mobileSnapDots .dot"));
 
   if (snapTrack && snapCards.length) {
-    snapCards[0].classList.add("is-active");
 
-    const snapObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.intersectionRatio >= 0.6) {
-            snapCards.forEach((c) => c.classList.remove("is-active"));
-            entry.target.classList.add("is-active");
-            const idx = Number(entry.target.dataset.index || 0);
-            snapDots.forEach((d, i) => d.classList.toggle("active", i === idx));
-          }
-        });
-      },
-      { root: snapTrack, threshold: 0.6 }
-    );
+    const getCenterCard = () => {
+      const trackRect = snapTrack.getBoundingClientRect();
+      const trackCenter = trackRect.left + trackRect.width / 2;
+      let closestCard = null;
+      let closestDist = Infinity;
+      snapCards.forEach((card) => {
+        const rect = card.getBoundingClientRect();
+        const cardCenter = rect.left + rect.width / 2;
+        const dist = Math.abs(trackCenter - cardCenter);
+        if (dist < closestDist) { closestDist = dist; closestCard = card; }
+      });
+      return closestCard;
+    };
 
-    snapCards.forEach((card) => snapObserver.observe(card));
+    const updateActiveCard = () => {
+      const closestCard = getCenterCard();
+      if (closestCard) {
+        snapCards.forEach((c) => c.classList.remove("is-active"));
+        closestCard.classList.add("is-active");
+        const idx = Number(closestCard.dataset.index || 0);
+        snapDots.forEach((d, i) => d.classList.toggle("active", i === idx));
+      }
+    };
+
+    const snapToCenter = () => {
+      const closestCard = getCenterCard();
+      if (!closestCard) return;
+      const trackRect = snapTrack.getBoundingClientRect();
+      const cardRect = closestCard.getBoundingClientRect();
+      const offset = (cardRect.left + cardRect.width / 2) - (trackRect.left + trackRect.width / 2);
+      snapTrack.scrollBy({ left: offset, behavior: "smooth" });
+      snapCards.forEach((c) => c.classList.remove("is-active"));
+      closestCard.classList.add("is-active");
+      const idx = Number(closestCard.dataset.index || 0);
+      snapDots.forEach((d, i) => d.classList.toggle("active", i === idx));
+    };
+
+    let snapTimer;
+    snapTrack.addEventListener("scroll", () => {
+      updateActiveCard();
+      clearTimeout(snapTimer);
+      snapTimer = setTimeout(snapToCenter, 80);
+    }, { passive: true });
+
+    setTimeout(snapToCenter, 120);
 
     snapDots.forEach((dot) => {
       dot.addEventListener("click", () => {
         const idx = Number(dot.dataset.card || 0);
-        const target = snapTrack.querySelector(`.mobile-snap-card[data-index="${idx}"]`);
-        if (target) {
-          target.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-        }
+        const target = snapCards[idx];
+        if (!target) return;
+        const trackRect = snapTrack.getBoundingClientRect();
+        const cardRect = target.getBoundingClientRect();
+        const offset = (cardRect.left + cardRect.width / 2) - (trackRect.left + trackRect.width / 2);
+        snapTrack.scrollBy({ left: offset, behavior: "smooth" });
       });
     });
   }
@@ -208,7 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
       t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
   const smoothScrollTo = (targetY, duration = 900) => {
-      const scroller = document.scrollingElement || document.body;
+      const scroller = document.body;
       const startY = scroller.scrollTop;
       const distance = targetY - startY;
       const startTime = performance.now();
@@ -236,11 +272,99 @@ document.addEventListener("DOMContentLoaded", () => {
               if (menuToggle) menuToggle.classList.remove('active');
           }
 
-          const headerHeight = document.querySelector('header')?.offsetHeight || 0;
-          const scroller = document.scrollingElement || document.body;
-          const targetY = target.getBoundingClientRect().top + scroller.scrollTop - headerHeight;
+          if (header) {
+              header.style.transform = 'translateY(0)';
+              header.style.opacity = '1';
+          }
 
+          const headerHeight = header ? header.offsetHeight : 0;
+          const targetY = target.getBoundingClientRect().top + document.body.scrollTop - headerHeight;
           smoothScrollTo(targetY, 900);
       });
   });
+
+  // 9. Smooth momentum wheel scrolling
+  (() => {
+    let current = 0;
+    let target = 0;
+    const ease = 0.09;
+    let rafId = null;
+
+    const scroller = document.body;
+
+    // Parallax elements
+    const heroImg    = document.querySelector('.hero-image');
+    const heroInner  = document.querySelector('.hero-inner');
+
+    const applyParallax = (scrollY) => {
+      if (heroImg) {
+        heroImg.style.transform = `translateY(${scrollY * 0.45}px)`;
+      }
+
+      if (heroInner) {
+        const fadeProgress = Math.min(scrollY / 380, 1);
+        heroInner.style.transform = `translateY(${scrollY * 0.2}px)`;
+        heroInner.style.opacity   = String(Math.max(0, 1 - fadeProgress * 1.3));
+      }
+    };
+
+    const update = () => {
+      current += (target - current) * ease;
+      const diff = Math.abs(target - current);
+      scroller.scrollTop = Math.round(current);
+      applyParallax(Math.round(current));
+      if (diff > 0.5) {
+        rafId = requestAnimationFrame(update);
+      } else {
+        scroller.scrollTop = target;
+        applyParallax(target);
+        rafId = null;
+      }
+    };
+
+    window.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      target = Math.max(0, Math.min(
+        target + e.deltaY,
+        scroller.scrollHeight - scroller.clientHeight
+      ));
+      if (!rafId) {
+        current = scroller.scrollTop;
+        rafId = requestAnimationFrame(update);
+      }
+    }, { passive: false });
+
+    // Also run on touch/mobile scroll
+    scroller.addEventListener('scroll', () => {
+      applyParallax(scroller.scrollTop);
+    }, { passive: true });
+
+    // Init
+    applyParallax(0);
+  })();
+  if (header) {
+    let lastScrollY = document.body.scrollTop;
+    let ticking = false;
+
+    document.body.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const currentScrollY = document.body.scrollTop;
+          const diff = currentScrollY - lastScrollY;
+
+          if (diff > 0 && currentScrollY > 80) {
+            header.style.transform = 'translateY(-100%)';
+            header.style.opacity = '0';
+          } else if (diff < 0) {
+            header.style.transform = 'translateY(0)';
+            header.style.opacity = '1';
+          }
+
+          lastScrollY = currentScrollY;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  }
 });
