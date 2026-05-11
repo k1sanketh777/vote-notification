@@ -1409,3 +1409,30 @@ nav a,
         padding: 0 12px !important;
     }
 }
+
+/* =============================================
+   PRELOADER
+============================================= */
+#preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#preloader.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.preloader-gif {
+    width: 500px;
+    height: 500px;
+    object-fit: contain;
+}
