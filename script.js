@@ -12,6 +12,50 @@ window.tailwind.config = {
   },
 };
 
+
+// =============================================
+// PRELOADER
+// =============================================
+(function () {
+  const preloader = document.getElementById('preloader');
+  if (!preloader) return;
+
+  // Lock scroll while preloader is showing
+  document.body.style.overflow = 'hidden';
+
+  const startTime = Date.now();
+  const MIN_DISPLAY = 4000;
+  let dismissed = false;
+
+  const dismiss = () => {
+    if (dismissed) return;
+    dismissed = true;
+    preloader.classList.add('fade-out');
+    document.body.style.overflow = '';
+    preloader.addEventListener('transitionend', () => preloader.remove(), { once: true });
+    // Safety: force remove if transitionend never fires
+    setTimeout(() => preloader.remove(), 1500);
+  };
+
+  const tryDismiss = () => {
+    const elapsed = Date.now() - startTime;
+    const remaining = MIN_DISPLAY - elapsed;
+    setTimeout(dismiss, remaining > 0 ? remaining : 0);
+  };
+
+  // Works whether load already fired or not
+  if (document.readyState === 'complete') {
+    tryDismiss();
+  } else {
+    window.addEventListener('load', tryDismiss, { once: true });
+  }
+
+  // Absolute hard fallback — always exits after 10s
+  setTimeout(dismiss, 10000);
+})();
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
   // 1. Menu Toggle Logic (Consolidated)
   const menuToggle = document.getElementById('menuToggle');
