@@ -185,15 +185,41 @@ document.addEventListener("DOMContentLoaded", () => {
   const dots = document.querySelectorAll(".desktop-dots .dot");
 
   if (teamCarousel && slides.length && dots.length) {
+    let currentSlide = 0;
+
     const setActiveSlide = (index) => {
-      const safeIndex = Math.max(0, Math.min(index, slides.length - 1));
-      teamCarousel.style.transform = `translateX(-${safeIndex * 100}%)`;
-      dots.forEach((dot, i) => dot.classList.toggle("active", i === safeIndex));
+      currentSlide = Math.max(0, Math.min(index, slides.length - 1));
+      teamCarousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+      dots.forEach((dot, i) => dot.classList.toggle("active", i === currentSlide));
     };
     dots.forEach((dot) => {
       dot.addEventListener("click", () => setActiveSlide(Number(dot.dataset.slide || 0)));
     });
     setActiveSlide(0);
+
+    // Edge-hover arrows
+    const carouselWrap = document.querySelector(".team-carousel-wrap");
+    const prevBtn = document.getElementById("carouselPrev");
+    const nextBtn = document.getElementById("carouselNext");
+
+    if (carouselWrap && prevBtn && nextBtn) {
+      carouselWrap.addEventListener("mousemove", (e) => {
+        const rect = carouselWrap.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const edgeZone = rect.width * 0.2; // 20% from each side
+
+        prevBtn.classList.toggle("edge-active", x < edgeZone);
+        nextBtn.classList.toggle("edge-active", x > rect.width - edgeZone);
+      });
+
+      carouselWrap.addEventListener("mouseleave", () => {
+        prevBtn.classList.remove("edge-active");
+        nextBtn.classList.remove("edge-active");
+      });
+
+      prevBtn.addEventListener("click", () => setActiveSlide(currentSlide - 1));
+      nextBtn.addEventListener("click", () => setActiveSlide(currentSlide + 1));
+    }
   }
 
   // 5. Team Carousel Pop-up / Scroll Effect
