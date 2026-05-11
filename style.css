@@ -26,6 +26,13 @@ body {
     overflow-x: hidden;
     overflow-y: scroll;
     height: 100%;
+    /* Hide scrollbar on all browsers */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+body::-webkit-scrollbar {
+    display: none;
 }
 
 html {
@@ -34,10 +41,13 @@ html {
 
 .hero-bg {
     line-height: 0;
+    position: relative;
+    overflow: hidden;
 }
 
 .hero-image {
     display: block;
+    will-change: transform;
 }
 
 .hero-overlay {
@@ -45,10 +55,12 @@ html {
     box-sizing: border-box;
     padding-top: 0;
     padding-bottom: 0;
+    will-change: transform, opacity;
 }
 
 .hero-inner {
     margin-top: 0;
+    margin-bottom: 60px;
     width: min(100%, 1200px);
     max-width: calc(100% - 32px);
     padding: 0;
@@ -57,7 +69,6 @@ html {
     display: flex;
     flex-direction: column;
     align-items: center;
-    transform: translateY(-12vh);
 }
 
 .hero-title {
@@ -87,55 +98,93 @@ html {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     transition: background-color 0.35s ease, box-shadow 0.35s ease;
+    /* Desktop: show as pill */
+    display: flex;
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
 }
 
 header {
-    position: absolute !important;
+    position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     width: 100% !important;
     display: flex !important;
     justify-content: space-between !important;
     align-items: center !important;
-    /* This creates the 'safe zone' from the screen edges */
-    padding: 30px 60px !important; 
+    padding: 30px 60px !important;
     z-index: 100 !important;
     box-sizing: border-box !important;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.4s ease !important;
 }
 
 .social-glass {
     background: rgba(127, 147, 170, 0.25);
     border: 1px solid rgba(255, 255, 255, 0.22);
-    box-shadow: 0 8px 18px rgba(6, 22, 41, 0.35);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 8px 18px rgba(6,22,41,0.35);
     backdrop-filter: blur(9px);
     -webkit-backdrop-filter: blur(9px);
-    transition: transform 0.35s ease, box-shadow 0.35s ease, background-color 0.35s ease;
     width: 196px;
     height: 44px;
     display: inline-flex;
-    gap: 4px;
+    gap: 10px;
     align-items: center;
     justify-content: center;
-    padding: 0;
+    padding: 0 16px;
     border-radius: 999px;
+    position: relative;
+}
+
+/* Each icon link inside the pill — this is what animates */
+.social-glass a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    position: relative;
+    transition:
+        transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+        background 0.25s ease,
+        box-shadow 0.25s ease;
+    z-index: 1;
+}
+
+/* Liquid glass bubble behind each icon on hover */
+.social-glass a::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,0.3);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}
+
+.social-glass a:hover {
+    transform: scale(1.35) translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+}
+
+.social-glass a:hover::before {
+    opacity: 1;
 }
 
 .social-glass img {
-    width: 24px;
-    height: 24px;
+    width: 16px;
+    height: 16px;
     object-fit: contain;
-
-}
-
-.social-glass:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(6, 22, 41, 0.45);
-}
-
-
-.social-glass a :hover {
-    transform: translateY(-4px);
-    transition-duration: 250ms;
+    position: relative;
+    z-index: 1;
 }
 
 nav a,
@@ -156,13 +205,17 @@ nav a,
 }
 
 .about-section {
-    margin-top: 0;
-    padding: 0 0 4rem;
+    margin-top: 0 !important;
+    padding: 80px 0 3.5rem;
     position: relative;
-    z-index: 30;
+    z-index: 10;
+    background: #061B31;
 }
 
+
+
 .about-wrap {
+    margin-bottom: 0;
     max-width: 980px;
 }
 
@@ -196,12 +249,16 @@ nav a,
 }
 
 .showcase-section {
-    padding: 2rem 0 0;
+    position: relative;
+    z-index: 5;
+    margin-top: 0px;
+    padding: 3rem 0 2rem;
     background: radial-gradient(circle at top, rgba(29, 75, 130, 0.38), rgba(6, 27, 49, 0.92) 35%, #061b31 100%);
+    background-repeat: no-repeat;
 }
 
 .showcase-wrap {
-    max-width: 1240px;
+    max-width: 1340px;
     width: 100%;
     box-sizing: border-box;
 }
@@ -341,7 +398,7 @@ nav a,
 }
 
 .team-heading {
-    margin-top: 0;
+    margin-top: 2.8rem;
 }
 
 .team-card {
@@ -460,8 +517,8 @@ nav a,
     /* =============================================
        2. HEADER — logo left, hamburger right, flat row
     ============================================= */
-    .header {
-        position: absolute !important;
+    header {
+        position: fixed !important;
         top: 0 !important;
         left: 0 !important;
         right: 0 !important;
@@ -499,110 +556,108 @@ nav a,
         min-height: unset !important;
     }
 
-    /* Show the hamburger button */
+    /* Show the hamburger button — liquid glass style */
     #menuToggle {
         display: flex !important;
         order: 0 !important;
         margin: 0 !important;
-    }
-
-    /* ---- Hamburger → X animation ---- */
-    #menuToggle {
+        width: 46px !important;
+        height: 46px !important;
+        border-radius: 50% !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.25) !important;
+        backdrop-filter: blur(16px) saturate(1.8) !important;
+        -webkit-backdrop-filter: blur(16px) saturate(1.8) !important;
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.3),
+            inset 0 -1px 0 rgba(0,0,0,0.15),
+            0 4px 16px rgba(0,0,0,0.3) !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 5px !important;
+        cursor: pointer !important;
+        transition: background 0.3s ease, box-shadow 0.3s ease !important;
         position: relative !important;
-        overflow: visible !important;
+        overflow: hidden !important;
     }
 
-    /* All three bars share a transition */
+    #menuToggle::before {
+        content: '' !important;
+        position: absolute !important;
+        top: 0 !important; left: 0 !important; right: 0 !important;
+        height: 50% !important;
+        background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 100%) !important;
+        border-radius: 50% 50% 0 0 !important;
+        pointer-events: none !important;
+    }
+
     #menuToggle span {
-        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                    opacity   0.25s ease !important;
-        transform-origin: center !important;
         display: block !important;
+        width: 20px !important;
+        height: 2px !important;
+        background: rgba(255,255,255,0.95) !important;
+        border-radius: 2px !important;
+        transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease !important;
+        transform-origin: center !important;
+        position: relative !important;
     }
 
-    /* When active: top bar rotates to / , middle fades out, bottom rotates to \ */
     #menuToggle.active span:nth-child(1) {
-        transform: translateY(6.5px) rotate(45deg) !important;
+        transform: translateY(7px) rotate(45deg) !important;
     }
     #menuToggle.active span:nth-child(2) {
         opacity: 0 !important;
         transform: scaleX(0) !important;
     }
     #menuToggle.active span:nth-child(3) {
-        transform: translateY(-6.5px) rotate(-45deg) !important;
+        transform: translateY(-7px) rotate(-45deg) !important;
     }
 
-    /* ---- Dropdown nav: always in the DOM, animated via clip-path ---- */
+    #menuToggle.active {
+        background: rgba(255, 255, 255, 0.18) !important;
+    }
+
+    /* Mobile nav — liquid glass dropdown, hidden by default */
     #mainNav {
-        /* Keep it in flow so clip-path can animate from/to */
-        display: flex !important;
+        display: none !important;
         position: absolute !important;
-        top: 68px !important;
-        right: 16px !important;
-        width: 160px !important;
-        height: auto !important;
-        padding: 10px 0 !important;
-        margin: 0 !important;
-
+        top: 58px !important;
+        right: 0 !important;
         flex-direction: column !important;
-        justify-content: flex-start !important;
-        align-items: center !important;
+        align-items: stretch !important;
         gap: 0 !important;
-        z-index: 200 !important;
-
-        /* Glassmorphism */
-        background: rgba(127, 147, 170, 0.28) !important;
-        border: 1px solid rgba(255, 255, 255, 0.22) !important;
-        backdrop-filter: blur(12px) !important;
-        -webkit-backdrop-filter: blur(12px) !important;
-        border-radius: 12px 12px 12px 44px !important;
-        box-shadow: 0 8px 24px rgba(6, 22, 41, 0.45) !important;
-
-        /* Closed state — clipped to top edge, invisible, non-interactive */
-        clip-path: inset(0 0 100% 0 round 12px) !important;
-        opacity: 0 !important;
-        pointer-events: none !important;
-        transition:
-            clip-path 0.38s cubic-bezier(0.4, 0, 0.2, 1),
-            opacity   0.28s ease !important;
-    }
-
-    /* Open state */
-    #mainNav.active {
-        clip-path: inset(0 0 0% 0 round 12px) !important;
-        opacity: 1 !important;
-        pointer-events: auto !important;
-    }
-
-    /* Individual link stagger using CSS animation-delay */
-    #mainNav a {
-        width: 100% !important;
-        text-align: center !important;
-        font-size: 13px !important;
-        line-height: 1 !important;
-        padding: 13px 0 !important;
+        padding: 8px !important;
+        width: 180px !important;
         margin: 0 !important;
-        border: none !important;
-        opacity: 0 !important;
-        transform: translateY(-6px) !important;
-        transition: opacity 0.22s ease, transform 0.22s ease,
-                    color 0.2s ease !important;
+        background: rgba(255, 255, 255, 0.08) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 16px !important;
+        backdrop-filter: blur(24px) saturate(1.8) !important;
+        -webkit-backdrop-filter: blur(24px) saturate(1.8) !important;
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.25),
+            0 16px 40px rgba(0,0,0,0.4) !important;
+        z-index: 200 !important;
     }
 
-    #mainNav.active a {
-        opacity: 1 !important;
-        transform: translateY(0) !important;
+    #mainNav.active {
+        display: flex !important;
     }
 
-    /* Stagger each link's entry */
-    #mainNav.active a:nth-child(1) { transition-delay: 0.08s !important; }
-    #mainNav.active a:nth-child(2) { transition-delay: 0.13s !important; }
-    #mainNav.active a:nth-child(3) { transition-delay: 0.18s !important; }
-    #mainNav.active a:nth-child(4) { transition-delay: 0.23s !important; }
+    #mainNav a {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        line-height: 1 !important;
+        padding: 12px 16px !important;
+        border-radius: 10px !important;
+        text-align: left !important;
+        color: rgba(255,255,255,0.92) !important;
+        gap: 0 !important;
+    }
 
-    /* Hover accent inside open menu */
-    #mainNav a:hover {
-        color: #f5a623 !important;
+    #mainNav a:active {
+        background: rgba(255,255,255,0.12) !important;
     }
 
     /* =============================================
@@ -611,29 +666,23 @@ nav a,
     .hero-bg {
         position: relative !important;
         width: 100% !important;
-        margin-top: 0 !important;
-    }
-
-    /* Hero: bg image fills exactly the viewport so only the hero is seen on first load */
-    .hero-bg {
-        height: 100svh !important;
+        min-height: 100dvh !important;
         overflow: hidden !important;
     }
 
     .hero-image {
         position: absolute !important;
-        top: 0 !important;
-        left: 0 !important;
+        inset: 0 !important;
         width: 100% !important;
         height: 100% !important;
         object-fit: cover !important;
         object-position: center top !important;
         display: block !important;
         transform: none !important;
+        margin-top: 0 !important;
     }
 
     .hero-overlay {
-        margin-top: 0 !important;
         position: absolute !important;
         inset: 0 !important;
         display: flex !important;
@@ -641,10 +690,11 @@ nav a,
         justify-content: center !important;
         align-items: center !important;
         padding: 0 20px !important;
+        min-height: 100dvh !important;
     }
 
     .hero-inner {
-        transform: translateY(-10%) !important;
+        transform: none !important;
         width: 100% !important;
         max-width: 100% !important;
         padding: 0 !important;
@@ -655,7 +705,7 @@ nav a,
     }
 
     .hero-title {
-        font-size: clamp(1.35rem, 6vw, 1.7rem) !important;
+        font-size: clamp(1.5rem, 6.5vw, 1.9rem) !important;
         line-height: 1.15 !important;
         margin-bottom: 0.5rem !important;
         text-align: center !important;
@@ -663,7 +713,7 @@ nav a,
     }
 
     .hero-subtitle {
-        font-size: clamp(0.55rem, 2.5vw, 0.75rem) !important;
+        font-size: clamp(0.6rem, 2.8vw, 0.8rem) !important;
         margin-bottom: 1.2rem !important;
         text-align: center !important;
     }
@@ -671,12 +721,22 @@ nav a,
     .social-glass {
         width: 140px !important;
         height: 36px !important;
-        gap: 8px !important;
+        gap: 6px !important;
+        padding: 0 12px !important;
     }
 
     .social-glass img {
-        width: 18px !important;
-        height: 18px !important;
+        width: 14px !important;
+        height: 14px !important;
+    }
+
+    .social-glass a:hover {
+        transform: none !important;
+        box-shadow: none !important;
+    }
+
+    .social-glass a:hover::before {
+        opacity: 0 !important;
     }
 
 
@@ -686,6 +746,7 @@ nav a,
     .about-section {
         margin-top: 0 !important;
         padding: 2.5rem 0 2rem !important;
+        margin-bottom: 120px !important;
         position: relative !important;
         z-index: 30 !important;
     }
@@ -702,7 +763,7 @@ nav a,
     }
 
     .about-text {
-        font-size: clamp(0.62rem, 2.4vw, 0.70rem) !important;
+        font-size: clamp(0.62rem, 2.4vw, 0.75rem) !important;
         line-height: 1.65 !important;
         margin-bottom: 1.8rem !important;
         max-width: 100% !important;
@@ -743,7 +804,7 @@ nav a,
        5. WHAT WE DO — 2-column grid of cards
     ============================================= */
     .showcase-section {
-        padding: 1.5rem 0 2rem !important;
+        padding: 5rem 0 2rem !important;
         overflow-x: hidden !important;
         max-width: 100vw !important;
     }
@@ -810,8 +871,13 @@ nav a,
     /* =============================================
        6. OUR TEAM — handled by .mobile-snap-track below
     ============================================= */
+    .team-bg-section {
+        margin-top: 35px !important;
+        padding-top: 35px !important;
+    }
+
     .team-heading {
-        margin-top: 2rem !important;
+        margin-top: 0 !important;
     }
 
     .team-carousel-wrap {
@@ -824,25 +890,27 @@ nav a,
     }
 
     /* =============================================
-       7. FOOTER — single left-aligned column, bigger tap targets
+       7. FOOTER — two-column layout matching design
     ============================================= */
     .site-footer {
         padding-top: 1.5rem !important;
     }
 
     .footer-wrap {
-        padding-left: 20px !important;
-        padding-right: 20px !important;
+        padding-left: 16px !important;
+        padding-right: 16px !important;
         max-width: 100% !important;
     }
 
-    /* Stack brand and contact vertically, both left-aligned */
+    /* Top row: brand left, socials+contact right */
+    /* =============================================
+       7. FOOTER — single column, left-aligned, big touch targets
+    ============================================= */
     .footer-top {
         display: flex !important;
         flex-direction: column !important;
-        justify-content: flex-start !important;
         align-items: flex-start !important;
-        gap: 1.6rem !important;
+        gap: 1.5rem !important;
     }
 
     .footer-brand {
@@ -852,8 +920,8 @@ nav a,
     .footer-brand-row {
         display: flex !important;
         align-items: center !important;
-        gap: 12px !important;
-        margin-bottom: 1.2rem !important;
+        gap: 10px !important;
+        margin-bottom: 1rem !important;
     }
 
     .footer-brand-row img {
@@ -863,7 +931,7 @@ nav a,
     }
 
     .footer-brand-row h3 {
-        font-size: 1rem !important;
+        font-size: 0.95rem !important;
         line-height: 1.2 !important;
         font-weight: 700 !important;
     }
@@ -874,17 +942,15 @@ nav a,
     }
 
     .footer-creators h4 {
-        font-size: 0.9rem !important;
+        font-size: 0.95rem !important;
         font-weight: 700 !important;
         margin-bottom: 0.4rem !important;
-        text-align: left !important;
     }
 
     .footer-creators p {
-        font-size: 0.75rem !important;
-        line-height: 1.6 !important;
+        font-size: 0.8rem !important;
+        line-height: 1.8 !important;
         opacity: 0.85 !important;
-        text-align: left !important;
     }
 
     .footer-contact {
@@ -894,29 +960,29 @@ nav a,
         align-items: flex-start !important;
     }
 
-    /* Socials row: left-aligned, larger hit areas */
+    /* Socials row: left-aligned */
     .footer-socials {
         display: flex !important;
         flex-direction: row !important;
         justify-content: flex-start !important;
         gap: 10px !important;
         margin-bottom: 1rem !important;
-        width: 100% !important;
+        width: 25% !important;
     }
 
     .footer-socials a {
-        width: 44px !important;
-        height: 44px !important;
+        width: 40px !important;
+        height: 40px !important;
         border-radius: 999px !important;
     }
 
     .footer-socials img {
-        width: 18px !important;
-        height: 18px !important;
+        width: 16px !important;
+        height: 16px !important;
     }
 
     .footer-contact h4 {
-        font-size: 0.9rem !important;
+        font-size: 0.95rem !important;
         font-weight: 700 !important;
         margin-bottom: 0.6rem !important;
         width: 100% !important;
@@ -925,39 +991,54 @@ nav a,
 
     .contact-list {
         width: 100% !important;
-        gap: 10px !important;
+        gap: 8px !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .contact-list {
+        width: 100% !important;
+        gap: 8px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
     }
 
     .contact-item {
-        width: 100% !important;
-        min-height: 48px !important;
-        font-size: 0.88rem !important;
-        padding: 0.6rem 0.85rem !important;
+        width: 50% !important;
+        min-height: 44px !important;
+        font-size: 0.8rem !important;
+        padding: 0.55rem 0.75rem !important;
         box-sizing: border-box !important;
     }
 
+    .contact-item span {
+        font-size: 0.8rem !important;
+    }
+
     .contact-item img {
-        width: 18px !important;
-        height: 18px !important;
+        width: 16px !important;
+        height: 16px !important;
     }
 
     .footer-copy {
-        font-size: 0.58rem !important;
-        margin-top: 1.2rem !important;
-        opacity: 0.7 !important;
-        text-align: left !important;
-        padding-left: 20px !important;
-    }
-        width: 100% !important;
-    }
-
+        margin: 1.7rem 0 0;
+        padding: 1rem 1rem;
+        text-align: center;
+        font-size: 0.62rem;
+        opacity: 1;
+        width: 100%;
+        box-sizing: border-box;
+        display: block;
+        background: #0D0D0D;
+    }   
 }
 
 
 
 /* --- Desktop Defaults (Outside Media Query) --- */
 .menu-btn {
-    display: none; /* Always hide hamburger on desktop */
+    display: none !important; /* Always hide hamburger on desktop */
 }
 
 
@@ -965,10 +1046,11 @@ nav a,
     position: relative;
     background-image: url('assets/images/teambg.png');
     background-size: cover;
-    background-position: center top;
+    background-position: center 30%;
     background-repeat: no-repeat;
     width: 100%;
-    padding-top: 70px;
+    margin-top: 52px;
+    padding-top: 52px;
     padding-bottom: 1rem;
     margin-bottom: 0;
 }
@@ -1054,35 +1136,43 @@ nav a,
     opacity: 0.88;
 }
 
-.footer-socials {
+.creator-link {
     display: flex;
-    justify-content: flex-end;
-    gap: 9px;
+    align-items: center;
+    gap: 7px;
+    text-decoration: none;
+    color: rgba(255,255,255,0.8);
+    font-size: 0.7rem;
+    line-height: 1.9;
+    transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.creator-link:hover {
+    color: #fff;
+    opacity: 1;
+}
+
+.creator-link img {
+    width: 12px;
+    height: 12px;
+    opacity: 0.7;
+    flex-shrink: 0;
+}
+
+.footer-socials {
     margin-bottom: 1.3rem;
+    /* Inherits all pill styles from .social-glass */
 }
 
 .footer-socials a {
-    width: 44px;
-    height: 44px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.2);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
 }
 
 .footer-socials img {
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
-
-}
-
-.footer-socials img {
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     object-fit: contain;
 }
 
@@ -1106,11 +1196,81 @@ nav a,
     text-decoration: none;
     color: #fff;
     font-size: 0.88rem;
+    position: relative;
+    overflow: hidden;
+    transition:
+        background 0.35s ease,
+        border-color 0.35s ease,
+        box-shadow 0.35s ease,
+        transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+/* Liquid glass shimmer layer */
+.contact-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 4px;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.22) 0%,
+        rgba(255, 255, 255, 0.06) 40%,
+        rgba(255, 255, 255, 0.14) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+}
+
+/* Ripple highlight on top edge */
+.contact-item::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+}
+
+.contact-item:hover {
+    background: rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.38);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 8px 24px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px) scale(1.01);
+}
+
+.contact-item:hover::before {
+    opacity: 1;
+}
+
+.contact-item:hover::after {
+    opacity: 1;
 }
 
 .contact-item img {
     width: 16px;
     height: 16px;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.contact-item:hover img {
+    transform: scale(1.25) rotate(-8deg);
+}
+
+.contact-item span {
+    position: relative;
+    z-index: 1;
 }
 
 .footer-copy {
@@ -1169,30 +1329,20 @@ nav a,
         -webkit-overflow-scrolling: touch !important;
         scrollbar-width: none !important;
         -ms-overflow-style: none !important;
-        /*
-         * Side padding = 50% - (half the widest card width)
-         * Widest card = officer = min(382px, 76vw)
-         * So half = min(191px, 38vw)
-         * padding = calc(50% - min(191px, 38vw))
-         * This guarantees card #1 AND last card snap to dead center.
-         * scroll-padding must match exactly.
-         */
         padding-top: 20px !important;
         padding-bottom: 20px !important;
-        padding-left: calc(50% - min(191px, 38vw)) !important;
-        padding-right: 0 !important;
-        scroll-padding-left: calc(50% - min(191px, 38vw)) !important;
-        scroll-padding-right: calc(50% - min(141px, 28vw)) !important;
+        padding-left: 50% !important;
+        padding-right: 50% !important;
         gap: 14px !important;
         width: 100% !important;
         box-sizing: border-box !important;
+        scroll-padding-inline: 50% !important;
     }
 
     .mobile-snap-track::-webkit-scrollbar {
         display: none !important;
     }
 
-    /* Every card snaps to center */
     .mobile-snap-card {
         flex: 0 0 auto !important;
         scroll-snap-align: center !important;
@@ -1202,31 +1352,30 @@ nav a,
         overflow: hidden !important;
         background: rgba(255, 255, 255, 0.06) !important;
         border: 1px solid rgba(255, 255, 255, 0.08) !important;
-        /* Default: shrunk + blurred (side card state) */
-        transform: scale(0.82) !important;
-        filter: blur(1.5px) brightness(0.6) !important;
-        transition: transform 0.35s ease, filter 0.35s ease, box-shadow 0.35s ease !important;
+        opacity: 0.45 !important;
+        filter: blur(1px) brightness(0.6) !important;
+        transform: scale(0.88) !important;
+        transition: opacity 0.3s ease, filter 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease !important;
         box-shadow: none !important;
-        /* Prevent hover from applying on mobile */
         cursor: grab !important;
     }
 
-    /* Center (active) card: full size, sharp, elevated */
     .mobile-snap-card.is-active {
-        transform: scale(1) !important;
+        opacity: 1 !important;
         filter: none !important;
+        transform: scale(1) !important;
         box-shadow: 0 12px 36px rgba(0,0,0,0.55) !important;
     }
 
-    /* Officer cards: 382w x 394h scaled to mobile */
     .mobile-snap-officer {
-        width: min(382px, 76vw) !important;
+        width: 76vw !important;
+        max-width: 382px !important;
         height: min(394px, 78.8vw) !important;
     }
 
-    /* Member cards: 282w x 366h scaled to mobile */
     .mobile-snap-member {
-        width: min(282px, 56vw) !important;
+        width: 56vw !important;
+        max-width: 282px !important;
         height: min(366px, 73.2vw) !important;
     }
 
@@ -1250,17 +1399,6 @@ nav a,
         font-size: clamp(0.5rem, 2vw, 0.62rem) !important;
     }
 
-    /* 
-     * Last card is a MEMBER card (width: min(282px, 56vw), half = min(141px, 28vw)).
-     * ::after must give enough room for it to snap to dead center.
-     */
-    .mobile-snap-track::after {
-        content: '';
-        display: block;
-        flex: 0 0 calc(50% - min(141px, 28vw));
-        min-width: calc(50% - min(141px, 28vw));
-    }
-
     /* Mobile dots */
     .mobile-dots {
         display: flex !important;
@@ -1269,13 +1407,5 @@ nav a,
         margin-top: 10px !important;
         flex-wrap: wrap !important;
         padding: 0 12px !important;
-    }
-
-    .team-bg-section {
-        padding-top: 35px !important;
-    }
-
-    .team-heading {
-        margin-top: 0 !important;
     }
 }
