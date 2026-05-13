@@ -1,0 +1,59 @@
+{
+  "nav": [
+    { "label": "Home",     "href": "home" },
+    { "label": "About Us", "href": "about" },
+    { "label": "Showcase", "href": "showcase" },
+    { "label": "Team",     "href": "team" },
+    { "label": "Contact",  "href": "contact" }
+  ],
+  "hero": {
+    "title":    "MEDIA UNIT OF MARIS STELLA COLLEGE NEGOMBO",
+    "subtitle": "Capturing Every Moment, Sharing Every Story",
+    "fb": "https://web.facebook.com/profile.php?id=100090829437509",
+    "ig": "https://www.instagram.com/msc_mediaunit",
+    "wa": "https://whatsapp.com/channel/0029VajSC3v60eBY0REknS2W",
+    "yt": "https://www.youtube.com/@emumsc?sub_confirmation=1"
+  },
+  "about": {
+    "text": "The Educational Media Unit of Maris Stella College, Negombo is a dedicated platform that brings together creativity, innovation, and communication within the school community. It provides students with opportunities to explore and develop skills in photography, videography, graphic design, and digital media production. Through active involvement in covering school events and creating visual content, the unit plays an essential role in documenting and presenting the vibrant life of the college. Members work collaboratively, learning teamwork, responsibility, and professionalism while producing high quality media. The unit also encourages students to adapt to modern technology and media trends, preparing them for future creative fields. Beyond technical growth, it fosters leadership, discipline, and a strong sense of identity, making it an integral part of the Maris Stella College community and a vital cornerstone for nurturing the next generation of talented, visionary digital storytellers and media professionals",
+    "stats": [
+      { "value": 20, "suffix": "+",  "label": "Years of Excellence" },
+      { "value": 12, "suffix": "k+", "label": "Followers on Social Media" },
+      { "value": 50, "suffix": "+",  "label": "Events Covered Yearly" }
+    ]
+  },
+  "services": [
+    { "title": "Photography / Videography", "desc": "Capturing school moments with creative visuals and storytelling.",         "img": "assets/images/photography.png" },
+    { "title": "Live Production",           "desc": "Live streaming and production support for events and ceremonies.",          "img": "assets/images/live.png" },
+    { "title": "Announcing",               "desc": "Professional announcing service for school events and ceremonies.",          "img": "assets/images/Announcing.png" },
+    { "title": "Technical",                "desc": "Audio visual setup and technical assistance for school activities.",         "img": "assets/images/technical.png" }
+  ],
+  "team": [
+    { "name": "", "role": "President",        "img": "assets/images/Team/1..png" },
+    { "name": "", "role": "Secretary",        "img": "assets/images/Team/2..png" },
+    { "name": "", "role": "Treasurer",        "img": "assets/images/Team/3..png" },
+    { "name": "", "role": "Committee Member", "img": "assets/images/Team/4..png" },
+    { "name": "", "role": "Committee Member", "img": "assets/images/Team/5..png" },
+    { "name": "", "role": "Committee Member", "img": "assets/images/Team/6..png" },
+    { "name": "", "role": "Committee Member", "img": "assets/images/Team/7..png" },
+    { "name": "", "role": "Committee Member", "img": "assets/images/Team/8..png" },
+    { "name": "", "role": "Committee Member", "img": "assets/images/Team/9..png" },
+    { "name": "", "role": "Committee Member", "img": "assets/images/Team/10..png" },
+    { "name": "", "role": "Committee Member", "img": "assets/images/Team/11..png" }
+  ],
+  "footer": {
+    "org":     "The Educational Media Unit",
+    "college": "Maris Stella College Negombo",
+    "copy":    "All Rights Reserved | Educational Media Unit of Maris Stella College, Negombo",
+    "contacts": [
+      { "name": "Mahen Perera",     "phone": "94767537515" },
+      { "name": "Denuwan Jayakody", "phone": "94760734143" }
+    ],
+    "creators": [
+      { "name": "Mayon Minthaka",   "ig": "https://www.instagram.com/mayon_max_/" },
+      { "name": "Dinon Fernando",   "ig": "https://www.instagram.com/dinon_fdo/" },
+      { "name": "Kevan Sanketh",    "ig": "https://www.instagram.com/kevan_sanketh/" },
+      { "name": "Sandila Fernando", "ig": "https://www.instagram.com/sandilafernando/" }
+    ]
+  }
+}
