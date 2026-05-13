@@ -1253,73 +1253,90 @@ async function deployToGitHub(){
   progress.style.display='block';
 
   const step = (pct, text) => { bar.style.width=pct+'%'; msg.textContent=text; };
+  const ghH = {'Authorization':'Bearer '+ghCfg.token,'Accept':'application/vnd.github+json','Content-Type':'application/json'};
+  const noCacheH = {...ghH, 'Cache-Control':'no-cache','Pragma':'no-cache'};
 
-  try{
-    step(10,'Fetching current index.html from GitHub...');
+  const now = new Date().toLocaleString();
+  const commitMsg = `Admin update: content changes — ${now}`;
 
-    // 1. Get current file SHA + content
-    const getRes = await fetch(
-      `https://api.github.com/repos/${ghCfg.user}/${ghCfg.repo}/contents/index.html?ref=${ghCfg.branch}`,
-      { headers:{'Authorization':'Bearer '+ghCfg.token,'Accept':'application/vnd.github+json'} }
-    );
-    if(!getRes.ok) throw new Error('Cannot fetch index.html: '+getRes.status+' — check repo name and branch.');
-    const fileData = await getRes.json();
-    const sha = fileData.sha;
-    const originalHTML = atob(fileData.content.replace(/\n/g,''));
+  for(let attempt = 1; attempt <= 3; attempt++){
+    try{
+      step(10, attempt > 1 ? `Retrying (attempt ${attempt}/3)…` : 'Fetching current index.html from GitHub...');
 
-    step(40,'Building updated HTML...');
-    const updatedHTML = buildHTML(originalHTML);
+      // Always fetch fresh SHA with cache-busting
+      const getRes = await fetch(
+        `https://api.github.com/repos/${ghCfg.user}/${ghCfg.repo}/contents/index.html?ref=${ghCfg.branch}&_=${Date.now()}`,
+        { headers: noCacheH }
+      );
+      if(!getRes.ok) throw new Error('Cannot fetch index.html: '+getRes.status+' — check repo name and branch.');
+      const fileData = await getRes.json();
+      const sha = fileData.sha;
+      const originalHTML = atob(fileData.content.replace(/\n/g,''));
 
-    step(65,'Pushing to GitHub...');
-    const now = new Date().toLocaleString();
-    const commitMsg = `Admin update: content changes — ${now}`;
+      step(40,'Building updated HTML...');
+      const updatedHTML = buildHTML(originalHTML);
 
-    const putRes = await fetch(
-      `https://api.github.com/repos/${ghCfg.user}/${ghCfg.repo}/contents/index.html`,
-      {
-        method:'PUT',
-        headers:{'Authorization':'Bearer '+ghCfg.token,'Accept':'application/vnd.github+json','Content-Type':'application/json'},
-        body: JSON.stringify({
-          message: commitMsg,
-          content: btoa(unescape(encodeURIComponent(updatedHTML))),
-          sha: sha,
-          branch: ghCfg.branch,
-        })
+      step(65,'Pushing to GitHub...');
+      const putRes = await fetch(
+        `https://api.github.com/repos/${ghCfg.user}/${ghCfg.repo}/contents/index.html`,
+        {
+          method:'PUT',
+          headers: ghH,
+          body: JSON.stringify({
+            message: commitMsg,
+            content: btoa(unescape(encodeURIComponent(updatedHTML))),
+            sha: sha,
+            branch: ghCfg.branch,
+          })
+        }
+      );
+
+      if(putRes.ok){
+        step(100,'Done!');
+        dirtyPanels.clear();
+        document.getElementById('fStatusHtml').textContent='Deployed';
+        document.getElementById('fStatusHtml').className='badge success';
+        document.getElementById('dDeployStatus').textContent = new Date().toLocaleTimeString();
+        document.getElementById('dDeployStatus').style.color = 'var(--success)';
+        document.getElementById('dDeployStatus').style.fontSize = '0.85rem';
+
+        const entry=document.createElement('div');
+        entry.className='commit-entry';
+        entry.innerHTML=`<span class="ct">${now}</span><span class="cm">✅ ${commitMsg}</span>`;
+        log.prepend(entry);
+
+        toast('Deployed to GitHub! 🚀','success');
+        setTimeout(()=>{ progress.style.display='none'; bar.style.width='0%'; },2000);
+        return; // success
       }
-    );
-    if(!putRes.ok){
+
       const errData = await putRes.json().catch(()=>({}));
-      throw new Error((errData.message||'Push failed')+' ('+putRes.status+')');
+      const errMsg  = errData.message || 'Push failed ('+putRes.status+')';
+
+      // SHA conflict — wait and retry with a freshly fetched SHA
+      if(putRes.status === 409 || (putRes.status === 422 && errMsg.toLowerCase().includes('sha'))){
+        if(attempt < 3){
+          step(0, `SHA conflict — retrying in ${attempt}s…`);
+          await new Promise(r => setTimeout(r, 1000 * attempt));
+          continue;
+        }
+        throw new Error('SHA conflict after 3 attempts. Wait a moment and try Deploy again.');
+      }
+
+      throw new Error(errMsg);
+
+    } catch(err){
+      if(attempt === 3){
+        step(0,'');
+        progress.style.display='none';
+        toast('Deploy failed: '+err.message,'error');
+        console.error(err);
+        const entry=document.createElement('div');
+        entry.className='commit-entry';
+        entry.innerHTML=`<span class="ct">${new Date().toLocaleTimeString()}</span><span class="cm" style="color:var(--danger)">❌ ${err.message}</span>`;
+        log.prepend(entry);
+      }
     }
-    const putData = await putRes.json();
-
-    step(100,'Done!');
-    dirtyPanels.clear();
-    document.getElementById('fStatusHtml').textContent='Deployed';
-    document.getElementById('fStatusHtml').className='badge success';
-    document.getElementById('dDeployStatus').textContent = new Date().toLocaleTimeString();
-    document.getElementById('dDeployStatus').style.color = 'var(--success)';
-    document.getElementById('dDeployStatus').style.fontSize = '0.85rem';
-
-    // Add to log
-    const entry=document.createElement('div');
-    entry.className='commit-entry';
-    entry.innerHTML=`<span class="ct">${now}</span><span class="cm">✅ ${commitMsg}</span>`;
-    log.prepend(entry);
-
-    toast('Deployed to GitHub! 🚀','success');
-
-    setTimeout(()=>{ progress.style.display='none'; bar.style.width='0%'; },2000);
-
-  } catch(err){
-    step(0,'');
-    progress.style.display='none';
-    toast('Deploy failed: '+err.message,'error');
-    console.error(err);
-    const entry=document.createElement('div');
-    entry.className='commit-entry';
-    entry.innerHTML=`<span class="ct">${new Date().toLocaleTimeString()}</span><span class="cm" style="color:var(--danger)">❌ ${err.message}</span>`;
-    document.getElementById('commitLog').prepend(entry);
   }
 }
 </script>
