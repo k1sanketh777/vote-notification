@@ -117,7 +117,8 @@
         <div class="card">
           <div class="card-header"><div><h2>Welcome, Admin</h2><p>Manage all site content and deploy directly to GitHub.</p></div></div>
           <div class="hint">💡 <strong>Activate from the website:</strong> Open your live site and type <code style="background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px">CARYO</code> (all caps) anywhere on the page — the admin panel opens automatically in a new tab.</div>
-          <div class="hint success">✅ <strong>GitHub Deploy:</strong> Set up your repo token in <em>GitHub Deploy</em>, then hit 🚀 Deploy to push changes directly to your repository files.</div>
+          <div class="hint success">✅ <strong>Auto-sync:</strong> Every 💾 Save button instantly pushes your changes to <code style="background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px">site-data.json</code> in your GitHub repo — no extra steps needed. The website reads this file on every load.</div>
+          <div class="hint">🚀 <strong>GitHub Deploy:</strong> Use the Deploy button to also bake content into <em>index.html</em> itself (for maximum compatibility / CDN caching).</div>
           <div class="hint warn">⚠️ <strong>Image uploads:</strong> Images are converted to base64 references or you provide the path. For real image hosting, commit them to your GitHub repo's <code style="background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px">assets/</code> folder.</div>
         </div>
         <div class="card">
@@ -290,6 +291,10 @@
             <div class="file-status-row">
               <div><div class="fs-name">📄 index.html</div><div class="fs-meta">Main website HTML</div></div>
               <span class="badge" id="fStatusHtml">Pending</span>
+            </div>
+            <div class="file-status-row">
+              <div><div class="fs-name">📦 site-data.json</div><div class="fs-meta">Auto-synced on every Save</div></div>
+              <span class="badge success" id="fStatusJson">Auto-sync</span>
             </div>
             <div class="file-status-row">
               <div><div class="fs-name">🎨 style.css</div><div class="fs-meta">Stylesheet</div></div>
@@ -480,6 +485,98 @@ let editNavIdx     = -1;
 let dirtyPanels    = new Set();
 
 /* ================================================================
+   GITHUB JSON SYNC  —  site-data.json in the repo
+================================================================ */
+const DATA_FILE = 'site-data.json';
+
+function ghHeaders(){
+  return {
+    'Authorization': 'Bearer ' + ghCfg.token,
+    'Accept':        'application/vnd.github+json',
+    'Content-Type':  'application/json'
+  };
+}
+
+async function loadFromGitHub(){
+  if(!ghCfg.token || !ghCfg.user || !ghCfg.repo){
+    toast('GitHub not configured — using defaults','warn');
+    return;
+  }
+  try{
+    toast('Loading saved data from GitHub…','info');
+    const res = await fetch(
+      `https://api.github.com/repos/${ghCfg.user}/${ghCfg.repo}/contents/${DATA_FILE}?ref=${ghCfg.branch}`,
+      { headers: ghHeaders() }
+    );
+    if(res.status === 404){ toast('No saved data yet — starting fresh','info'); return; }
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const file   = await res.json();
+    const saved  = JSON.parse(atob(file.content.replace(/\n/g,'')));
+    mergeIntoD(saved);
+    populateDOMFromD();
+    initAll();
+    toast('Loaded saved data ✅','success');
+  } catch(e){
+    toast('Could not load GitHub data: '+e.message,'error');
+    console.error(e);
+  }
+}
+
+async function saveToGitHub(section){
+  if(!ghCfg.token || !ghCfg.user || !ghCfg.repo){
+    toast(`${section} saved locally (configure GitHub to sync)`, 'warn');
+    return;
+  }
+  try{
+    // Get current SHA if file exists (needed for updates)
+    let sha = null;
+    const getRes = await fetch(
+      `https://api.github.com/repos/${ghCfg.user}/${ghCfg.repo}/contents/${DATA_FILE}?ref=${ghCfg.branch}`,
+      { headers: ghHeaders() }
+    );
+    if(getRes.ok){ const f = await getRes.json(); sha = f.sha; }
+
+    const body = {
+      message: `Admin: saved ${section} — ${new Date().toLocaleString()}`,
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(D, null, 2)))),
+      branch:  ghCfg.branch,
+    };
+    if(sha) body.sha = sha;
+
+    const putRes = await fetch(
+      `https://api.github.com/repos/${ghCfg.user}/${ghCfg.repo}/contents/${DATA_FILE}`,
+      { method:'PUT', headers: ghHeaders(), body: JSON.stringify(body) }
+    );
+    if(!putRes.ok){
+      const err = await putRes.json().catch(()=>({}));
+      throw new Error(err.message || 'Push failed ('+putRes.status+')');
+    }
+    toast(`${section} saved & synced to GitHub ✅`,'success');
+  } catch(e){
+    toast(`${section} save failed: ${e.message}`,'error');
+    console.error(e);
+  }
+}
+
+function mergeIntoD(saved){
+  if(saved.nav)      D.nav      = saved.nav;
+  if(saved.hero)     Object.assign(D.hero, saved.hero);
+  if(saved.about){
+    if(saved.about.text  !== undefined) D.about.text  = saved.about.text;
+    if(saved.about.stats !== undefined) D.about.stats = saved.about.stats;
+  }
+  if(saved.services) D.services = saved.services;
+  if(saved.team)     D.team     = saved.team;
+  if(saved.footer){
+    D.footer.org     = saved.footer.org     ?? D.footer.org;
+    D.footer.college = saved.footer.college ?? D.footer.college;
+    D.footer.copy    = saved.footer.copy    ?? D.footer.copy;
+    if(saved.footer.contacts) D.footer.contacts = saved.footer.contacts;
+    if(saved.footer.creators) D.footer.creators = saved.footer.creators;
+  }
+}
+
+/* ================================================================
    LOCK / UNLOCK
 ================================================================ */
 document.getElementById('lockBtn').addEventListener('click', tryUnlock);
@@ -491,8 +588,11 @@ function tryUnlock(){
     document.getElementById('adminLock').classList.add('hidden');
     const app = document.getElementById('adminApp');
     app.classList.add('visible');
-    initAll();
     loadGHConfig();
+    // Show UI with defaults immediately, then fetch from GitHub
+    populateDOMFromD();
+    initAll();
+    loadFromGitHub(); // async — will re-render if data found
     toast('Welcome back! 👋','success');
   } else {
     const err = document.getElementById('lockErr');
@@ -742,6 +842,30 @@ function updateDash(){
 /* ================================================================
    DIRTY / SAVE (collects from DOM inputs)
 ================================================================ */
+function populateDOMFromD(){
+  // Hero
+  document.getElementById('heroTitle').value = D.hero.title    || '';
+  document.getElementById('heroSub').value   = D.hero.subtitle || '';
+  document.getElementById('hFb').value = D.hero.fb || '';
+  document.getElementById('hIg').value = D.hero.ig || '';
+  document.getElementById('hWa').value = D.hero.wa || '';
+  document.getElementById('hYt').value = D.hero.yt || '';
+  // About
+  document.getElementById('aboutText').value = D.about.text || '';
+  // Footer
+  document.getElementById('fOrg').value    = D.footer.org    || '';
+  document.getElementById('fCollege').value= D.footer.college|| '';
+  document.getElementById('fCopy').value   = D.footer.copy   || '';
+  if(D.footer.contacts[0]){
+    document.getElementById('c1name').value  = D.footer.contacts[0].name  || '';
+    document.getElementById('c1phone').value = D.footer.contacts[0].phone || '';
+  }
+  if(D.footer.contacts[1]){
+    document.getElementById('c2name').value  = D.footer.contacts[1].name  || '';
+    document.getElementById('c2phone').value = D.footer.contacts[1].phone || '';
+  }
+}
+
 function markDirty(section){
   // Collect values from DOM into D at save time
   if(section==='Hero'){
@@ -767,7 +891,7 @@ function markDirty(section){
   document.getElementById('fStatusHtml').className='badge warn';
   const btn=document.getElementById('deployBtn');
   if(ghCfg.token) btn.disabled=false;
-  toast(`${section} saved ✅`,'success');
+  saveToGitHub(section); // async — pushes D as site-data.json to GitHub
 }
 
 /* ================================================================
