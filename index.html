@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Media Unit | Maris Stella College</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-ms-navy text-white overflow-x-hidden">
@@ -14,12 +15,7 @@
         <img src="assets/pre.gif" alt="Loading" class="preloader-gif">
     </div>
 
-    <!-- =============================================
-         All sections are empty shells ÃÂ¢ÃÂÃÂ filled by
-         renderFromData() after site-data.json loads.
-    ============================================= -->
-
-    <header id="siteHeader" class="absolute top-0 w-full z-50 flex justify-between items-center px-6 lg:px-12 py-8">
+    <header class="absolute top-0 w-full z-50 flex justify-between items-center px-6 lg:px-12 py-8">
         <div class="flex items-center gap-3">
             <img src="assets/images/logo.png" class="h-10" alt="Logo">
             <div class="text-[11px] leading-tight text-white font-medium">
@@ -27,13 +23,14 @@
                 <span class="opacity-80">Maris Stella College Negombo</span>
             </div>
         </div>
+        
         <div class="flex items-center relative">
             <button id="menuToggle" class="menu-btn lg:hidden flex flex-col justify-center items-center gap-1.5 w-12 h-12 rounded-full bg-white/10 border border-white/20">
                 <span class="w-5 h-[2px] bg-white block"></span>
                 <span class="w-5 h-[2px] bg-white block"></span>
                 <span class="w-5 h-[2px] bg-white block"></span>
             </button>
-            <!-- Nav links injected here -->
+
             <nav id="mainNav" class="top-nav-glass gap-7 px-7 py-2.5 rounded-full">
                 <a href="#home" class="text-[13px] font-semibold text-white hover:opacity-80 transition-opacity">Home</a>
                 <a href="#about" class="text-[13px] font-semibold text-white hover:opacity-80 transition-opacity">About Us</a>
@@ -48,9 +45,15 @@
         <img src="assets/images/hero-bg.png" class="hero-image w-full h-auto block" alt="Media Unit hero background">
         <div class="hero-overlay absolute inset-0 flex flex-col justify-center items-center px-4">
             <div class="hero-inner z-20">
-                <h1 id="heroTitle" class="hero-title font-bold font-greater leading-tight">MEDIA UNIT OF MARIS STELLA COLLEGE NEGOMBO</h1>
-                <p id="heroSubtitle" class="hero-subtitle font-light opacity-95">Capturing Every Moment, Sharing Every Story</p>
-                <div id="heroSocials" class="social-glass inline-flex gap-4 items-center justify-center px-5 py-2.5 rounded-full"></div>
+                <h1 class="hero-title font-bold font-greater leading-tight">MEDIA UNIT OF MARIS STELLA COLLEGE NEGOMBO</h1>
+                <p class="hero-subtitle font-light opacity-95">Capturing Every Moment, Sharing Every Story</p>
+                
+                <div class="social-glass inline-flex gap-4 items-center justify-center px-5 py-2.5 rounded-full">
+                        <a href="https://web.facebook.com/profile.php?id=100090829437509" aria-label="Facebook" target="_blank" rel="noopener noreferrer"><img src="assets/icons/icon-facebook.png" alt="Facebook"></a>
+                        <a href="https://www.instagram.com/msc_mediaunit" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><img src="assets/icons/icon-instagram.png" alt="Instagram"></a>
+                        <a href="https://whatsapp.com/channel/0029VajSC3v60eBY0REknS2W" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer"><img src="assets/icons/icon-whatsapp.png" alt="WhatsApp"></a>
+                        <a href="https://www.youtube.com/@emumsc?sub_confirmation=1" aria-label="YouTube" target="_blank" rel="noopener noreferrer"><img src="assets/icons/icon-youtube.png" alt="YouTube"></a>
+                </div>
             </div>
         </div>
     </section>
@@ -58,27 +61,123 @@
     <section id="about" class="about-section text-center">
         <div class="about-wrap mx-auto px-6">
             <h2 class="about-title font-bold font-greater uppercase">ABOUT US</h2>
-            <p id="aboutText" class="about-text font-light opacity-80"></p>
-            <div id="statsRow" class="stats-row flex justify-around items-center gap-12"></div>
+            <p class="about-text font-light opacity-80">The Educational Media Unit of Maris Stella College, Negombo is a dedicated platform that brings together creativity, innovation, and communication within the school community. It provides students with opportunities to explore and develop skills in photography, videography, graphic design, and digital media production. Through active involvement in covering school events and creating visual content, the unit plays an essential role in documenting and presenting the vibrant life of the college. Members work collaboratively, learning teamwork, responsibility, and professionalism while producing high quality media. The unit also encourages students to adapt to modern technology and media trends, preparing them for future creative fields. Beyond technical growth, it fosters leadership, discipline, and a strong sense of identity, making it an integral part of the Maris Stella College community and a vital cornerstone for nurturing the next generation of talented, visionary digital storytellers and media professionals
+            <div class="stats-row flex justify-around items-center gap-12">
+                <div class="stat-item flex flex-col items-center">
+                    <h3 class="stat-number font-bold count" data-target="20">0+</h3>
+                    <p class="stat-label font-medium uppercase">Years of Excellence</p>
+                </div>
+                <div class="stat-item flex flex-col items-center">
+                    <h3 class="stat-number font-bold count" data-target="12" data-suffix="k+">0k+</h3>
+                    <p class="stat-label font-medium uppercase">Followers on Social Media</p>
+                </div>
+                <div class="stat-item flex flex-col items-center">
+                    <h3 class="stat-number font-bold count" data-target="50">0+</h3>
+                    <p class="stat-label font-medium uppercase">Events Covered Yearly</p>
+                </div>
+            </div>
         </div>
     </section>
 
     <section id="showcase" class="showcase-section">
         <div class="showcase-wrap mx-auto px-6">
             <h2 class="showcase-title font-bold font-greater uppercase text-center">WHAT WE DO</h2>
-            <div id="serviceGrid" class="service-grid"></div>
-        </div>
+            <div class="service-grid">
+                <article class="service-card">
+                    <img src="assets/images/photography.png" alt="Photography and Videography">
+                    <div class="service-overlay">
+                        <h3>Photography / Videography</h3>
+                        <p>Capturing school moments with creative visuals and storytelling.</p>
+                    </div>
+                </article>
+                <article class="service-card">
+                    <img src="assets/images/live.png" alt="Live Production">
+                    <div class="service-overlay">
+                        <h3>Live Production</h3>
+                        <p>Live streaming and production support for events and ceremonies.</p>
+                    </div>
+                </article>
+                <article class="service-card">
+                    <img src="assets/images/Announcing.png" alt="Announcing">
+                    <div class="service-overlay">
+                        <h3>Announcing</h3>
+                        <p>Professional announcing service for school events and ceremonies.</p>
+                    </div>
+                </article>
+                <article class="service-card">
+                    <img src="assets/images/technical.png" alt="Technical Support">
+                    <div class="service-overlay">
+                        <h3>Technical</h3>
+                        <p>Audio visual setup and technical assistance for school activities.</p>
+                    </div>
+                </article>
+            </div>
+        </div> <!-- end showcase-wrap -->
 
         <div class="team-bg-section">
             <div class="team-inner-wrap mx-auto px-6">
-                <h2 id="team" class="showcase-title font-bold font-greater uppercase text-center team-heading">OUR TEAM</h2>
-                <div class="team-carousel-wrap">
-                    <button class="carousel-arrow carousel-arrow-left" id="carouselPrev" aria-label="Previous">&#8592;</button>
-                    <button class="carousel-arrow carousel-arrow-right" id="carouselNext" aria-label="Next">&#8594;</button>
-                    <!-- Desktop carousel ÃÂ¢ÃÂÃÂ 3 slides injected -->
-                    <div class="team-carousel desktop-carousel" id="desktopCarousel"></div>
-                    <!-- Mobile snap track ÃÂ¢ÃÂÃÂ injected -->
-                    <div class="mobile-snap-track" id="mobileSnapTrack">
+            <h2 id="team" class="showcase-title font-bold font-greater uppercase text-center team-heading">OUR TEAM</h2>
+            <div class="team-carousel-wrap">
+                <!-- Arrow buttons - appear on edge hover -->
+                <button class="carousel-arrow carousel-arrow-left" id="carouselPrev" aria-label="Previous">&#8592;</button>
+                <button class="carousel-arrow carousel-arrow-right" id="carouselNext" aria-label="Next">&#8594;</button>
+                <!-- DESKTOP carousel: original 3-slide layout (untouched) -->
+                <div class="team-carousel desktop-carousel">
+                    <div class="team-slide team-slide-main">
+                        <article class="team-card team-card-main">
+                            <img src="assets/images/Team/1..png" alt="President">
+                            <div class="team-overlay"><h3></h3><p>President</p></div>
+                        </article>
+                        <article class="team-card">
+                            <img src="assets/images/Team/2..png" alt="Secretary">
+                            <div class="team-overlay"><h3></h3><p>Secretary</p></div>
+                        </article>
+                        <article class="team-card">
+                            <img src="assets/images/Team/3..png" alt="Treasurer">
+                            <div class="team-overlay"><h3></h3><p>Treasurer</p></div>
+                        </article>
+                    </div>
+                    <div class="team-slide">
+                        <article class="team-card">
+                            <img src="assets/images/Team/4..png" alt="Team member">
+                            <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
+                        </article>
+                        <article class="team-card">
+                            <img src="assets/images/Team/5..png" alt="Team member">
+                            <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
+                        </article>
+                        <article class="team-card">
+                            <img src="assets/images/Team/6..png" alt="Team member">
+                            <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
+                        </article>
+                        <article class="team-card">
+                            <img src="assets/images/Team/7..png" alt="Team member">
+                            <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
+                        </article>
+                    </div>
+                    <div class="team-slide">
+                        <article class="team-card">
+                            <img src="assets/images/Team/8..png" alt="Team member">
+                            <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
+                        </article>
+                        <article class="team-card">
+                            <img src="assets/images/Team/9..png" alt="Team member">
+                            <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
+                        </article>
+                        <article class="team-card">
+                            <img src="assets/images/Team/10..png" alt="Team member">
+                            <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
+                        </article>
+                        <article class="team-card">
+                            <img src="assets/images/Team/11..png" alt="Team member">
+                            <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
+                        </article>
+                    </div>
+                </div>
+
+                <!-- MOBILE snap-scroll track: all cards flat in one row -->
+                <div class="mobile-snap-track" id="mobileSnapTrack">
+                    <!-- Officers (big: 382x394) -->
                     <article class="mobile-snap-card mobile-snap-officer" data-index="0">
                         <img src="assets/images/Team/1..png" alt="President">
                         <div class="team-overlay"><h3></h3><p>President</p></div>
@@ -91,595 +190,427 @@
                         <img src="assets/images/Team/3..png" alt="Treasurer">
                         <div class="team-overlay"><h3></h3><p>Treasurer</p></div>
                     </article>
+                    <!-- Committee Members (normal: 282x366) -->
                     <article class="mobile-snap-card mobile-snap-member" data-index="3">
-                        <img src="assets/images/Team/4..png" alt="Committee Member">
+                        <img src="assets/images/Team/4..png" alt="Team member">
                         <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
                     </article>
                     <article class="mobile-snap-card mobile-snap-member" data-index="4">
-                        <img src="assets/images/Team/5..png" alt="Committee Member">
+                        <img src="assets/images/Team/5..png" alt="Team member">
                         <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
                     </article>
                     <article class="mobile-snap-card mobile-snap-member" data-index="5">
-                        <img src="assets/images/Team/6..png" alt="Committee Member">
+                        <img src="assets/images/Team/6..png" alt="Team member">
                         <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
                     </article>
                     <article class="mobile-snap-card mobile-snap-member" data-index="6">
-                        <img src="assets/images/Team/7..png" alt="Committee Member">
+                        <img src="assets/images/Team/7..png" alt="Team member">
                         <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
                     </article>
                     <article class="mobile-snap-card mobile-snap-member" data-index="7">
-                        <img src="assets/images/Team/8..png" alt="Committee Member">
+                        <img src="assets/images/Team/8..png" alt="Team member">
                         <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
                     </article>
                     <article class="mobile-snap-card mobile-snap-member" data-index="8">
-                        <img src="assets/images/Team/9..png" alt="Committee Member">
+                        <img src="assets/images/Team/9..png" alt="Team member">
                         <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
                     </article>
                     <article class="mobile-snap-card mobile-snap-member" data-index="9">
-                        <img src="assets/images/Team/10..png" alt="Committee Member">
+                        <img src="assets/images/Team/10..png" alt="Team member">
                         <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
                     </article>
                     <article class="mobile-snap-card mobile-snap-member" data-index="10">
-                        <img src="assets/images/Team/11..png" alt="Committee Member">
+                        <img src="assets/images/Team/11..png" alt="Team member">
                         <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
                     </article>
                 </div>
             </div>
-            <!-- Desktop dots ÃÂ¢ÃÂÃÂ injected -->
-                <div class="team-dots desktop-dots" id="desktopDots" role="tablist" aria-label="Team slide selector">
+
+            <!-- Desktop dots (3) -->
+            <div class="team-dots desktop-dots" role="tablist" aria-label="Team slide selector">
                 <button class="dot active" type="button" data-slide="0" aria-label="Show slide 1"></button>
                 <button class="dot" type="button" data-slide="1" aria-label="Show slide 2"></button>
                 <button class="dot" type="button" data-slide="2" aria-label="Show slide 3"></button>
             </div>
-            <!-- Mobile dots ÃÂ¢ÃÂÃÂ injected -->
-                <div class="team-dots mobile-dots" id="mobileSnapDots" role="tablist" aria-label="Team card selector"></div>
+            <!-- Mobile dots (11 cards) -->
+            <div class="team-dots mobile-dots" id="mobileSnapDots" role="tablist" aria-label="Team card selector">
+                <button class="dot active" type="button" data-card="0"></button>
+                <button class="dot" type="button" data-card="1"></button>
+                <button class="dot" type="button" data-card="2"></button>
+                <button class="dot" type="button" data-card="3"></button>
+                <button class="dot" type="button" data-card="4"></button>
+                <button class="dot" type="button" data-card="5"></button>
+                <button class="dot" type="button" data-card="6"></button>
+                <button class="dot" type="button" data-card="7"></button>
+                <button class="dot" type="button" data-card="8"></button>
+                <button class="dot" type="button" data-card="9"></button>
+                <button class="dot" type="button" data-card="10"></button>
             </div>
-        </div>
+            </div> <!-- end team-inner-wrap -->
+        </div> <!-- end team-bg-section -->
     </section>
 
     <footer id="contact" class="site-footer">
         <div class="footer-wrap mx-auto px-6">
             <div class="footer-top">
-                <div id="footerBrand" class="footer-brand"></div>
-                <div id="footerContact" class="footer-contact"></div>
-            </div>
-        </div>
-        <p id="footerCopy" class="footer-copy"></p>
-    </footer>
+                <div class="footer-brand">
+                    <div class="footer-brand-row">
+                        <img src="assets/images/logo.png" alt="Educational Media Unit logo">
+                        <div>
+                            <h3>The Educational Media Unit</h3>
+                            <p>Maris Stella College Negombo</p>
+                        </div>
+                    </div>
 
-<!-- =============================================
-     INLINE SCRIPTS
-============================================= -->
-<script>
-/* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ Tailwind config ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
-window.tailwind = window.tailwind || {};
-window.tailwind.config = {
-  theme: { extend: {
-    colors: { 'ms-navy': '#061B31' },
-    fontFamily: { greater: ['"GreaterTheory"','serif'] }
-  }}
-};
+                    <div class="footer-creators">
+                        <h4>Creators</h4>
+                        <a class="creator-link" href="https://www.instagram.com/mayon_max_/" target="_blank" rel="noopener noreferrer">
+                            <img src="assets/icons/icon-instagram.png" alt="Instagram">
+                            <span>Mayon Minthaka</span>
+                        </a>
+                        <a class="creator-link" href="https://www.instagram.com/dinon_fdo/" target="_blank" rel="noopener noreferrer">
+                            <img src="assets/icons/icon-instagram.png" alt="Instagram">
+                            <span>Dinon Fernando</span>
+                        </a>
+                        <a class="creator-link" href="https://www.instagram.com/kevan_sanketh/" target="_blank" rel="noopener noreferrer">
+                            <img src="assets/icons/icon-instagram.png" alt="Instagram">
+                            <span>Kevan Sanketh</span>
+                        </a>
+                        <a class="creator-link" href="https://www.instagram.com/sandilafernando/" target="_blank" rel="noopener noreferrer">
+                            <img src="assets/icons/icon-instagram.png" alt="Instagram">
+                            <span>Sandila Fernando</span>
+                        </a>
+                    </div>
+                </div>
 
-/* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ CARYO trigger ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
-(function(){
-  const SECRET = 'CARYO';
-  let buf = '';
-  let timer;
-  document.addEventListener('keydown', e => {
-    const tag = document.activeElement.tagName;
-    if (tag==='INPUT'||tag==='TEXTAREA'||document.activeElement.isContentEditable) return;
-    buf += e.key;
-    if (buf.length > SECRET.length) buf = buf.slice(-SECRET.length);
-    clearTimeout(timer);
-    timer = setTimeout(() => { buf = ''; }, 1800);
-    if (buf === SECRET) { buf = ''; window.open('admin.html','_blank'); }
-  });
-})();
-
-/* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ PRELOADER ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
-(function(){
-  const preloader = document.getElementById('preloader');
-  if (!preloader) return;
-  document.body.style.overflow = 'hidden';
-  const startTime = Date.now();
-  const MIN_DISPLAY = 4000;
-  let dismissed = false;
-  const dismiss = () => {
-    if (dismissed) return;
-    dismissed = true;
-    preloader.classList.add('fade-out');
-    document.body.style.overflow = '';
-    preloader.addEventListener('transitionend', () => preloader.remove(), { once: true });
-    setTimeout(() => preloader.remove(), 1500);
-  };
-  const tryDismiss = () => {
-    const elapsed = Date.now() - startTime;
-    setTimeout(dismiss, Math.max(0, MIN_DISPLAY - elapsed));
-  };
-  if (document.readyState === 'complete') tryDismiss();
-  else window.addEventListener('load', tryDismiss, { once: true });
-  setTimeout(dismiss, 10000);
-})();
-
-/* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ DATA RENDERER ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
-function renderFromData(D) {
-
-  /* NAV */
-  const nav = document.getElementById('mainNav');
-  nav.innerHTML = D.nav.map(n =>
-    `<a href="#${n.href}" class="text-[13px] font-semibold text-white hover:opacity-80 transition-opacity">${n.label}</a>`
-  ).join('');
-
-  /* HERO */
-  document.getElementById('heroTitle').textContent    = D.hero.title;
-  document.getElementById('heroSubtitle').textContent = D.hero.subtitle;
-  document.getElementById('heroSocials').innerHTML = `
-    <a href="${D.hero.fb}" aria-label="Facebook"  target="_blank" rel="noopener noreferrer"><img src="assets/icons/icon-facebook.png"   alt="Facebook"></a>
-    <a href="${D.hero.ig}" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><img src="assets/icons/icon-instagram.png" alt="Instagram"></a>
-    <a href="${D.hero.wa}" aria-label="WhatsApp"  target="_blank" rel="noopener noreferrer"><img src="assets/icons/icon-whatsapp.png"  alt="WhatsApp"></a>
-    <a href="${D.hero.yt}" aria-label="YouTube"   target="_blank" rel="noopener noreferrer"><img src="assets/icons/icon-youtube.png"   alt="YouTube"></a>`;
-
-  /* ABOUT TEXT */
-  document.getElementById('aboutText').textContent = D.about.text;
-
-  /* STATS */
-  document.getElementById('statsRow').innerHTML = D.about.stats.map(s => `
-    <div class="stat-item flex flex-col items-center">
-      <h3 class="stat-number font-bold count" data-target="${s.value}" data-suffix="${s.suffix}">0${s.suffix}</h3>
-      <p class="stat-label font-medium uppercase">${s.label}</p>
-    </div>`).join('');
-
-  /* SERVICES */
-  document.getElementById('serviceGrid').innerHTML = D.services.map(s => `
-    <article class="service-card">
-      <img src="${s.img}" alt="${s.title}">
-      <div class="service-overlay">
-        <h3>${s.title}</h3>
-        <p>${s.desc}</p>
-      </div>
-    </article>`).join('');
-
-  /* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ DESKTOP CAROUSEL (groups of 3, first is "main" slide) ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
-  const team = D.team;
-  const slides = [];
-  // Slide 0: first 3 members (officers-style) ÃÂ¢ÃÂÃÂ first card gets team-card-main
-  slides.push(team.slice(0, 3));
-  // Remaining members split into groups of 4
-  const rest = team.slice(3);
-  for (let i = 0; i < rest.length; i += 4) slides.push(rest.slice(i, i + 4));
-
-  document.getElementById('desktopCarousel').innerHTML = slides.map((group, si) => `
-    <div class="team-slide${si === 0 ? ' team-slide-main' : ''}">
-      ${group.map((m, mi) => `
-        <article class="team-card${si === 0 && mi === 0 ? ' team-card-main' : ''}">
-          <img src="${m.img}" alt="${m.name || m.role}">
-          <div class="team-overlay"><h3>${m.name || ''}</h3><p>${m.role}</p></div>
-        </article>`).join('')}
-    </div>`).join('');
-
-  /* Desktop dots */
-  document.getElementById('desktopDots').innerHTML = slides.map((_, i) =>
-    `<button class="dot${i===0?' active':''}" type="button" data-slide="${i}" aria-label="Show slide ${i+1}"></button>`
-  ).join('');
-
-  /* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ MOBILE SNAP TRACK ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
-  // Officers = first 3 (index 0,1,2); rest are members
-  document.getElementById('mobileSnapTrack').innerHTML = team.map((m, i) => {
-    const isOfficer = i < 3;
-    return `<article class="mobile-snap-card ${isOfficer ? 'mobile-snap-officer' : 'mobile-snap-member'}" data-index="${i}">
-      <img src="${m.img}" alt="${m.name || m.role}">
-      <div class="team-overlay"><h3>${m.name || ''}</h3><p>${m.role}</p></div>
-    </article>`;
-  }).join('');
-
-  /* Mobile dots */
-  document.getElementById('mobileSnapDots').innerHTML = team.map((_, i) =>
-    `<button class="dot${i===0?' active':''}" type="button" data-card="${i}"></button>`
-  ).join('');
-
-  /* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ FOOTER BRAND ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
-  document.getElementById('footerBrand').innerHTML = `
-    <div class="footer-brand-row">
-      <img src="assets/images/logo.png" alt="Educational Media Unit logo">
-      <div>
-        <h3>${D.footer.org}</h3>
-        <p>${D.footer.college}</p>
-      </div>
-    </div>
-    <div class="footer-creators">
-      <h4>Creators</h4>
-      ${D.footer.creators.map(c => `
-        <a class="creator-link" href="${c.ig}" target="_blank" rel="noopener noreferrer">
-          <img src="assets/icons/icon-instagram.png" alt="Instagram">
-          <span>${c.name}</span>
-        </a>`).join('')}
-    </div>`;
-
-  /* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ FOOTER CONTACT ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
-  document.getElementById('footerContact').innerHTML = `
-    <div class="footer-socials social-glass">
+                <div class="footer-contact">
+                    <div class="footer-socials social-glass">
                         <a href="https://web.facebook.com/profile.php?id=100090829437509" aria-label="Facebook"><img src="assets/icons/icon-facebook.png" alt="Facebook"></a>
                         <a href="https://www.instagram.com/msc_mediaunit" aria-label="Instagram"><img src="assets/icons/icon-instagram.png" alt="Instagram"></a>
                         <a href="https://whatsapp.com/channel/0029VajSC3v60eBY0REknS2W" aria-label="WhatsApp"><img src="assets/icons/icon-whatsapp.png" alt="WhatsApp"></a>
                         <a href="https://www.youtube.com/@emumsc?sub_confirmation=1" aria-label="YouTube"><img src="assets/icons/icon-youtube.png" alt="YouTube"></a>
                     </div>
+
                     <h4>Contact Us</h4>
-    <div class="contact-list">
-      ${D.footer.contacts.map(c => `
-        <a class="contact-item" href="https://wa.me/${c.phone}" target="_blank" rel="noopener noreferrer">
-          <span>${c.name}</span>
-          <img src="assets/icons/icon-whatsapp.png" alt="WhatsApp">
-        </a>`).join('')}
-    </div>`;
+                    <div class="contact-list">
+                        <a class="contact-item" href="https://wa.me/94767537515" target="_blank" rel="noopener noreferrer">
+                            <span>Mahen Perera</span>
+                            <img src="assets/icons/icon-whatsapp.png" alt="WhatsApp">
+                        </a>
+                        <a class="contact-item" href="https://wa.me/94760734143" target="_blank" rel="noopener noreferrer">
+                            <span>Denuwan Jayakody</span>
+                            <img src="assets/icons/icon-whatsapp.png" alt="WhatsApp">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <p class="footer-copy">All Rights Reserved | Educational Media Unit of Maris Stella College, Negombo</p>
+    </footer>
+<!-- =============================================
+     ADMIN SYNC — fetches site-data.json from GitHub
+     and patches the live DOM after DOMContentLoaded.
+     Falls back gracefully if no data or no network.
+============================================= -->
+<script>
+(function(){
 
-  /* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ FOOTER COPYRIGHT ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
-  document.getElementById('footerCopy').textContent = D.footer.copy;
+  // ── Read GitHub config saved by admin panel ──────────────────
+  let ghCfg = {};
+  try{ ghCfg = JSON.parse(localStorage.getItem('msc_admin_gh')) || {}; }catch(e){}
 
-  /* After DOM is ready, run all the interactive JS */
-  initInteractivity();
-}
+  const { user, repo, branch = 'main', token } = ghCfg;
+  if(!user || !repo) return; // GitHub not configured — keep static HTML
 
-/* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ FETCH site-data.json, fallback to hardcoded defaults ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
-(async function bootstrap(){
-  // Default data ÃÂ¢ÃÂÃÂ used if JSON can't be fetched (e.g. local file:// or network error)
-  const DEFAULTS = {
-    nav: [
-      { label:'Home',     href:'home' },
-      { label:'About Us', href:'about' },
-      { label:'Showcase', href:'showcase' },
-      { label:'Team',     href:'team' },
-      { label:'Contact',  href:'contact' }
-    ],
-    hero: {
-      title:    'MEDIA UNIT OF MARIS STELLA COLLEGE NEGOMBO',
-      subtitle: 'Capturing Every Moment, Sharing Every Story',
-      fb: 'https://web.facebook.com/profile.php?id=100090829437509',
-      ig: 'https://www.instagram.com/msc_mediaunit',
-      wa: 'https://whatsapp.com/channel/0029VajSC3v60eBY0REknS2W',
-      yt: 'https://www.youtube.com/@emumsc?sub_confirmation=1'
-    },
-    about: {
-      text: 'The Educational Media Unit of Maris Stella College, Negombo is a dedicated platform that brings together creativity, innovation, and communication within the school community. It provides students with opportunities to explore and develop skills in photography, videography, graphic design, and digital media production. Through active involvement in covering school events and creating visual content, the unit plays an essential role in documenting and presenting the vibrant life of the college. Members work collaboratively, learning teamwork, responsibility, and professionalism while producing high quality media. The unit also encourages students to adapt to modern technology and media trends, preparing them for future creative fields. Beyond technical growth, it fosters leadership, discipline, and a strong sense of identity, making it an integral part of the Maris Stella College community and a vital cornerstone for nurturing the next generation of talented, visionary digital storytellers and media professionals',
-      stats: [
-        { value:20, suffix:'+',  label:'Years of Excellence' },
-        { value:12, suffix:'k+', label:'Followers on Social Media' },
-        { value:50, suffix:'+',  label:'Events Covered Yearly' }
-      ]
-    },
-    services: [
-      { title:'Photography / Videography', desc:'Capturing school moments with creative visuals and storytelling.',        img:'assets/images/photography.png' },
-      { title:'Live Production',           desc:'Live streaming and production support for events and ceremonies.',         img:'assets/images/live.png' },
-      { title:'Announcing',               desc:'Professional announcing service for school events and ceremonies.',         img:'assets/images/Announcing.png' },
-      { title:'Technical',                desc:'Audio visual setup and technical assistance for school activities.',        img:'assets/images/technical.png' }
-    ],
-    team: [
-      { name:'', role:'President',        img:'assets/images/Team/1..png' },
-      { name:'', role:'Secretary',        img:'assets/images/Team/2..png' },
-      { name:'', role:'Treasurer',        img:'assets/images/Team/3..png' },
-      { name:'', role:'Committee Member', img:'assets/images/Team/4..png' },
-      { name:'', role:'Committee Member', img:'assets/images/Team/5..png' },
-      { name:'', role:'Committee Member', img:'assets/images/Team/6..png' },
-      { name:'', role:'Committee Member', img:'assets/images/Team/7..png' },
-      { name:'', role:'Committee Member', img:'assets/images/Team/8..png' },
-      { name:'', role:'Committee Member', img:'assets/images/Team/9..png' },
-      { name:'', role:'Committee Member', img:'assets/images/Team/10..png' },
-      { name:'', role:'Committee Member', img:'assets/images/Team/11..png' }
-    ],
-    footer: {
-      org:     'The Educational Media Unit',
-      college: 'Maris Stella College Negombo',
-      copy:    'All Rights Reserved | Educational Media Unit of Maris Stella College, Negombo',
-      contacts: [
-        { name:'Mahen Perera',     phone:'94767537515' },
-        { name:'Denuwan Jayakody', phone:'94760734143' }
-      ],
-      creators: [
-        { name:'Mayon Minthaka',   ig:'https://www.instagram.com/mayon_max_/' },
-        { name:'Dinon Fernando',   ig:'https://www.instagram.com/dinon_fdo/' },
-        { name:'Kevan Sanketh',    ig:'https://www.instagram.com/kevan_sanketh/' },
-        { name:'Sandila Fernando', ig:'https://www.instagram.com/sandilafernando/' }
-      ]
+  // ── Fetch site-data.json from the public raw CDN (no token needed for public repos)
+  // If repo is private we use the API with the token.
+  async function fetchData(){
+    // Try unauthenticated raw first (works for public repos, no rate limit issues)
+    let res = await fetch(
+      `https://raw.githubusercontent.com/${user}/${repo}/${branch}/site-data.json`,
+      { cache: 'no-store' }
+    );
+    if(!res.ok && token){
+      // Private repo — use API with token
+      const apiRes = await fetch(
+        `https://api.github.com/repos/${user}/${repo}/contents/site-data.json?ref=${branch}`,
+        { headers:{ 'Authorization':'Bearer '+token, 'Accept':'application/vnd.github+json' } }
+      );
+      if(!apiRes.ok) return null;
+      const f = await apiRes.json();
+      const text = atob(f.content.replace(/\n/g,''));
+      return JSON.parse(text);
     }
-  };
-
-  try {
-    // Add cache-busting so the browser always gets the freshest JSON after a deploy
-    const res = await fetch('site-data.json?v=' + Date.now());
-    if (!res.ok) throw new Error('not found');
-    const data = await res.json();
-
-    // Deep-merge with defaults so any missing key falls back gracefully
-    const merged = {
-      nav:      data.nav      || DEFAULTS.nav,
-      hero:     Object.assign({}, DEFAULTS.hero,  data.hero  || {}),
-      about:    { text: (data.about && data.about.text) || DEFAULTS.about.text,
-                  stats: (data.about && data.about.stats) || DEFAULTS.about.stats },
-      services: data.services || DEFAULTS.services,
-      team:     data.team     || DEFAULTS.team,
-      footer:   Object.assign({}, DEFAULTS.footer, data.footer || {},
-                  { contacts: (data.footer && data.footer.contacts) || DEFAULTS.footer.contacts,
-                    creators: (data.footer && data.footer.creators) || DEFAULTS.footer.creators })
-    };
-    renderFromData(merged);
-  } catch(_) {
-    // JSON missing or fetch not supported (file://) ÃÂ¢ÃÂÃÂ use defaults
-    renderFromData(DEFAULTS);
+    if(!res.ok) return null;
+    return await res.json();
   }
-})();
 
-/* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ ALL INTERACTIVITY (runs after DOM is populated) ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
-function initInteractivity() {
+  // ── Apply data to DOM ─────────────────────────────────────────
+  function applyData(D){
 
-  /* 1. Menu Toggle */
-  const menuToggle = document.getElementById('menuToggle');
-  const mainNav    = document.getElementById('mainNav');
-  const header     = document.querySelector('header');
+    /* NAV */
+    if(D.nav && D.nav.length){
+      const nav = document.getElementById('mainNav');
+      if(nav) nav.innerHTML = D.nav.map(n =>
+        `<a href="#${n.href}" class="text-[13px] font-semibold text-white hover:opacity-80 transition-opacity">${n.label}</a>`
+      ).join('');
+    }
 
-  if (menuToggle && mainNav) {
-    menuToggle.addEventListener('click', e => {
-      e.stopPropagation();
-      const isOpen = mainNav.classList.toggle('active');
-      menuToggle.classList.toggle('active', isOpen);
-    });
-    document.addEventListener('click', e => {
-      if (!mainNav.contains(e.target) && !menuToggle.contains(e.target)) {
-        mainNav.classList.remove('active');
-        menuToggle.classList.remove('active');
+    /* HERO */
+    if(D.hero){
+      const h1  = document.querySelector('.hero-title');
+      const sub = document.querySelector('.hero-subtitle');
+      if(h1  && D.hero.title)    h1.textContent  = D.hero.title;
+      if(sub && D.hero.subtitle) sub.textContent = D.hero.subtitle;
+      // Hero social links — 4 anchors in order: fb, ig, wa, yt
+      const heroBox = document.querySelector('#home .social-glass');
+      if(heroBox){
+        const hrefs = [D.hero.fb, D.hero.ig, D.hero.wa, D.hero.yt];
+        heroBox.querySelectorAll('a').forEach(function(a,i){ if(hrefs[i]) a.href = hrefs[i]; });
       }
-    });
-  }
+    }
 
-  /* 2. Counter Animation */
-  const counts = document.querySelectorAll('.count');
-  let countersAnimated = false;
-  const animateCounters = () => {
-    if (countersAnimated || !counts.length) return;
-    countersAnimated = true;
-    counts.forEach(counter => {
-      const target   = Number(counter.dataset.target || 0);
-      const duration = 1200;
-      const startT   = performance.now();
-      const tick = now => {
-        const p = Math.min((now - startT) / duration, 1);
-        const eased = 1 - Math.pow(1 - p, 3);
-        counter.innerText = `${Math.floor(target * eased)}${counter.dataset.suffix || '+'}`;
-        if (p < 1) requestAnimationFrame(tick);
-        else counter.innerText = `${target}${counter.dataset.suffix || '+'}`;
-      };
-      requestAnimationFrame(tick);
-    });
-  };
-
-  /* 3. Reveal Elements */
-  const aboutSection = document.querySelector('#about');
-  if (aboutSection) {
-    aboutSection.style.marginTop = '0px';
-    window.addEventListener('resize', () => { aboutSection.style.marginTop = '0px'; });
-  }
-
-  const revealTargets = document.querySelectorAll(
-    '#about .about-title, #about .about-text, #about .stats-row .stat-item, .showcase-title, .service-card, .desktop-carousel .team-slide .team-card, .mobile-snap-card, .team-dots, .site-footer .footer-brand, .site-footer .footer-contact, .footer-copy'
-  );
-  revealTargets.forEach(el => el.classList.add('reveal-up'));
-
-  const revealObserver = new IntersectionObserver((entries, obs) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add('is-visible');
-      obs.unobserve(entry.target);
-    });
-  }, { threshold: 0.16, rootMargin: '0px 0px -8% 0px' });
-  revealTargets.forEach(el => revealObserver.observe(el));
-
-  if (aboutSection) {
-    new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) { animateCounters(); obs.unobserve(entry.target); }
-      });
-    }, { threshold: 0.35 }).observe(aboutSection);
-
-    const revealAbout = () => {
-      if (aboutSection.getBoundingClientRect().top < window.innerHeight * 0.88) {
-        aboutSection.classList.add('is-visible');
-        document.body.removeEventListener('scroll', revealAbout);
+    /* ABOUT TEXT */
+    if(D.about && D.about.text){
+      const aboutP = document.querySelector('.about-text');
+      if(aboutP){
+        const statsRow = aboutP.querySelector('.stats-row');
+        aboutP.innerHTML = '';
+        aboutP.appendChild(document.createTextNode(D.about.text));
+        if(statsRow) aboutP.appendChild(statsRow);
       }
-    };
-    document.body.addEventListener('scroll', revealAbout, { passive: true });
-    revealAbout();
-  }
+    }
 
-  /* 4. Desktop Carousel */
-  const teamCarousel = document.querySelector('.desktop-carousel');
-  const slides       = document.querySelectorAll('.desktop-carousel .team-slide');
-  const dots         = document.querySelectorAll('.desktop-dots .dot');
-
-  if (teamCarousel && slides.length && dots.length) {
-    let currentSlide = 0;
-    const setActiveSlide = idx => {
-      currentSlide = Math.max(0, Math.min(idx, slides.length - 1));
-      teamCarousel.style.transform = `translateX(-${currentSlide * 100}%)`;
-      dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
-    };
-    dots.forEach(dot => dot.addEventListener('click', () => setActiveSlide(Number(dot.dataset.slide || 0))));
-    setActiveSlide(0);
-
-    const carouselWrap = document.querySelector('.team-carousel-wrap');
-    const prevBtn = document.getElementById('carouselPrev');
-    const nextBtn = document.getElementById('carouselNext');
-    if (carouselWrap && prevBtn && nextBtn) {
-      carouselWrap.addEventListener('mousemove', e => {
-        const rect = carouselWrap.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const edge = rect.width * 0.2;
-        prevBtn.classList.toggle('edge-active', x < edge);
-        nextBtn.classList.toggle('edge-active', x > rect.width - edge);
+    /* STATS */
+    if(D.about && D.about.stats && D.about.stats.length){
+      const items = document.querySelectorAll('.stat-item');
+      D.about.stats.forEach(function(s, i){
+        if(!items[i]) return;
+        const num = items[i].querySelector('.count');
+        const lbl = items[i].querySelector('.stat-label');
+        if(num){
+          num.dataset.target = s.value;
+          num.dataset.suffix = s.suffix || '+';
+          num.textContent    = '0' + (s.suffix || '+');
+        }
+        if(lbl) lbl.textContent = s.label;
       });
-      carouselWrap.addEventListener('mouseleave', () => {
-        prevBtn.classList.remove('edge-active');
-        nextBtn.classList.remove('edge-active');
-      });
-      prevBtn.addEventListener('click', () => setActiveSlide(currentSlide - 1));
-      nextBtn.addEventListener('click', () => setActiveSlide(currentSlide + 1));
+    }
+
+    /* SERVICES */
+    if(D.services && D.services.length){
+      const grid = document.querySelector('.service-grid');
+      if(grid) grid.innerHTML = D.services.map(function(s){
+        return '<article class="service-card">'
+          + '<img src="'+s.img+'" alt="'+s.title+'">'
+          + '<div class="service-overlay"><h3>'+s.title+'</h3><p>'+s.desc+'</p></div>'
+          + '</article>';
+      }).join('');
+    }
+
+    /* TEAM */
+    if(D.team && D.team.length){
+      rebuildTeam(D.team);
+    }
+
+    /* FOOTER */
+    if(D.footer){
+      const fh3 = document.querySelector('.footer-brand-row h3');
+      if(fh3 && D.footer.org) fh3.textContent = D.footer.org;
+
+      const fp = document.querySelector('.footer-brand-row div p');
+      if(fp && D.footer.college) fp.textContent = D.footer.college;
+
+      const fcopy = document.querySelector('.footer-copy');
+      if(fcopy && D.footer.copy) fcopy.textContent = D.footer.copy;
+
+      // Creators
+      if(D.footer.creators && D.footer.creators.length){
+        const creatorDiv = document.querySelector('.footer-creators');
+        if(creatorDiv){
+          const h4 = creatorDiv.querySelector('h4');
+          creatorDiv.innerHTML = (h4 ? h4.outerHTML : '<h4>Creators</h4>')
+            + D.footer.creators.map(function(c){
+              return '<a class="creator-link" href="'+c.ig+'" target="_blank" rel="noopener noreferrer">'
+                + '<img src="assets/icons/icon-instagram.png" alt="Instagram">'
+                + '<span>'+c.name+'</span></a>';
+            }).join('');
+        }
+      }
+
+      // Contacts
+      if(D.footer.contacts && D.footer.contacts.length){
+        const contactList = document.querySelector('.contact-list');
+        if(contactList) contactList.innerHTML = D.footer.contacts.map(function(c){
+          return '<a class="contact-item" href="https://wa.me/'+c.phone+'" target="_blank" rel="noopener noreferrer">'
+            + '<span>'+c.name+'</span>'
+            + '<img src="assets/icons/icon-whatsapp.png" alt="WhatsApp"></a>';
+        }).join('');
+      }
+
+      // Footer social links
+      if(D.hero){
+        const footerSocials = document.querySelector('.footer-socials.social-glass');
+        if(footerSocials){
+          const hrefs = [D.hero.fb, D.hero.ig, D.hero.wa, D.hero.yt];
+          footerSocials.querySelectorAll('a').forEach(function(a,i){ if(hrefs[i]) a.href = hrefs[i]; });
+        }
+      }
     }
   }
 
-  /* 5. Team Carousel Pop-up */
-  const teamContainer  = document.querySelector('.team-carousel');
-  const mainTeamCards  = document.querySelectorAll('.team-slide-main .team-card');
-  if (teamContainer && mainTeamCards.length) {
-    const handleTeamScroll = () => {
-      const center = teamContainer.scrollLeft + teamContainer.offsetWidth / 2;
-      mainTeamCards.forEach(card => {
-        const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-        card.classList.toggle('is-center', Math.abs(center - cardCenter) < card.offsetWidth / 2);
+  /* ── TEAM REBUILD ─────────────────────────────────────────────
+     Rebuilds desktop slides, mobile snap track, and all dots,
+     then re-initialises the carousel JS so it works correctly.
+  ──────────────────────────────────────────────────────────── */
+  function rebuildTeam(team){
+
+    // ---- Desktop carousel ----
+    const desktopCarousel = document.querySelector('.desktop-carousel');
+    if(desktopCarousel){
+      var slides = [];
+
+      // Slide 0: first 3 (officers)
+      var officers = team.slice(0, 3);
+      slides.push('<div class="team-slide team-slide-main">'
+        + officers.map(function(m, i){
+          return '<article class="team-card' + (i===0 ? ' team-card-main' : '') + '">'
+            + '<img src="'+m.img+'" alt="'+m.role+'">'
+            + '<div class="team-overlay"><h3>'+(m.name||'')+'</h3><p>'+m.role+'</p></div>'
+            + '</article>';
+        }).join('') + '</div>');
+
+      // Remaining in groups of 4
+      var rest = team.slice(3);
+      for(var i = 0; i < rest.length; i += 4){
+        var chunk = rest.slice(i, i+4);
+        slides.push('<div class="team-slide">'
+          + chunk.map(function(m){
+            return '<article class="team-card">'
+              + '<img src="'+m.img+'" alt="'+m.role+'">'
+              + '<div class="team-overlay"><h3>'+(m.name||'')+'</h3><p>'+m.role+'</p></div>'
+              + '</article>';
+          }).join('') + '</div>');
+      }
+      desktopCarousel.innerHTML = slides.join('');
+    }
+
+    // ---- Desktop dots ----
+    var slideCount = 1 + Math.ceil(Math.max(0, team.length - 3) / 4);
+    var desktopDots = document.querySelector('.desktop-dots');
+    if(desktopDots){
+      desktopDots.innerHTML = Array.from({length: slideCount}, function(_, i){
+        return '<button class="dot'+(i===0?' active':'')+'" type="button" data-slide="'+i+'" aria-label="Show slide '+(i+1)+'"></button>';
+      }).join('');
+    }
+
+    // ---- Mobile snap track ----
+    var snapTrack = document.getElementById('mobileSnapTrack');
+    if(snapTrack){
+      snapTrack.innerHTML = team.map(function(m, i){
+        return '<article class="mobile-snap-card '+(i<3?'mobile-snap-officer':'mobile-snap-member')+'" data-index="'+i+'">'
+          + '<img src="'+m.img+'" alt="'+m.role+'">'
+          + '<div class="team-overlay"><h3>'+(m.name||'')+'</h3><p>'+m.role+'</p></div>'
+          + '</article>';
+      }).join('');
+    }
+
+    // ---- Mobile dots ----
+    var mobileDots = document.getElementById('mobileSnapDots');
+    if(mobileDots){
+      mobileDots.innerHTML = team.map(function(_, i){
+        return '<button class="dot'+(i===0?' active':'')+'" type="button" data-card="'+i+'"></button>';
+      }).join('');
+    }
+
+    // ---- Re-init desktop carousel JS ----
+    var carousel    = document.querySelector('.desktop-carousel');
+    var newSlides   = document.querySelectorAll('.desktop-carousel .team-slide');
+    var newDots     = document.querySelectorAll('.desktop-dots .dot');
+    var prevBtn     = document.getElementById('carouselPrev');
+    var nextBtn     = document.getElementById('carouselNext');
+    var carouselWrap= document.querySelector('.team-carousel-wrap');
+
+    if(carousel && newSlides.length && newDots.length){
+      var current = 0;
+      function setSlide(idx){
+        current = Math.max(0, Math.min(idx, newSlides.length-1));
+        carousel.style.transform = 'translateX(-'+current*100+'%)';
+        newDots.forEach(function(d,i){ d.classList.toggle('active', i===current); });
+      }
+      newDots.forEach(function(dot){
+        dot.addEventListener('click', function(){ setSlide(Number(dot.dataset.slide||0)); });
       });
-    };
-    teamContainer.addEventListener('scroll', handleTeamScroll);
-    handleTeamScroll();
-  }
+      if(prevBtn) prevBtn.onclick = function(){ setSlide(current-1); };
+      if(nextBtn) nextBtn.onclick = function(){ setSlide(current+1); };
+      if(carouselWrap){
+        carouselWrap.onmousemove = function(e){
+          var rect = carouselWrap.getBoundingClientRect();
+          var x = e.clientX - rect.left;
+          var edge = rect.width * 0.2;
+          if(prevBtn) prevBtn.classList.toggle('edge-active', x < edge);
+          if(nextBtn) nextBtn.classList.toggle('edge-active', x > rect.width - edge);
+        };
+        carouselWrap.onmouseleave = function(){
+          if(prevBtn) prevBtn.classList.remove('edge-active');
+          if(nextBtn) nextBtn.classList.remove('edge-active');
+        };
+      }
+      setSlide(0);
+    }
 
-  /* 6. Mobile Snap-scroll Carousel */
-  const snapTrack = document.getElementById('mobileSnapTrack');
-  const snapCards = snapTrack ? Array.from(snapTrack.querySelectorAll('.mobile-snap-card')) : [];
-  const snapDots  = Array.from(document.querySelectorAll('#mobileSnapDots .dot'));
-
-  if (snapTrack && snapCards.length) {
-    const getCenterCard = () => {
-      const trackCenter = snapTrack.getBoundingClientRect().left + snapTrack.getBoundingClientRect().width / 2;
-      return snapCards.reduce((closest, card) => {
-        const dist = Math.abs(card.getBoundingClientRect().left + card.getBoundingClientRect().width / 2 - trackCenter);
-        return dist < Math.abs(closest.getBoundingClientRect().left + closest.getBoundingClientRect().width / 2 - trackCenter) ? card : closest;
-      });
-    };
-
-    const updateActiveCard = () => {
-      const c = getCenterCard();
-      if (c) {
-        snapCards.forEach(x => x.classList.remove('is-active'));
+    // ---- Re-init mobile snap JS ----
+    var track    = document.getElementById('mobileSnapTrack');
+    var snapCards= track ? Array.from(track.querySelectorAll('.mobile-snap-card')) : [];
+    var snapDots = Array.from(document.querySelectorAll('#mobileSnapDots .dot'));
+    if(track && snapCards.length){
+      function getCenterCard(){
+        var tr = track.getBoundingClientRect();
+        var cx = tr.left + tr.width/2;
+        var best=null, bestD=Infinity;
+        snapCards.forEach(function(c){
+          var r=c.getBoundingClientRect();
+          var d=Math.abs((r.left+r.width/2)-cx);
+          if(d<bestD){ bestD=d; best=c; }
+        });
+        return best;
+      }
+      function snapToCenter(){
+        var c = getCenterCard(); if(!c) return;
+        var tr=track.getBoundingClientRect(), cr=c.getBoundingClientRect();
+        track.scrollBy({ left:(cr.left+cr.width/2)-(tr.left+tr.width/2), behavior:'smooth' });
+        snapCards.forEach(function(x){ x.classList.remove('is-active'); });
         c.classList.add('is-active');
-        const idx = Number(c.dataset.index || 0);
-        snapDots.forEach((d, i) => d.classList.toggle('active', i === idx));
+        var idx=Number(c.dataset.index||0);
+        snapDots.forEach(function(d,i){ d.classList.toggle('active',i===idx); });
       }
-    };
-
-    const snapToCenter = () => {
-      const c = getCenterCard();
-      if (!c) return;
-      const trackRect = snapTrack.getBoundingClientRect();
-      const cardRect  = c.getBoundingClientRect();
-      snapTrack.scrollBy({ left: (cardRect.left + cardRect.width/2) - (trackRect.left + trackRect.width/2), behavior: 'smooth' });
-      snapCards.forEach(x => x.classList.remove('is-active'));
-      c.classList.add('is-active');
-      const idx = Number(c.dataset.index || 0);
-      snapDots.forEach((d, i) => d.classList.toggle('active', i === idx));
-    };
-
-    let snapTimer;
-    snapTrack.addEventListener('scroll', () => {
-      updateActiveCard();
-      clearTimeout(snapTimer);
-      snapTimer = setTimeout(snapToCenter, 80);
-    }, { passive: true });
-    setTimeout(snapToCenter, 120);
-
-    snapDots.forEach(dot => {
-      dot.addEventListener('click', () => {
-        const target = snapCards[Number(dot.dataset.card || 0)];
-        if (!target) return;
-        const trackRect = snapTrack.getBoundingClientRect();
-        const cardRect  = target.getBoundingClientRect();
-        snapTrack.scrollBy({ left: (cardRect.left + cardRect.width/2) - (trackRect.left + trackRect.width/2), behavior:'smooth' });
+      var st;
+      track.addEventListener('scroll', function(){
+        clearTimeout(st);
+        st=setTimeout(snapToCenter, 80);
+      },{ passive:true });
+      snapDots.forEach(function(dot){
+        dot.addEventListener('click', function(){
+          var idx=Number(dot.dataset.card||0);
+          var tgt=snapCards[idx]; if(!tgt) return;
+          var tr=track.getBoundingClientRect(), cr=tgt.getBoundingClientRect();
+          track.scrollBy({ left:(cr.left+cr.width/2)-(tr.left+tr.width/2), behavior:'smooth' });
+        });
       });
-    });
+      setTimeout(snapToCenter, 150);
+    }
   }
 
-  /* 7. Smooth Scrolling Navigation */
-  const easeInOutCubic = t => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
-  const smoothScrollTo = (targetY, duration=900) => {
-    const scroller = document.body;
-    const startY   = scroller.scrollTop;
-    const dist     = targetY - startY;
-    const startT   = performance.now();
-    const step = now => {
-      const p = Math.min((now - startT) / duration, 1);
-      scroller.scrollTop = startY + dist * easeInOutCubic(p);
-      if (p < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  };
-
-  const header = document.querySelector('header');
-  document.querySelectorAll('a[href^="#"]').forEach(link => {
-    link.addEventListener('click', e => {
-      const target = document.getElementById(link.getAttribute('href').slice(1));
-      if (!target) return;
-      e.preventDefault();
-      const mainNav = document.getElementById('mainNav');
-      const menuToggle = document.getElementById('menuToggle');
-      if (mainNav) mainNav.classList.remove('active');
-      if (menuToggle) menuToggle.classList.remove('active');
-      if (header) { header.style.transform='translateY(0)'; header.style.opacity='1'; }
-      const headerH = header ? header.offsetHeight : 0;
-      smoothScrollTo(target.getBoundingClientRect().top + document.body.scrollTop - headerH, 900);
+  // ── Run after DOM + script.js are ready ──────────────────────
+  document.addEventListener('DOMContentLoaded', function(){
+    fetchData().then(function(D){
+      if(D) applyData(D);
+    }).catch(function(e){
+      console.warn('Site data sync failed:', e);
     });
   });
 
-  /* 8. Smooth Momentum Wheel + Parallax */
-  (() => {
-    let current = 0, target = 0, rafId = null;
-    const ease = 0.09;
-    const scroller  = document.body;
-    const heroImg   = document.querySelector('.hero-image');
-    const heroInner = document.querySelector('.hero-inner');
-
-    const applyParallax = scrollY => {
-      if (heroImg)   heroImg.style.transform = `translateY(${scrollY * 0.45}px)`;
-      if (heroInner) {
-        const fp = Math.min(scrollY / 380, 1);
-        heroInner.style.transform = `translateY(${scrollY * 0.2}px)`;
-        heroInner.style.opacity   = String(Math.max(0, 1 - fp * 1.3));
-      }
-    };
-
-    const update = () => {
-      current += (target - current) * ease;
-      const diff = Math.abs(target - current);
-      scroller.scrollTop = Math.round(current);
-      applyParallax(Math.round(current));
-      if (diff > 0.5) { rafId = requestAnimationFrame(update); }
-      else { scroller.scrollTop = target; applyParallax(target); rafId = null; }
-    };
-
-    window.addEventListener('wheel', e => {
-      e.preventDefault();
-      target = Math.max(0, Math.min(target + e.deltaY, scroller.scrollHeight - scroller.clientHeight));
-      if (!rafId) { current = scroller.scrollTop; rafId = requestAnimationFrame(update); }
-    }, { passive: false });
-
-    scroller.addEventListener('scroll', () => applyParallax(scroller.scrollTop), { passive: true });
-    applyParallax(0);
-  })();
-
-  /* 9. Header hide/show on scroll */
-  const header2 = document.querySelector('header');
-  if (header2) {
-    let lastScrollY = document.body.scrollTop;
-    let ticking = false;
-    document.body.addEventListener('scroll', () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const curr = document.body.scrollTop;
-          const diff = curr - lastScrollY;
-          if (diff > 0 && curr > 80)  { header2.style.transform='translateY(-100%)'; header2.style.opacity='0'; }
-          else if (diff < 0)           { header2.style.transform='translateY(0)';     header2.style.opacity='1'; }
-          lastScrollY = curr;
-          ticking = false;
-        });
-        ticking = true;
-      }
-    });
-  }
-}
+})();
 </script>
 </body>
 </html>
