@@ -4,7 +4,7 @@
 // to open the admin panel in a new tab.
 // =============================================
 (function () {
-  const SECRET = 'CARYO';
+  const SECRET = 'DUMB';
   let buffer = '';
   let resetTimer;
 
