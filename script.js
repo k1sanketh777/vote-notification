@@ -1,3 +1,31 @@
+// =============================================
+// CARYO ADMIN PANEL TRIGGER
+// Type "CARYO" (all caps) anywhere on the page
+// to open the admin panel in a new tab.
+// =============================================
+(function () {
+  const SECRET = 'CARYO';
+  let buffer = '';
+  let resetTimer;
+
+  document.addEventListener('keydown', (e) => {
+    // Ignore if user is typing in an input/textarea
+    const tag = document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement.isContentEditable) return;
+
+    buffer += e.key;
+    if (buffer.length > SECRET.length) buffer = buffer.slice(-SECRET.length);
+
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(() => { buffer = ''; }, 1800);
+
+    if (buffer === SECRET) {
+      buffer = '';
+      window.open('admin.html', '_blank');
+    }
+  });
+})();
+
 window.tailwind = window.tailwind || {};
 window.tailwind.config = {
   theme: {
