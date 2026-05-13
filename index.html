@@ -15,7 +15,7 @@
     </div>
 
     <!-- =============================================
-         All sections are empty shells — filled by
+         All sections are empty shells â filled by
          renderFromData() after site-data.json loads.
     ============================================= -->
 
@@ -34,7 +34,13 @@
                 <span class="w-5 h-[2px] bg-white block"></span>
             </button>
             <!-- Nav links injected here -->
-            <nav id="mainNav" class="top-nav-glass gap-7 px-7 py-2.5 rounded-full"></nav>
+            <nav id="mainNav" class="top-nav-glass gap-7 px-7 py-2.5 rounded-full">
+                <a href="#home" class="text-[13px] font-semibold text-white hover:opacity-80 transition-opacity">Home</a>
+                <a href="#about" class="text-[13px] font-semibold text-white hover:opacity-80 transition-opacity">About Us</a>
+                <a href="#showcase" class="text-[13px] font-semibold text-white hover:opacity-80 transition-opacity">Showcase</a>
+                <a href="#team" class="text-[13px] font-semibold text-white hover:opacity-80 transition-opacity">Team</a>
+                <a href="#contact" class="text-[13px] font-semibold text-white hover:opacity-80 transition-opacity">Contact</a>
+            </nav>
         </div>
     </header>
 
@@ -42,8 +48,8 @@
         <img src="assets/images/hero-bg.png" class="hero-image w-full h-auto block" alt="Media Unit hero background">
         <div class="hero-overlay absolute inset-0 flex flex-col justify-center items-center px-4">
             <div class="hero-inner z-20">
-                <h1 id="heroTitle" class="hero-title font-bold font-greater leading-tight"></h1>
-                <p id="heroSubtitle" class="hero-subtitle font-light opacity-95"></p>
+                <h1 id="heroTitle" class="hero-title font-bold font-greater leading-tight">MEDIA UNIT OF MARIS STELLA COLLEGE NEGOMBO</h1>
+                <p id="heroSubtitle" class="hero-subtitle font-light opacity-95">Capturing Every Moment, Sharing Every Story</p>
                 <div id="heroSocials" class="social-glass inline-flex gap-4 items-center justify-center px-5 py-2.5 rounded-full"></div>
             </div>
         </div>
@@ -69,15 +75,63 @@
                 <div class="team-carousel-wrap">
                     <button class="carousel-arrow carousel-arrow-left" id="carouselPrev" aria-label="Previous">&#8592;</button>
                     <button class="carousel-arrow carousel-arrow-right" id="carouselNext" aria-label="Next">&#8594;</button>
-                    <!-- Desktop carousel — 3 slides injected -->
+                    <!-- Desktop carousel â 3 slides injected -->
                     <div class="team-carousel desktop-carousel" id="desktopCarousel"></div>
-                    <!-- Mobile snap track — injected -->
-                    <div class="mobile-snap-track" id="mobileSnapTrack"></div>
+                    <!-- Mobile snap track â injected -->
+                    <div class="mobile-snap-track" id="mobileSnapTrack">
+                    <article class="mobile-snap-card mobile-snap-officer" data-index="0">
+                        <img src="assets/images/Team/1..png" alt="President">
+                        <div class="team-overlay"><h3></h3><p>President</p></div>
+                    </article>
+                    <article class="mobile-snap-card mobile-snap-officer" data-index="1">
+                        <img src="assets/images/Team/2..png" alt="Secretary">
+                        <div class="team-overlay"><h3></h3><p>Secretary</p></div>
+                    </article>
+                    <article class="mobile-snap-card mobile-snap-officer" data-index="2">
+                        <img src="assets/images/Team/3..png" alt="Treasurer">
+                        <div class="team-overlay"><h3></h3><p>Treasurer</p></div>
+                    </article>
+                    <article class="mobile-snap-card mobile-snap-member" data-index="3">
+                        <img src="assets/images/Team/4..png" alt="Committee Member">
+                        <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
+                    </article>
+                    <article class="mobile-snap-card mobile-snap-member" data-index="4">
+                        <img src="assets/images/Team/5..png" alt="Committee Member">
+                        <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
+                    </article>
+                    <article class="mobile-snap-card mobile-snap-member" data-index="5">
+                        <img src="assets/images/Team/6..png" alt="Committee Member">
+                        <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
+                    </article>
+                    <article class="mobile-snap-card mobile-snap-member" data-index="6">
+                        <img src="assets/images/Team/7..png" alt="Committee Member">
+                        <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
+                    </article>
+                    <article class="mobile-snap-card mobile-snap-member" data-index="7">
+                        <img src="assets/images/Team/8..png" alt="Committee Member">
+                        <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
+                    </article>
+                    <article class="mobile-snap-card mobile-snap-member" data-index="8">
+                        <img src="assets/images/Team/9..png" alt="Committee Member">
+                        <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
+                    </article>
+                    <article class="mobile-snap-card mobile-snap-member" data-index="9">
+                        <img src="assets/images/Team/10..png" alt="Committee Member">
+                        <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
+                    </article>
+                    <article class="mobile-snap-card mobile-snap-member" data-index="10">
+                        <img src="assets/images/Team/11..png" alt="Committee Member">
+                        <div class="team-overlay"><h3></h3><p>Committee Member</p></div>
+                    </article>
                 </div>
-
-                <!-- Desktop dots — injected -->
-                <div class="team-dots desktop-dots" id="desktopDots" role="tablist" aria-label="Team slide selector"></div>
-                <!-- Mobile dots — injected -->
+            </div>
+            <!-- Desktop dots â injected -->
+                <div class="team-dots desktop-dots" id="desktopDots" role="tablist" aria-label="Team slide selector">
+                <button class="dot active" type="button" data-slide="0" aria-label="Show slide 1"></button>
+                <button class="dot" type="button" data-slide="1" aria-label="Show slide 2"></button>
+                <button class="dot" type="button" data-slide="2" aria-label="Show slide 3"></button>
+            </div>
+            <!-- Mobile dots â injected -->
                 <div class="team-dots mobile-dots" id="mobileSnapDots" role="tablist" aria-label="Team card selector"></div>
             </div>
         </div>
@@ -97,7 +151,7 @@
      INLINE SCRIPTS
 ============================================= -->
 <script>
-/* ─── Tailwind config ─────────────────────────── */
+/* âââ Tailwind config âââââââââââââââââââââââââââ */
 window.tailwind = window.tailwind || {};
 window.tailwind.config = {
   theme: { extend: {
@@ -106,7 +160,7 @@ window.tailwind.config = {
   }}
 };
 
-/* ─── CARYO trigger ───────────────────────────── */
+/* âââ CARYO trigger âââââââââââââââââââââââââââââ */
 (function(){
   const SECRET = 'CARYO';
   let buf = '';
@@ -122,7 +176,7 @@ window.tailwind.config = {
   });
 })();
 
-/* ─── PRELOADER ───────────────────────────────── */
+/* âââ PRELOADER âââââââââââââââââââââââââââââââââ */
 (function(){
   const preloader = document.getElementById('preloader');
   if (!preloader) return;
@@ -147,7 +201,7 @@ window.tailwind.config = {
   setTimeout(dismiss, 10000);
 })();
 
-/* ─── DATA RENDERER ───────────────────────────── */
+/* âââ DATA RENDERER âââââââââââââââââââââââââââââ */
 function renderFromData(D) {
 
   /* NAV */
@@ -185,10 +239,10 @@ function renderFromData(D) {
       </div>
     </article>`).join('');
 
-  /* ── DESKTOP CAROUSEL (groups of 3, first is "main" slide) ── */
+  /* ââ DESKTOP CAROUSEL (groups of 3, first is "main" slide) ââ */
   const team = D.team;
   const slides = [];
-  // Slide 0: first 3 members (officers-style) — first card gets team-card-main
+  // Slide 0: first 3 members (officers-style) â first card gets team-card-main
   slides.push(team.slice(0, 3));
   // Remaining members split into groups of 4
   const rest = team.slice(3);
@@ -208,7 +262,7 @@ function renderFromData(D) {
     `<button class="dot${i===0?' active':''}" type="button" data-slide="${i}" aria-label="Show slide ${i+1}"></button>`
   ).join('');
 
-  /* ── MOBILE SNAP TRACK ── */
+  /* ââ MOBILE SNAP TRACK ââ */
   // Officers = first 3 (index 0,1,2); rest are members
   document.getElementById('mobileSnapTrack').innerHTML = team.map((m, i) => {
     const isOfficer = i < 3;
@@ -223,7 +277,7 @@ function renderFromData(D) {
     `<button class="dot${i===0?' active':''}" type="button" data-card="${i}"></button>`
   ).join('');
 
-  /* ── FOOTER BRAND ── */
+  /* ââ FOOTER BRAND ââ */
   document.getElementById('footerBrand').innerHTML = `
     <div class="footer-brand-row">
       <img src="assets/images/logo.png" alt="Educational Media Unit logo">
@@ -241,15 +295,15 @@ function renderFromData(D) {
         </a>`).join('')}
     </div>`;
 
-  /* ── FOOTER CONTACT ── */
+  /* ââ FOOTER CONTACT ââ */
   document.getElementById('footerContact').innerHTML = `
     <div class="footer-socials social-glass">
-      <a href="${D.hero.fb}" aria-label="Facebook"><img src="assets/icons/icon-facebook.png" alt="Facebook"></a>
-      <a href="${D.hero.ig}" aria-label="Instagram"><img src="assets/icons/icon-instagram.png" alt="Instagram"></a>
-      <a href="${D.hero.wa}" aria-label="WhatsApp"><img src="assets/icons/icon-whatsapp.png" alt="WhatsApp"></a>
-      <a href="${D.hero.yt}" aria-label="YouTube"><img src="assets/icons/icon-youtube.png" alt="YouTube"></a>
-    </div>
-    <h4>Contact Us</h4>
+                        <a href="https://web.facebook.com/profile.php?id=100090829437509" aria-label="Facebook"><img src="assets/icons/icon-facebook.png" alt="Facebook"></a>
+                        <a href="https://www.instagram.com/msc_mediaunit" aria-label="Instagram"><img src="assets/icons/icon-instagram.png" alt="Instagram"></a>
+                        <a href="https://whatsapp.com/channel/0029VajSC3v60eBY0REknS2W" aria-label="WhatsApp"><img src="assets/icons/icon-whatsapp.png" alt="WhatsApp"></a>
+                        <a href="https://www.youtube.com/@emumsc?sub_confirmation=1" aria-label="YouTube"><img src="assets/icons/icon-youtube.png" alt="YouTube"></a>
+                    </div>
+                    <h4>Contact Us</h4>
     <div class="contact-list">
       ${D.footer.contacts.map(c => `
         <a class="contact-item" href="https://wa.me/${c.phone}" target="_blank" rel="noopener noreferrer">
@@ -258,16 +312,16 @@ function renderFromData(D) {
         </a>`).join('')}
     </div>`;
 
-  /* ── FOOTER COPYRIGHT ── */
+  /* ââ FOOTER COPYRIGHT ââ */
   document.getElementById('footerCopy').textContent = D.footer.copy;
 
   /* After DOM is ready, run all the interactive JS */
   initInteractivity();
 }
 
-/* ─── FETCH site-data.json, fallback to hardcoded defaults ─── */
+/* âââ FETCH site-data.json, fallback to hardcoded defaults âââ */
 (async function bootstrap(){
-  // Default data — used if JSON can't be fetched (e.g. local file:// or network error)
+  // Default data â used if JSON can't be fetched (e.g. local file:// or network error)
   const DEFAULTS = {
     nav: [
       { label:'Home',     href:'home' },
@@ -348,12 +402,12 @@ function renderFromData(D) {
     };
     renderFromData(merged);
   } catch(_) {
-    // JSON missing or fetch not supported (file://) — use defaults
+    // JSON missing or fetch not supported (file://) â use defaults
     renderFromData(DEFAULTS);
   }
 })();
 
-/* ─── ALL INTERACTIVITY (runs after DOM is populated) ─────── */
+/* âââ ALL INTERACTIVITY (runs after DOM is populated) âââââââ */
 function initInteractivity() {
 
   /* 1. Menu Toggle */
