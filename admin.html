@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — MSC Media Unit</title>
+  <link rel="stylesheet" href="admin-style.css">
+</head>
+<body>
+
+<!-- =============================================  LOCK SCREEN  -->
+<div id="adminLock">
+  <div class="lock-bg-grid"></div>
+  <div class="lock-card">
+    <div class="lock-icon-ring">🔐</div>
+    <div>
+      <h1>Admin Panel</h1>
+      <p>MSC Media Unit<br>Enter your password to continue.</p>
+    </div>
+    <div class="lock-input-wrap">
+      <input class="lock-input" id="lockPwd" type="password" placeholder="Password" autocomplete="current-password">
+    </div>
+    <div class="lock-error" id="lockErr"></div>
+    <button class="lock-btn" id="lockBtn">Unlock →</button>
+  </div>
+</div>
+
+<!-- =============================================  APP  -->
+<div id="adminApp">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-icon">📡</div>
+      <div class="sidebar-brand-text">
+        <strong>MSC Media Unit</strong>
+        <span>Admin Panel v2.0</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <span class="nav-label">Overview</span>
+      <button class="nav-item active" data-panel="dashboard" onclick="nav('dashboard',this)">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </button>
+
+      <span class="nav-label" style="margin-top:8px">Content</span>
+      <button class="nav-item" data-panel="navbar" onclick="nav('navbar',this)">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        Navigation Bar
+      </button>
+      <button class="nav-item" data-panel="hero" onclick="nav('hero',this)">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        Hero / Banner
+      </button>
+      <button class="nav-item" data-panel="about" onclick="nav('about',this)">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        About & Stats
+      </button>
+      <button class="nav-item" data-panel="services" onclick="nav('services',this)">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Services
+      </button>
+      <button class="nav-item" data-panel="team" onclick="nav('team',this)">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Team Members
+      </button>
+      <button class="nav-item" data-panel="footer" onclick="nav('footer',this)">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+        Footer & Contact
+      </button>
+
+      <span class="nav-label" style="margin-top:8px">Deploy</span>
+      <button class="nav-item" data-panel="github" onclick="nav('github',this)">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77A5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        GitHub Deploy
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="nav-item" onclick="lockPanel()" style="color:var(--danger)">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Lock & Exit
+      </button>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <div class="top-bar">
+      <div class="top-bar-left">
+        <button class="mob-menu-btn" onclick="toggleSidebar()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <span class="top-bar-title" id="topTitle">Dashboard</span>
+      </div>
+      <div class="top-bar-right">
+        <div class="gh-status">
+          <div class="gh-dot" id="ghDot"></div>
+          <span id="ghStatusText">Not connected</span>
+        </div>
+        <span class="badge" id="adminBadge">ADMIN</span>
+        <button class="btn btn-primary btn-sm" id="deployBtn" onclick="deployToGitHub()" disabled>🚀 Deploy</button>
+      </div>
+    </div>
+
+    <div class="page-content">
+
+      <!-- ===== DASHBOARD ===== -->
+      <div class="panel active" id="panel-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="si">🔗</div><div class="sv" id="dNavCount">5</div><div class="sn">Nav Links</div></div>
+          <div class="stat-card"><div class="si">👥</div><div class="sv" id="dTeamCount">11</div><div class="sn">Team Members</div></div>
+          <div class="stat-card"><div class="si">⚡</div><div class="sv" id="dServiceCount">4</div><div class="sn">Services</div></div>
+          <div class="stat-card"><div class="si">☁️</div><div class="sv" id="dDeployStatus" style="font-size:0.9rem;color:var(--text-muted)">—</div><div class="sn">Last Deploy</div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div><h2>Welcome, Admin</h2><p>Manage all site content and deploy directly to GitHub.</p></div></div>
+          <div class="hint">💡 <strong>Activate from the website:</strong> Open your live site and type <code style="background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px">CARYO</code> (all caps) anywhere on the page — the admin panel opens automatically in a new tab.</div>
+          <div class="hint success">✅ <strong>GitHub Deploy:</strong> Set up your repo token in <em>GitHub Deploy</em>, then hit 🚀 Deploy to push changes directly to your repository files.</div>
+          <div class="hint warn">⚠️ <strong>Image uploads:</strong> Images are converted to base64 references or you provide the path. For real image hosting, commit them to your GitHub repo's <code style="background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px">assets/</code> folder.</div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div><h2>Quick Actions</h2></div></div>
+          <div style="display:flex;flex-wrap:wrap;gap:9px">
+            <button class="btn btn-ghost" onclick="nav('navbar',document.querySelector('[data-panel=navbar]'))">🔗 Edit Nav</button>
+            <button class="btn btn-ghost" onclick="nav('hero',document.querySelector('[data-panel=hero]'))">🖼️ Edit Hero</button>
+            <button class="btn btn-ghost" onclick="nav('about',document.querySelector('[data-panel=about]'))">📊 Edit Stats</button>
+            <button class="btn btn-ghost" onclick="nav('team',document.querySelector('[data-panel=team]'))">👤 Manage Team</button>
+            <button class="btn btn-ghost" onclick="nav('services',document.querySelector('[data-panel=services]'))">⚡ Edit Services</button>
+            <button class="btn btn-ghost" onclick="nav('github',document.querySelector('[data-panel=github]'))">⚙️ GitHub Setup</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== NAVBAR ===== -->
+      <div class="panel" id="panel-navbar">
+        <div class="card">
+          <div class="card-header">
+            <div><h2>Navigation Bar Links</h2><p>Drag to reorder. Edit labels and anchor targets.</p></div>
+            <button class="btn btn-primary btn-sm" onclick="openNavModal(-1)">+ Add Link</button>
+          </div>
+          <div class="nav-edit-list" id="navEditList"></div>
+          <div class="section-actions"><button class="btn btn-primary" onclick="markDirty('Navbar')">💾 Save Navbar</button></div>
+        </div>
+      </div>
+
+      <!-- ===== HERO ===== -->
+      <div class="panel" id="panel-hero">
+        <div class="card">
+          <div class="card-header"><div><h2>Hero / Banner Section</h2></div></div>
+          <div class="form-group"><label>Main Title</label>
+            <input type="text" id="heroTitle" value="MEDIA UNIT OF MARIS STELLA COLLEGE NEGOMBO">
+          </div>
+          <div class="form-group"><label>Subtitle</label>
+            <input type="text" id="heroSub" value="Capturing Every Moment, Sharing Every Story">
+          </div>
+          <hr class="divider">
+          <p style="font-size:0.8rem;font-weight:700;color:rgba(255,255,255,0.65);margin-bottom:12px">Social Media Links</p>
+          <div class="form-row">
+            <div class="form-group"><label>Facebook URL</label>
+              <input type="url" id="hFb" value="https://web.facebook.com/profile.php?id=100090829437509">
+            </div>
+            <div class="form-group"><label>Instagram URL</label>
+              <input type="url" id="hIg" value="https://www.instagram.com/msc_mediaunit">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>WhatsApp URL</label>
+              <input type="url" id="hWa" value="https://whatsapp.com/channel/0029VajSC3v60eBY0REknS2W">
+            </div>
+            <div class="form-group"><label>YouTube URL</label>
+              <input type="url" id="hYt" value="https://www.youtube.com/@emumsc?sub_confirmation=1">
+            </div>
+          </div>
+          <div class="section-actions"><button class="btn btn-primary" onclick="markDirty('Hero')">💾 Save Hero</button></div>
+        </div>
+      </div>
+
+      <!-- ===== ABOUT ===== -->
+      <div class="panel" id="panel-about">
+        <div class="card">
+          <div class="card-header"><div><h2>About Us Text</h2></div></div>
+          <div class="form-group">
+            <textarea id="aboutText" rows="8">The Educational Media Unit of Maris Stella College, Negombo is a dedicated platform that brings together creativity, innovation, and communication within the school community. It provides students with opportunities to explore and develop skills in photography, videography, graphic design, and digital media production. Through active involvement in covering school events and creating visual content, the unit plays an essential role in documenting and presenting the vibrant life of the college. Members work collaboratively, learning teamwork, responsibility, and professionalism while producing high quality media. The unit also encourages students to adapt to modern technology and media trends, preparing them for future creative fields. Beyond technical growth, it fosters leadership, discipline, and a strong sense of identity, making it an integral part of the Maris Stella College community and a vital cornerstone for nurturing the next generation of talented, visionary digital storytellers and media professionals</textarea>
+          </div>
+          <div class="section-actions"><button class="btn btn-primary" onclick="markDirty('About')">💾 Save About</button></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div><h2>Animated Stats / Counters</h2></div></div>
+          <div id="statRows" style="display:flex;flex-direction:column;gap:14px"></div>
+          <div style="display:flex;justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:9px">
+            <button class="btn btn-ghost btn-sm" onclick="addStatRow()">+ Add Stat</button>
+            <button class="btn btn-primary" onclick="markDirty('Stats')">💾 Save Stats</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SERVICES ===== -->
+      <div class="panel" id="panel-services">
+        <div class="card">
+          <div class="card-header">
+            <div><h2>Services — What We Do</h2><p>Drag cards to reorder.</p></div>
+            <button class="btn btn-primary btn-sm" onclick="openServiceModal(-1)">+ Add Service</button>
+          </div>
+          <div class="service-grid-edit" id="serviceGrid"></div>
+          <div class="section-actions"><button class="btn btn-primary" onclick="markDirty('Services')">💾 Save Services</button></div>
+        </div>
+      </div>
+
+      <!-- ===== TEAM ===== -->
+      <div class="panel" id="panel-team">
+        <div class="card">
+          <div class="card-header">
+            <div><h2>Team Members</h2><p>Drag to reorder. Click ✏️ to edit names, roles and images.</p></div>
+            <button class="btn btn-primary btn-sm" onclick="openMemberModal(-1)">+ Add Member</button>
+          </div>
+          <div class="member-list" id="memberList"></div>
+          <div class="section-actions"><button class="btn btn-primary" onclick="markDirty('Team')">💾 Save Team</button></div>
+        </div>
+      </div>
+
+      <!-- ===== FOOTER ===== -->
+      <div class="panel" id="panel-footer">
+        <div class="card">
+          <div class="card-header"><div><h2>Footer — Brand</h2></div></div>
+          <div class="form-row">
+            <div class="form-group"><label>Organisation Name</label>
+              <input type="text" id="fOrg" value="The Educational Media Unit">
+            </div>
+            <div class="form-group"><label>College / Sub-heading</label>
+              <input type="text" id="fCollege" value="Maris Stella College Negombo">
+            </div>
+          </div>
+          <div class="form-group"><label>Copyright Line</label>
+            <input type="text" id="fCopy" value="All Rights Reserved | Educational Media Unit of Maris Stella College, Negombo">
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div><h2>Contact Persons (WhatsApp)</h2></div></div>
+          <div class="form-row">
+            <div class="form-group"><label>Contact 1 — Name</label><input type="text" id="c1name" value="Mahen Perera"></div>
+            <div class="form-group"><label>Contact 1 — Number (with country code)</label><input type="tel" id="c1phone" value="94767537515"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Contact 2 — Name</label><input type="text" id="c2name" value="Denuwan Jayakody"></div>
+            <div class="form-group"><label>Contact 2 — Number</label><input type="tel" id="c2phone" value="94760734143"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div><h2>Creators Listed in Footer</h2></div></div>
+          <div id="creatorList" style="display:flex;flex-direction:column;gap:9px"></div>
+          <div style="display:flex;justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:9px">
+            <button class="btn btn-ghost btn-sm" onclick="addCreator()">+ Add Creator</button>
+            <button class="btn btn-primary" onclick="markDirty('Footer')">💾 Save Footer</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== GITHUB ===== -->
+      <div class="panel" id="panel-github">
+        <div class="card">
+          <div class="card-header"><div><h2>GitHub Repository Setup</h2><p>Connect your repo to enable direct file deployment.</p></div></div>
+          <div class="hint">🔑 Create a <strong>Personal Access Token</strong> at <a href="https://github.com/settings/tokens" target="_blank" style="color:var(--accent)">github.com/settings/tokens</a> with <code style="background:rgba(255,255,255,0.1);padding:2px 5px;border-radius:3px">repo</code> scope. It is stored only in your browser's localStorage.</div>
+          <div class="gh-field-row">
+            <div class="form-group"><label>GitHub Username</label>
+              <input type="text" id="ghUser" placeholder="e.g. msc-mediaunit">
+            </div>
+            <div class="form-group"><label>Repository Name</label>
+              <input type="text" id="ghRepo" placeholder="e.g. msc-website">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Branch</label>
+              <input type="text" id="ghBranch" placeholder="main" value="main">
+            </div>
+            <div class="form-group"><label>Personal Access Token</label>
+              <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+            </div>
+          </div>
+          <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:4px">
+            <button class="btn btn-primary" onclick="saveGHConfig()">💾 Save Config</button>
+            <button class="btn btn-ghost" onclick="testGHConnection()">🔌 Test Connection</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div><h2>Files to Deploy</h2><p>These files in your repo will be updated on deploy.</p></div></div>
+          <div class="file-status-list">
+            <div class="file-status-row">
+              <div><div class="fs-name">📄 index.html</div><div class="fs-meta">Main website HTML</div></div>
+              <span class="badge" id="fStatusHtml">Pending</span>
+            </div>
+            <div class="file-status-row">
+              <div><div class="fs-name">🎨 style.css</div><div class="fs-meta">Stylesheet</div></div>
+              <span class="badge" id="fStatusCss">No changes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div><h2>Deploy to GitHub</h2></div>
+            <button class="btn btn-success" id="bigDeployBtn" onclick="deployToGitHub()">🚀 Deploy Now</button>
+          </div>
+          <div class="hint warn">⚠️ This will overwrite <strong>index.html</strong> in your repository with the current admin panel content. Make sure you've saved all sections first.</div>
+          <div id="deployProgress" style="display:none;margin-top:12px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+              <div class="spinner"></div>
+              <span id="deployMsg" style="font-size:0.82rem;color:var(--text-muted)">Preparing...</span>
+            </div>
+            <div class="progress-wrap"><div class="progress-bar" id="deployBar" style="width:0%"></div></div>
+          </div>
+          <div class="commit-log" id="commitLog" style="margin-top:12px"></div>
+        </div>
+      </div>
+
+    </div><!-- /page-content -->
+  </div><!-- /main-area -->
+</div><!-- /adminApp -->
+
+<!-- ===== MODALS ===== -->
+
+<!-- Team Member Modal -->
+<div class="modal-overlay" id="memberModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="mModalTitle">Add Team Member</h3>
+      <button class="modal-close" onclick="closeModal('memberModal')">✕</button>
+    </div>
+    <div class="form-group"><label>Full Name</label>
+      <input type="text" id="mName" placeholder="e.g. Kavindu Perera">
+    </div>
+    <div class="form-group"><label>Role / Position</label>
+      <input type="text" id="mRole" placeholder="e.g. President">
+    </div>
+    <div class="form-group"><label>Image Path (in repo)</label>
+      <input type="text" id="mImgPath" placeholder="assets/images/Team/1..png">
+    </div>
+    <div class="form-group"><label>Or Upload Image (preview only)</label>
+      <div class="img-upload-zone" id="mImgZone">
+        <input type="file" accept="image/*" id="mImgFile" onchange="previewImg(this,'mImgPreview','mImgPath')">
+        <div>📁 Click or drop image here</div>
+        <p>PNG / JPG — stores path reference</p>
+        <img class="img-preview" id="mImgPreview" alt="">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('memberModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveMember()">Save Member</button>
+    </div>
+  </div>
+</div>
+
+<!-- Service Modal -->
+<div class="modal-overlay" id="serviceModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="sModalTitle">Add Service</h3>
+      <button class="modal-close" onclick="closeModal('serviceModal')">✕</button>
+    </div>
+    <div class="form-group"><label>Service Title</label>
+      <input type="text" id="sTitle" placeholder="e.g. Photography / Videography">
+    </div>
+    <div class="form-group"><label>Description</label>
+      <textarea id="sDesc" rows="3" placeholder="Short description..."></textarea>
+    </div>
+    <div class="form-group"><label>Image Path (in repo)</label>
+      <input type="text" id="sImgPath" placeholder="assets/images/photography.png">
+    </div>
+    <div class="form-group"><label>Or Upload Image (preview only)</label>
+      <div class="img-upload-zone">
+        <input type="file" accept="image/*" id="sImgFile" onchange="previewImg(this,'sImgPreview','sImgPath')">
+        <div>📁 Click or drop image here</div>
+        <p>PNG / JPG</p>
+        <img class="img-preview" id="sImgPreview" alt="">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('serviceModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveService()">Save Service</button>
+    </div>
+  </div>
+</div>
+
+<!-- Nav Link Modal -->
+<div class="modal-overlay" id="navModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="nModalTitle">Add Nav Link</h3>
+      <button class="modal-close" onclick="closeModal('navModal')">✕</button>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Label (shown text)</label>
+        <input type="text" id="nLabel" placeholder="e.g. Home">
+      </div>
+      <div class="form-group"><label>Anchor Target (href="#...")</label>
+        <input type="text" id="nHref" placeholder="home">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('navModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveNavItem()">Save Link</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastWrap"></div>
+
+<script>
+/* ================================================================
+   CONSTANTS & DATA
+================================================================ */
+const PASS = 'CARYO2024'; // ← Change this password!
+
+const D = {
+  nav: [
+    { label: 'Home',     href: 'home' },
+    { label: 'About Us', href: 'about' },
+    { label: 'Showcase', href: 'showcase' },
+    { label: 'Team',     href: 'team' },
+    { label: 'Contact',  href: 'contact' },
+  ],
+  hero: {
+    title:    'MEDIA UNIT OF MARIS STELLA COLLEGE NEGOMBO',
+    subtitle: 'Capturing Every Moment, Sharing Every Story',
+    fb: 'https://web.facebook.com/profile.php?id=100090829437509',
+    ig: 'https://www.instagram.com/msc_mediaunit',
+    wa: 'https://whatsapp.com/channel/0029VajSC3v60eBY0REknS2W',
+    yt: 'https://www.youtube.com/@emumsc?sub_confirmation=1',
+  },
+  about: {
+    text: `The Educational Media Unit of Maris Stella College, Negombo is a dedicated platform that brings together creativity, innovation, and communication within the school community. It provides students with opportunities to explore and develop skills in photography, videography, graphic design, and digital media production. Through active involvement in covering school events and creating visual content, the unit plays an essential role in documenting and presenting the vibrant life of the college. Members work collaboratively, learning teamwork, responsibility, and professionalism while producing high quality media. The unit also encourages students to adapt to modern technology and media trends, preparing them for future creative fields. Beyond technical growth, it fosters leadership, discipline, and a strong sense of identity, making it an integral part of the Maris Stella College community and a vital cornerstone for nurturing the next generation of talented, visionary digital storytellers and media professionals`,
+    stats: [
+      { value: 20, suffix: '+',  label: 'Years of Excellence' },
+      { value: 12, suffix: 'k+', label: 'Followers on Social Media' },
+      { value: 50, suffix: '+',  label: 'Events Covered Yearly' },
+    ]
+  },
+  services: [
+    { title: 'Photography / Videography', desc: 'Capturing school moments with creative visuals and storytelling.',          img: 'assets/images/photography.png' },
+    { title: 'Live Production',           desc: 'Live streaming and production support for events and ceremonies.',           img: 'assets/images/live.png' },
+    { title: 'Announcing',               desc: 'Professional announcing service for school events and ceremonies.',           img: 'assets/images/Announcing.png' },
+    { title: 'Technical',                desc: 'Audio visual setup and technical assistance for school activities.',          img: 'assets/images/technical.png' },
+  ],
+  team: [
+    { name: '', role: 'President',        img: 'assets/images/Team/1..png' },
+    { name: '', role: 'Secretary',        img: 'assets/images/Team/2..png' },
+    { name: '', role: 'Treasurer',        img: 'assets/images/Team/3..png' },
+    { name: '', role: 'Committee Member', img: 'assets/images/Team/4..png' },
+    { name: '', role: 'Committee Member', img: 'assets/images/Team/5..png' },
+    { name: '', role: 'Committee Member', img: 'assets/images/Team/6..png' },
+    { name: '', role: 'Committee Member', img: 'assets/images/Team/7..png' },
+    { name: '', role: 'Committee Member', img: 'assets/images/Team/8..png' },
+    { name: '', role: 'Committee Member', img: 'assets/images/Team/9..png' },
+    { name: '', role: 'Committee Member', img: 'assets/images/Team/10..png' },
+    { name: '', role: 'Committee Member', img: 'assets/images/Team/11..png' },
+  ],
+  footer: {
+    org: 'The Educational Media Unit',
+    college: 'Maris Stella College Negombo',
+    copy: 'All Rights Reserved | Educational Media Unit of Maris Stella College, Negombo',
+    contacts: [
+      { name: 'Mahen Perera',     phone: '94767537515' },
+      { name: 'Denuwan Jayakody', phone: '94760734143' },
+    ],
+    creators: [
+      { name: 'Mayon Minthaka',   ig: 'https://www.instagram.com/mayon_max_/' },
+      { name: 'Dinon Fernando',   ig: 'https://www.instagram.com/dinon_fdo/' },
+      { name: 'Kevan Sanketh',    ig: 'https://www.instagram.com/kevan_sanketh/' },
+      { name: 'Sandila Fernando', ig: 'https://www.instagram.com/sandilafernando/' },
+    ]
+  }
+};
+
+let ghCfg = { user:'', repo:'', branch:'main', token:'' };
+let editMemberIdx  = -1;
+let editServiceIdx = -1;
+let editNavIdx     = -1;
+let dirtyPanels    = new Set();
+
+/* ================================================================
+   LOCK / UNLOCK
+================================================================ */
+document.getElementById('lockBtn').addEventListener('click', tryUnlock);
+document.getElementById('lockPwd').addEventListener('keydown', e => { if(e.key==='Enter') tryUnlock(); });
+
+function tryUnlock(){
+  const v = document.getElementById('lockPwd').value;
+  if(v === PASS){
+    document.getElementById('adminLock').classList.add('hidden');
+    const app = document.getElementById('adminApp');
+    app.classList.add('visible');
+    initAll();
+    loadGHConfig();
+    toast('Welcome back! 👋','success');
+  } else {
+    const err = document.getElementById('lockErr');
+    err.textContent = 'Incorrect password.';
+    document.getElementById('lockPwd').value = '';
+    document.getElementById('lockPwd').focus();
+    setTimeout(()=>{ err.textContent=''; },2500);
+  }
+}
+function lockPanel(){
+  document.getElementById('adminApp').classList.remove('visible');
+  document.getElementById('lockPwd').value='';
+  document.getElementById('adminLock').classList.remove('hidden');
+}
+
+/* ================================================================
+   NAVIGATION
+================================================================ */
+const titles = { dashboard:'Dashboard', navbar:'Navigation Bar', hero:'Hero / Banner',
+  about:'About & Stats', services:'Services', team:'Team Members',
+  footer:'Footer & Contact', github:'GitHub Deploy' };
+
+function nav(id, btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  document.getElementById('topTitle').textContent = titles[id]||id;
+  closeSidebar();
+}
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
+function closeSidebar()  { document.getElementById('sidebar').classList.remove('open'); }
+
+/* ================================================================
+   INIT
+================================================================ */
+function initAll(){
+  renderNav();
+  renderMembers();
+  renderServices();
+  renderStats();
+  renderCreators();
+  updateDash();
+}
+
+/* ================================================================
+   NAV BAR EDITOR
+================================================================ */
+function renderNav(){
+  const el = document.getElementById('navEditList');
+  if(!D.nav.length){ el.innerHTML='<div class="empty-state"><span class="ei">🔗</span>No nav links yet.</div>'; return; }
+  el.innerHTML = D.nav.map((n,i)=>`
+    <div class="nav-edit-row" draggable="true" data-idx="${i}"
+      ondragstart="dragStart(event,${i},'nav')" ondragover="dragOver(event,${i},'nav-edit-row','navEditList')"
+      ondrop="dragDrop(event,${i},'nav')" ondragleave="dragLeave(event,'nav-edit-row','navEditList')">
+      <span style="color:var(--text-muted);cursor:grab;font-size:17px;user-select:none">⠿</span>
+      <div style="flex:1;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <input type="text" value="${n.label}" placeholder="Label" style="flex:1;min-width:80px"
+          oninput="D.nav[${i}].label=this.value">
+        <div style="display:flex;align-items:center;gap:4px">
+          <span style="color:var(--text-muted);font-size:0.8rem">#</span>
+          <input type="text" value="${n.href}" placeholder="anchor" style="width:110px"
+            oninput="D.nav[${i}].href=this.value">
+        </div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-ghost btn-xs" onclick="openNavModal(${i})">✏️</button>
+        <button class="btn btn-danger btn-xs" onclick="deleteNavItem(${i})">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+function openNavModal(i){
+  editNavIdx=i;
+  document.getElementById('nModalTitle').textContent = i<0?'Add Nav Link':'Edit Nav Link';
+  document.getElementById('nLabel').value = i<0?'':(D.nav[i].label||'');
+  document.getElementById('nHref').value  = i<0?'':(D.nav[i].href||'');
+  openModal('navModal');
+}
+function saveNavItem(){
+  const lbl = document.getElementById('nLabel').value.trim();
+  const href = document.getElementById('nHref').value.trim().replace('#','');
+  if(!lbl){ toast('Label required','error'); return; }
+  if(editNavIdx<0) D.nav.push({label:lbl,href});
+  else D.nav[editNavIdx]={label:lbl,href};
+  closeModal('navModal'); renderNav(); updateDash(); markDirty('Navbar');
+}
+function deleteNavItem(i){ if(!confirm('Remove this nav link?')) return; D.nav.splice(i,1); renderNav(); updateDash(); }
+
+/* ================================================================
+   TEAM MEMBERS
+================================================================ */
+function renderMembers(){
+  const el=document.getElementById('memberList');
+  if(!D.team.length){ el.innerHTML='<div class="empty-state"><span class="ei">👤</span>No members yet.</div>'; return; }
+  el.innerHTML = D.team.map((m,i)=>`
+    <div class="member-row" draggable="true" data-idx="${i}"
+      ondragstart="dragStart(event,${i},'team')" ondragover="dragOver(event,${i},'member-row','memberList')"
+      ondrop="dragDrop(event,${i},'team')" ondragleave="dragLeave(event,'member-row','memberList')">
+      <span class="drag-handle">⠿</span>
+      <div class="member-avatar">
+        ${m.img ? `<img src="${m.img}" alt="" onerror="this.style.display='none'">` : '👤'}
+      </div>
+      <div class="member-info">
+        <strong>${m.name||'<em style="opacity:.4;font-style:normal">No name</em>'}</strong>
+        <span>${m.role}</span>
+      </div>
+      <div class="member-actions">
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="openMemberModal(${i})">✏️</button>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="deleteMember(${i})">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+  updateDash();
+}
+function openMemberModal(i){
+  editMemberIdx=i;
+  document.getElementById('mModalTitle').textContent = i<0?'Add Team Member':'Edit Member';
+  const m = i<0?{name:'',role:'',img:''}:D.team[i];
+  document.getElementById('mName').value    = m.name;
+  document.getElementById('mRole').value    = m.role;
+  document.getElementById('mImgPath').value = m.img;
+  document.getElementById('mImgPreview').style.display='none';
+  document.getElementById('mImgFile').value='';
+  openModal('memberModal');
+}
+function saveMember(){
+  const e={
+    name: document.getElementById('mName').value.trim(),
+    role: document.getElementById('mRole').value.trim()||'Member',
+    img:  document.getElementById('mImgPath').value.trim(),
+  };
+  if(editMemberIdx<0) D.team.push(e);
+  else D.team[editMemberIdx]=e;
+  closeModal('memberModal'); renderMembers(); markDirty('Team');
+  toast(editMemberIdx<0?'Member added ✅':'Member updated ✅','success');
+}
+function deleteMember(i){
+  if(!confirm(`Remove "${D.team[i].role}" from the team?`)) return;
+  D.team.splice(i,1); renderMembers(); markDirty('Team'); toast('Member removed','info');
+}
+
+/* ================================================================
+   SERVICES
+================================================================ */
+function renderServices(){
+  const el=document.getElementById('serviceGrid');
+  if(!D.services.length){ el.innerHTML='<div class="empty-state" style="grid-column:1/-1"><span class="ei">⚡</span>No services yet.</div>'; return; }
+  el.innerHTML = D.services.map((s,i)=>`
+    <div class="service-edit-card" draggable="true" data-idx="${i}"
+      ondragstart="dragStart(event,${i},'service')" ondragover="dragOver(event,${i},'service-edit-card','serviceGrid')"
+      ondrop="dragDrop(event,${i},'service')" ondragleave="dragLeave(event,'service-edit-card','serviceGrid')">
+      <div class="se-title">⚡ ${s.title}</div>
+      <div class="se-desc">${s.desc}</div>
+      <div class="se-img">📁 ${s.img}</div>
+      <div class="se-actions">
+        <button class="btn btn-ghost btn-sm" onclick="openServiceModal(${i})">✏️ Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteService(${i})">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+  updateDash();
+}
+function openServiceModal(i){
+  editServiceIdx=i;
+  document.getElementById('sModalTitle').textContent = i<0?'Add Service':'Edit Service';
+  const s=i<0?{title:'',desc:'',img:''}:D.services[i];
+  document.getElementById('sTitle').value   = s.title;
+  document.getElementById('sDesc').value    = s.desc;
+  document.getElementById('sImgPath').value = s.img;
+  document.getElementById('sImgPreview').style.display='none';
+  document.getElementById('sImgFile').value='';
+  openModal('serviceModal');
+}
+function saveService(){
+  const e={
+    title: document.getElementById('sTitle').value.trim(),
+    desc:  document.getElementById('sDesc').value.trim(),
+    img:   document.getElementById('sImgPath').value.trim(),
+  };
+  if(!e.title){ toast('Title required','error'); return; }
+  if(editServiceIdx<0) D.services.push(e);
+  else D.services[editServiceIdx]=e;
+  closeModal('serviceModal'); renderServices(); markDirty('Services');
+  toast(editServiceIdx<0?'Service added ✅':'Service updated ✅','success');
+}
+function deleteService(i){
+  if(!confirm(`Delete "${D.services[i].title}"?`)) return;
+  D.services.splice(i,1); renderServices(); markDirty('Services'); toast('Service removed','info');
+}
+
+/* ================================================================
+   STATS
+================================================================ */
+function renderStats(){
+  const el=document.getElementById('statRows');
+  el.innerHTML = D.about.stats.map((s,i)=>`
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:0.8rem;font-weight:700;color:rgba(255,255,255,0.6)">Stat ${i+1}</span>
+        ${D.about.stats.length>1?`<button class="btn btn-danger btn-xs" onclick="removeStat(${i})">✕</button>`:''}
+      </div>
+      <div class="form-row-3">
+        <div class="form-group" style="margin:0"><label>Value</label>
+          <input type="number" value="${s.value}" oninput="D.about.stats[${i}].value=+this.value">
+        </div>
+        <div class="form-group" style="margin:0"><label>Suffix</label>
+          <input type="text" value="${s.suffix}" placeholder="+ or k+" oninput="D.about.stats[${i}].suffix=this.value">
+        </div>
+        <div class="form-group" style="margin:0"><label>Label</label>
+          <input type="text" value="${s.label}" oninput="D.about.stats[${i}].label=this.value">
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+function addStatRow(){ D.about.stats.push({value:0,suffix:'+',label:'New Stat'}); renderStats(); }
+function removeStat(i){ D.about.stats.splice(i,1); renderStats(); }
+
+/* ================================================================
+   CREATORS
+================================================================ */
+function renderCreators(){
+  const el=document.getElementById('creatorList');
+  el.innerHTML = D.footer.creators.map((c,i)=>`
+    <div style="display:flex;gap:9px;align-items:center">
+      <input type="text" value="${c.name}" placeholder="Creator name" style="flex:1"
+        oninput="D.footer.creators[${i}].name=this.value">
+      <input type="url" value="${c.ig}" placeholder="Instagram URL" style="flex:1.5"
+        oninput="D.footer.creators[${i}].ig=this.value">
+      <button class="btn btn-danger btn-xs btn-icon" onclick="removeCreator(${i})">✕</button>
+    </div>
+  `).join('');
+}
+function addCreator(){ D.footer.creators.push({name:'',ig:''}); renderCreators(); }
+function removeCreator(i){ D.footer.creators.splice(i,1); renderCreators(); toast('Creator removed','info'); }
+
+/* ================================================================
+   DASHBOARD
+================================================================ */
+function updateDash(){
+  document.getElementById('dNavCount').textContent     = D.nav.length;
+  document.getElementById('dTeamCount').textContent    = D.team.length;
+  document.getElementById('dServiceCount').textContent = D.services.length;
+}
+
+/* ================================================================
+   DIRTY / SAVE (collects from DOM inputs)
+================================================================ */
+function markDirty(section){
+  // Collect values from DOM into D at save time
+  if(section==='Hero'){
+    D.hero.title    = document.getElementById('heroTitle').value;
+    D.hero.subtitle = document.getElementById('heroSub').value;
+    D.hero.fb = document.getElementById('hFb').value;
+    D.hero.ig = document.getElementById('hIg').value;
+    D.hero.wa = document.getElementById('hWa').value;
+    D.hero.yt = document.getElementById('hYt').value;
+  }
+  if(section==='About'||section==='Stats'){
+    D.about.text = document.getElementById('aboutText').value;
+  }
+  if(section==='Footer'){
+    D.footer.org     = document.getElementById('fOrg').value;
+    D.footer.college = document.getElementById('fCollege').value;
+    D.footer.copy    = document.getElementById('fCopy').value;
+    D.footer.contacts[0]={name:document.getElementById('c1name').value,phone:document.getElementById('c1phone').value};
+    D.footer.contacts[1]={name:document.getElementById('c2name').value,phone:document.getElementById('c2phone').value};
+  }
+  dirtyPanels.add(section);
+  document.getElementById('fStatusHtml').textContent='Modified';
+  document.getElementById('fStatusHtml').className='badge warn';
+  const btn=document.getElementById('deployBtn');
+  if(ghCfg.token) btn.disabled=false;
+  toast(`${section} saved ✅`,'success');
+}
+
+/* ================================================================
+   IMAGE UPLOAD PREVIEW
+================================================================ */
+function previewImg(input, previewId, pathInputId){
+  const f=input.files[0]; if(!f) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const preview=document.getElementById(previewId);
+    preview.src=e.target.result; preview.style.display='block';
+    const pathInput=document.getElementById(pathInputId);
+    if(!pathInput.value) pathInput.value='assets/images/'+f.name;
+  };
+  reader.readAsDataURL(f);
+}
+
+/* ================================================================
+   DRAG-AND-DROP REORDER (generic)
+================================================================ */
+let dragSrcIdx=-1;
+function dragStart(e,i,type){ dragSrcIdx=i; e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('type',type); }
+function dragOver(e,i,cls,listId){
+  e.preventDefault(); e.dataTransfer.dropEffect='move';
+  document.querySelectorAll('#'+listId+' .'+cls).forEach(r=>r.classList.remove('drag-over'));
+  e.currentTarget.classList.add('drag-over');
+}
+function dragLeave(e,cls,listId){
+  document.querySelectorAll('#'+listId+' .'+cls).forEach(r=>r.classList.remove('drag-over'));
+}
+function dragDrop(e,i,type){
+  e.preventDefault();
+  if(dragSrcIdx===i||dragSrcIdx<0) return;
+  const arr = type==='team'?D.team : type==='service'?D.services : D.nav;
+  const [moved]=arr.splice(dragSrcIdx,1);
+  arr.splice(i,0,moved);
+  dragSrcIdx=-1;
+  if(type==='team')    { renderMembers();  markDirty('Team'); }
+  if(type==='service') { renderServices(); markDirty('Services'); }
+  if(type==='nav')     { renderNav();      markDirty('Navbar'); }
+  toast('Reordered ✅','success');
+}
+
+/* ================================================================
+   MODALS
+================================================================ */
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(o=>{
+  o.addEventListener('click', e=>{ if(e.target===o) o.classList.remove('open'); });
+});
+
+/* ================================================================
+   TOAST
+================================================================ */
+function toast(msg,type='info'){
+  const icons={success:'✅',error:'❌',info:'ℹ️',warn:'⚠️'};
+  const el=document.createElement('div');
+  el.className=`toast ${type}`;
+  el.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
+  document.getElementById('toastWrap').appendChild(el);
+  setTimeout(()=>{
+    el.classList.add('out');
+    el.addEventListener('animationend',()=>el.remove());
+  },3200);
+}
+
+/* ================================================================
+   GITHUB CONFIG
+================================================================ */
+function saveGHConfig(){
+  ghCfg.user   = document.getElementById('ghUser').value.trim();
+  ghCfg.repo   = document.getElementById('ghRepo').value.trim();
+  ghCfg.branch = document.getElementById('ghBranch').value.trim()||'main';
+  ghCfg.token  = document.getElementById('ghToken').value.trim();
+  localStorage.setItem('msc_admin_gh', JSON.stringify(ghCfg));
+  toast('GitHub config saved 💾','success');
+  if(ghCfg.token) document.getElementById('deployBtn').disabled=false;
+}
+function loadGHConfig(){
+  const stored=localStorage.getItem('msc_admin_gh');
+  if(!stored) return;
+  try{
+    ghCfg=JSON.parse(stored);
+    if(ghCfg.user)   document.getElementById('ghUser').value   = ghCfg.user;
+    if(ghCfg.repo)   document.getElementById('ghRepo').value   = ghCfg.repo;
+    if(ghCfg.branch) document.getElementById('ghBranch').value = ghCfg.branch;
+    if(ghCfg.token)  document.getElementById('ghToken').value  = ghCfg.token;
+    if(ghCfg.token)  document.getElementById('deployBtn').disabled=false;
+  }catch(e){}
+}
+
+async function testGHConnection(){
+  if(!ghCfg.user||!ghCfg.token){ toast('Fill in username & token first','error'); return; }
+  const dot=document.getElementById('ghDot');
+  const txt=document.getElementById('ghStatusText');
+  dot.className='gh-dot loading'; txt.textContent='Testing...';
+  try{
+    const res=await fetch(`https://api.github.com/repos/${ghCfg.user}/${ghCfg.repo}`,{
+      headers:{'Authorization':'Bearer '+ghCfg.token,'Accept':'application/vnd.github+json'}
+    });
+    if(res.ok){
+      const data=await res.json();
+      dot.className='gh-dot connected';
+      txt.textContent=data.full_name;
+      document.getElementById('adminBadge').className='badge success';
+      document.getElementById('adminBadge').textContent='CONNECTED';
+      toast('GitHub connected ✅','success');
+      document.getElementById('deployBtn').disabled=false;
+    } else {
+      dot.className='gh-dot error'; txt.textContent='Auth failed';
+      toast('Connection failed: '+res.status,'error');
+    }
+  } catch(err){
+    dot.className='gh-dot error'; txt.textContent='Network error';
+    toast('Network error','error');
+  }
+}
+
+/* ================================================================
+   BUILD UPDATED index.html
+================================================================ */
+function buildHTML(original){
+  // Collect latest DOM values
+  D.hero.title    = document.getElementById('heroTitle').value;
+  D.hero.subtitle = document.getElementById('heroSub').value;
+  D.hero.fb = document.getElementById('hFb').value;
+  D.hero.ig = document.getElementById('hIg').value;
+  D.hero.wa = document.getElementById('hWa').value;
+  D.hero.yt = document.getElementById('hYt').value;
+  D.about.text    = document.getElementById('aboutText').value;
+  D.footer.org    = document.getElementById('fOrg').value;
+  D.footer.college= document.getElementById('fCollege').value;
+  D.footer.copy   = document.getElementById('fCopy').value;
+  D.footer.contacts[0]={name:document.getElementById('c1name').value,phone:document.getElementById('c1phone').value};
+  D.footer.contacts[1]={name:document.getElementById('c2name').value,phone:document.getElementById('c2phone').value};
+
+  let html = original;
+
+  // --- HERO TITLE ---
+  html = html.replace(
+    /(<h1[^>]*class="hero-title[^"]*"[^>]*>)([\s\S]*?)(<\/h1>)/,
+    `$1${D.hero.title}$3`
+  );
+  // --- HERO SUBTITLE ---
+  html = html.replace(
+    /(<p[^>]*class="hero-subtitle[^"]*"[^>]*>)([\s\S]*?)(<\/p>)/,
+    `$1${D.hero.subtitle}$3`
+  );
+  // --- SOCIAL LINKS ---
+  const socialBlock = `
+                <div class="social-glass inline-flex gap-4 items-center justify-center px-5 py-2.5 rounded-full">
+                        <a href="${D.hero.fb}" aria-label="Facebook" target="_blank" rel="noopener noreferrer"><img src="assets/icons/icon-facebook.png" alt="Facebook"></a>
+                        <a href="${D.hero.ig}" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><img src="assets/icons/icon-instagram.png" alt="Instagram"></a>
+                        <a href="${D.hero.wa}" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer"><img src="assets/icons/icon-whatsapp.png" alt="WhatsApp"></a>
+                        <a href="${D.hero.yt}" aria-label="YouTube" target="_blank" rel="noopener noreferrer"><img src="assets/icons/icon-youtube.png" alt="YouTube"></a>
+                </div>`;
+  html = html.replace(/<div class="social-glass inline-flex[\s\S]*?<\/div>/m, socialBlock);
+
+  // --- NAV LINKS ---
+  const navLinks = D.nav.map(n=>
+    `\n                <a href="#${n.href}" class="text-[13px] font-semibold text-white hover:opacity-80 transition-opacity">${n.label}</a>`
+  ).join('');
+  html = html.replace(
+    /(<nav[^>]*id="mainNav"[^>]*>)([\s\S]*?)(<\/nav>)/,
+    `$1${navLinks}\n            $3`
+  );
+
+  // --- ABOUT TEXT ---
+  html = html.replace(
+    /(<p[^>]*class="about-text[^"]*"[^>]*>)([\s\S]*?)(<div class="stats-row)/,
+    `$1${D.about.text}\n            $3`
+  );
+
+  // --- STATS ---
+  const statsHTML = D.about.stats.map(s=>`
+                <div class="stat-item flex flex-col items-center">
+                    <h3 class="stat-number font-bold count" data-target="${s.value}" data-suffix="${s.suffix}">0${s.suffix}</h3>
+                    <p class="stat-label font-medium uppercase">${s.label}</p>
+                </div>`).join('');
+  html = html.replace(
+    /(<div class="stats-row[^"]*"[^>]*>)([\s\S]*?)(<\/div>\s*<\/div>\s*<\/section>[\s\S]*?id="showcase")/,
+    `$1${statsHTML}\n            </div>$3`
+  );
+
+  // --- SERVICES ---
+  const servicesHTML = D.services.map(s=>`
+                <article class="service-card">
+                    <img src="${s.img}" alt="${s.title}">
+                    <div class="service-overlay">
+                        <h3>${s.title}</h3>
+                        <p>${s.desc}</p>
+                    </div>
+                </article>`).join('');
+  html = html.replace(
+    /(<div class="service-grid">)([\s\S]*?)(<\/div>\s*<\/div> <!-- end showcase-wrap -->)/,
+    `$1${servicesHTML}\n            $3`
+  );
+
+  // --- DESKTOP TEAM SLIDES ---
+  // Build slides of 3 (first slot = main card, rest = normal)
+  const buildDesktopSlides = ()=>{
+    let slides=''; let i=0;
+    while(i < D.team.length){
+      const chunk=D.team.slice(i, i+4);
+      if(i===0){
+        // first slide: first member is main card
+        slides+=`\n                    <div class="team-slide team-slide-main">`;
+        slides+=`\n                        <article class="team-card team-card-main">
+                            <img src="${chunk[0].img}" alt="${chunk[0].role}">
+                            <div class="team-overlay"><h3>${chunk[0].name}</h3><p>${chunk[0].role}</p></div>
+                        </article>`;
+        chunk.slice(1).forEach(m=>{
+          slides+=`\n                        <article class="team-card">
+                            <img src="${m.img}" alt="${m.role}">
+                            <div class="team-overlay"><h3>${m.name}</h3><p>${m.role}</p></div>
+                        </article>`;
+        });
+        slides+=`\n                    </div>`;
+      } else {
+        slides+=`\n                    <div class="team-slide">`;
+        chunk.forEach(m=>{
+          slides+=`\n                        <article class="team-card">
+                            <img src="${m.img}" alt="${m.role}">
+                            <div class="team-overlay"><h3>${m.name}</h3><p>${m.role}</p></div>
+                        </article>`;
+        });
+        slides+=`\n                    </div>`;
+      }
+      i+=i===0?4:4;
+    }
+    return slides;
+  };
+  html = html.replace(
+    /(<div class="team-carousel desktop-carousel">)([\s\S]*?)(<\/div>\s*<!-- MOBILE)/,
+    `$1${buildDesktopSlides()}\n                $3`
+  );
+
+  // --- MOBILE TEAM CARDS ---
+  const mobileCards = D.team.map((m,idx)=>{
+    const cls = idx<3 ? 'mobile-snap-card mobile-snap-officer' : 'mobile-snap-card mobile-snap-member';
+    return `\n                    <article class="${cls}" data-index="${idx}">
+                        <img src="${m.img}" alt="${m.role}">
+                        <div class="team-overlay"><h3>${m.name}</h3><p>${m.role}</p></div>
+                    </article>`;
+  }).join('');
+  html = html.replace(
+    /(<div class="mobile-snap-track" id="mobileSnapTrack">)([\s\S]*?)(<\/div>\s*<\/div>\s*<!-- Desktop dots)/,
+    `$1${mobileCards}\n                </div>\n            </div>\n            <!-- Desktop dots`
+  );
+
+  // --- DESKTOP DOTS ---
+  const slideCount = Math.ceil(D.team.length/4);
+  const dDots = Array.from({length:slideCount},(_,i)=>
+    `\n                <button class="dot${i===0?' active':''}" type="button" data-slide="${i}" aria-label="Show slide ${i+1}"></button>`
+  ).join('');
+  html = html.replace(
+    /(<div class="team-dots desktop-dots"[^>]*>)([\s\S]*?)(<\/div>\s*<!-- Mobile dots)/,
+    `$1${dDots}\n            </div>\n            <!-- Mobile dots`
+  );
+
+  // --- MOBILE DOTS ---
+  const mDots = D.team.map((_,i)=>
+    `\n                <button class="dot${i===0?' active':''}" type="button" data-card="${i}"></button>`
+  ).join('');
+  html = html.replace(
+    /(<div class="team-dots mobile-dots" id="mobileSnapDots"[^>]*>)([\s\S]*?)(<\/div>\s*<\/div> <!-- end team-inner-wrap -->)/,
+    `$1${mDots}\n            </div>\n            </div> <!-- end team-inner-wrap -->`
+  );
+
+  // --- FOOTER BRAND ---
+  html = html.replace(
+    /(<h3>)(.*?)(<\/h3>\s*<p>Maris)/,
+    `$1${D.footer.org}$3`
+  );
+  html = html.replace(
+    /(<div>\s*<h3>[^<]*<\/h3>\s*<p>)(.*?)(<\/p>\s*<\/div>\s*<div class="footer-creators">)/,
+    `$1${D.footer.college}$3`
+  );
+
+  // --- CREATORS ---
+  const creatorsHTML = D.footer.creators.map(c=>`
+                        <a class="creator-link" href="${c.ig}" target="_blank" rel="noopener noreferrer">
+                            <img src="assets/icons/icon-instagram.png" alt="Instagram">
+                            <span>${c.name}</span>
+                        </a>`).join('');
+  html = html.replace(
+    /(<div class="footer-creators">\s*<h4>Creators<\/h4>)([\s\S]*?)(<\/div>\s*<\/div>\s*<div class="footer-contact">)/,
+    `$1${creatorsHTML}\n                    </div>\n                </div>\n                <div class="footer-contact">`
+  );
+
+  // --- CONTACTS ---
+  const contactsHTML = D.footer.contacts.map(c=>`
+                        <a class="contact-item" href="https://wa.me/${c.phone}" target="_blank" rel="noopener noreferrer">
+                            <span>${c.name}</span>
+                            <img src="assets/icons/icon-whatsapp.png" alt="WhatsApp">
+                        </a>`).join('');
+  html = html.replace(
+    /(<div class="contact-list">)([\s\S]*?)(<\/div>\s*<\/div>\s*<\/div>\s*<\/div>\s*<\/div>\s*<\/footer>)/,
+    `$1${contactsHTML}\n                    </div>$3`
+  );
+
+  // --- FOOTER SOCIALS ---
+  html = html.replace(
+    /(<div class="footer-socials social-glass">)([\s\S]*?)(<\/div>\s*<h4>Contact Us<\/h4>)/,
+    `$1
+                        <a href="${D.hero.fb}" aria-label="Facebook"><img src="assets/icons/icon-facebook.png" alt="Facebook"></a>
+                        <a href="${D.hero.ig}" aria-label="Instagram"><img src="assets/icons/icon-instagram.png" alt="Instagram"></a>
+                        <a href="${D.hero.wa}" aria-label="WhatsApp"><img src="assets/icons/icon-whatsapp.png" alt="WhatsApp"></a>
+                        <a href="${D.hero.yt}" aria-label="YouTube"><img src="assets/icons/icon-youtube.png" alt="YouTube"></a>
+                    </div>
+                    <h4>Contact Us</h4>`
+  );
+
+  // --- COPYRIGHT ---
+  html = html.replace(
+    /(<p class="footer-copy">)([\s\S]*?)(<\/p>)/,
+    `$1${D.footer.copy}$3`
+  );
+
+  return html;
+}
+
+/* ================================================================
+   GITHUB DEPLOY
+================================================================ */
+async function deployToGitHub(){
+  if(!ghCfg.user||!ghCfg.repo||!ghCfg.token){
+    toast('Configure GitHub settings first','error');
+    nav('github', document.querySelector('[data-panel=github]')); return;
+  }
+
+  const progress = document.getElementById('deployProgress');
+  const bar      = document.getElementById('deployBar');
+  const msg      = document.getElementById('deployMsg');
+  const log      = document.getElementById('commitLog');
+  progress.style.display='block';
+
+  const step = (pct, text) => { bar.style.width=pct+'%'; msg.textContent=text; };
+
+  try{
+    step(10,'Fetching current index.html from GitHub...');
+
+    // 1. Get current file SHA + content
+    const getRes = await fetch(
+      `https://api.github.com/repos/${ghCfg.user}/${ghCfg.repo}/contents/index.html?ref=${ghCfg.branch}`,
+      { headers:{'Authorization':'Bearer '+ghCfg.token,'Accept':'application/vnd.github+json'} }
+    );
+    if(!getRes.ok) throw new Error('Cannot fetch index.html: '+getRes.status+' — check repo name and branch.');
+    const fileData = await getRes.json();
+    const sha = fileData.sha;
+    const originalHTML = atob(fileData.content.replace(/\n/g,''));
+
+    step(40,'Building updated HTML...');
+    const updatedHTML = buildHTML(originalHTML);
+
+    step(65,'Pushing to GitHub...');
+    const now = new Date().toLocaleString();
+    const commitMsg = `Admin update: content changes — ${now}`;
+
+    const putRes = await fetch(
+      `https://api.github.com/repos/${ghCfg.user}/${ghCfg.repo}/contents/index.html`,
+      {
+        method:'PUT',
+        headers:{'Authorization':'Bearer '+ghCfg.token,'Accept':'application/vnd.github+json','Content-Type':'application/json'},
+        body: JSON.stringify({
+          message: commitMsg,
+          content: btoa(unescape(encodeURIComponent(updatedHTML))),
+          sha: sha,
+          branch: ghCfg.branch,
+        })
+      }
+    );
+    if(!putRes.ok){
+      const errData = await putRes.json().catch(()=>({}));
+      throw new Error((errData.message||'Push failed')+' ('+putRes.status+')');
+    }
+    const putData = await putRes.json();
+
+    step(100,'Done!');
+    dirtyPanels.clear();
+    document.getElementById('fStatusHtml').textContent='Deployed';
+    document.getElementById('fStatusHtml').className='badge success';
+    document.getElementById('dDeployStatus').textContent = new Date().toLocaleTimeString();
+    document.getElementById('dDeployStatus').style.color = 'var(--success)';
+    document.getElementById('dDeployStatus').style.fontSize = '0.85rem';
+
+    // Add to log
+    const entry=document.createElement('div');
+    entry.className='commit-entry';
+    entry.innerHTML=`<span class="ct">${now}</span><span class="cm">✅ ${commitMsg}</span>`;
+    log.prepend(entry);
+
+    toast('Deployed to GitHub! 🚀','success');
+
+    setTimeout(()=>{ progress.style.display='none'; bar.style.width='0%'; },2000);
+
+  } catch(err){
+    step(0,'');
+    progress.style.display='none';
+    toast('Deploy failed: '+err.message,'error');
+    console.error(err);
+    const entry=document.createElement('div');
+    entry.className='commit-entry';
+    entry.innerHTML=`<span class="ct">${new Date().toLocaleTimeString()}</span><span class="cm" style="color:var(--danger)">❌ ${err.message}</span>`;
+    document.getElementById('commitLog').prepend(entry);
+  }
+}
+</script>
+</body>
+</html>
