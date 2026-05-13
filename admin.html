@@ -100,7 +100,7 @@
           <span id="ghStatusText">Not connected</span>
         </div>
         <span class="badge" id="adminBadge">ADMIN</span>
-        <button class="btn btn-primary btn-sm" id="deployBtn" onclick="deployToGitHub()" disabled>🚀 Deploy</button>
+        <button class="btn btn-primary btn-sm" onclick="syncAll()">☁️ Sync All</button>
       </div>
     </div>
 
@@ -117,9 +117,9 @@
         <div class="card">
           <div class="card-header"><div><h2>Welcome, Admin</h2><p>Manage all site content and deploy directly to GitHub.</p></div></div>
           <div class="hint">💡 <strong>Activate from the website:</strong> Open your live site and type <code style="background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px">CARYO</code> (all caps) anywhere on the page — the admin panel opens automatically in a new tab.</div>
-          <div class="hint success">✅ <strong>Auto-sync:</strong> Every 💾 Save button instantly pushes your changes to <code style="background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px">site-data.json</code> in your GitHub repo — no extra steps needed. The website reads this file on every load.</div>
-          <div class="hint">🚀 <strong>GitHub Deploy:</strong> Use the Deploy button to also bake content into <em>index.html</em> itself (for maximum compatibility / CDN caching).</div>
-          <div class="hint warn">⚠️ <strong>Image uploads:</strong> Images are converted to base64 references or you provide the path. For real image hosting, commit them to your GitHub repo's <code style="background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px">assets/</code> folder.</div>
+          <div class="hint success">☁️ <strong>How saving works:</strong> Every 💾 Save button writes your changes directly to <code style="background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px">site-data.json</code> in your GitHub repo as a new commit. Your live website fetches this file on every load — <strong>no extra deploy step needed.</strong></div>
+          <div class="hint success">🔄 <strong>Always in sync:</strong> When you open the admin panel, it automatically loads the latest <code style="background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px">site-data.json</code> from GitHub so you always see the current live data.</div>
+          <div class="hint warn">⚠️ <strong>Images:</strong> Add image files directly to your GitHub repo under <code style="background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px">assets/images/</code>, then enter the path in the admin panel (e.g. <code style="background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px">assets/images/Team/photo.png</code>).</div>
         </div>
         <div class="card">
           <div class="card-header"><div><h2>Quick Actions</h2></div></div>
@@ -286,37 +286,21 @@
         </div>
 
         <div class="card">
-          <div class="card-header"><div><h2>Files to Deploy</h2><p>These files in your repo will be updated on deploy.</p></div></div>
+          <div class="card-header"><div><h2>How Syncing Works</h2><p>Every Save button pushes directly to your repo.</p></div></div>
           <div class="file-status-list">
             <div class="file-status-row">
-              <div><div class="fs-name">📄 index.html</div><div class="fs-meta">Main website HTML</div></div>
-              <span class="badge" id="fStatusHtml">Pending</span>
-            </div>
-            <div class="file-status-row">
-              <div><div class="fs-name">📦 site-data.json</div><div class="fs-meta">Auto-synced on every Save</div></div>
+              <div><div class="fs-name">📦 site-data.json</div><div class="fs-meta">Updated instantly on every 💾 Save</div></div>
               <span class="badge success" id="fStatusJson">Auto-sync</span>
             </div>
             <div class="file-status-row">
-              <div><div class="fs-name">🎨 style.css</div><div class="fs-meta">Stylesheet</div></div>
-              <span class="badge" id="fStatusCss">No changes</span>
+              <div><div class="fs-name">📄 index.html</div><div class="fs-meta">Reads site-data.json on every page load — no changes needed</div></div>
+              <span class="badge success">Untouched ✅</span>
             </div>
           </div>
-        </div>
-
-        <div class="card">
-          <div class="card-header">
-            <div><h2>Deploy to GitHub</h2></div>
-            <button class="btn btn-success" id="bigDeployBtn" onclick="deployToGitHub()">🚀 Deploy Now</button>
+          <div class="hint success" style="margin-top:16px;margin-bottom:0">
+            ✅ <strong>That's it.</strong> When you click any 💾 Save button, the admin panel writes your changes to <code style="background:rgba(255,255,255,0.1);padding:2px 5px;border-radius:3px">site-data.json</code> in your GitHub repo as a new commit. Your live website fetches that file on every load and applies it — <strong>no deploy step needed</strong>.
           </div>
-          <div class="hint warn">⚠️ This will overwrite <strong>index.html</strong> in your repository with the current admin panel content. Make sure you've saved all sections first.</div>
-          <div id="deployProgress" style="display:none;margin-top:12px">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-              <div class="spinner"></div>
-              <span id="deployMsg" style="font-size:0.82rem;color:var(--text-muted)">Preparing...</span>
-            </div>
-            <div class="progress-wrap"><div class="progress-bar" id="deployBar" style="width:0%"></div></div>
-          </div>
-          <div class="commit-log" id="commitLog" style="margin-top:12px"></div>
+          <div class="commit-log" id="commitLog" style="margin-top:14px"></div>
         </div>
       </div>
 
@@ -541,7 +525,7 @@ async function saveToGitHub(section){
 
       const body = {
         message: `Admin: saved ${section} — ${new Date().toLocaleString()}`,
-        content: btoa(unescape(encodeURIComponent(JSON.stringify(D, null, 2)))),
+        content: btoa(encodeURIComponent(JSON.stringify(D, null, 2)).replace(/%([0-9A-F]{2})/g, (_, p1) => String.fromCharCode('0x' + p1))),
         branch:  ghCfg.branch,
       };
       if(sha) body.sha = sha;
@@ -553,6 +537,17 @@ async function saveToGitHub(section){
 
       if(putRes.ok){
         toast(`${section} saved & synced to GitHub ✅`, 'success');
+        // Update deploy status on dashboard
+        const ds = document.getElementById('dDeployStatus');
+        if(ds){ ds.textContent = new Date().toLocaleTimeString(); ds.style.color='var(--success)'; ds.style.fontSize='0.82rem'; }
+        // Log commit in GitHub panel
+        const log = document.getElementById('commitLog');
+        if(log){
+          const entry = document.createElement('div');
+          entry.className = 'commit-entry';
+          entry.innerHTML = `<span class="ct">${new Date().toLocaleString()}</span><span class="cm">✅ Admin: saved ${section}</span>`;
+          log.prepend(entry);
+        }
         return; // success — exit
       }
 
@@ -909,10 +904,6 @@ function markDirty(section){
     D.footer.contacts[1]={name:document.getElementById('c2name').value,phone:document.getElementById('c2phone').value};
   }
   dirtyPanels.add(section);
-  document.getElementById('fStatusHtml').textContent='Modified';
-  document.getElementById('fStatusHtml').className='badge warn';
-  const btn=document.getElementById('deployBtn');
-  if(ghCfg.token) btn.disabled=false;
   saveToGitHub(section); // async — pushes D as site-data.json to GitHub
 }
 
@@ -991,7 +982,6 @@ function saveGHConfig(){
   ghCfg.token  = document.getElementById('ghToken').value.trim();
   localStorage.setItem('msc_admin_gh', JSON.stringify(ghCfg));
   toast('GitHub config saved 💾','success');
-  if(ghCfg.token) document.getElementById('deployBtn').disabled=false;
 }
 function loadGHConfig(){
   const stored=localStorage.getItem('msc_admin_gh');
@@ -1002,7 +992,6 @@ function loadGHConfig(){
     if(ghCfg.repo)   document.getElementById('ghRepo').value   = ghCfg.repo;
     if(ghCfg.branch) document.getElementById('ghBranch').value = ghCfg.branch;
     if(ghCfg.token)  document.getElementById('ghToken').value  = ghCfg.token;
-    if(ghCfg.token)  document.getElementById('deployBtn').disabled=false;
   }catch(e){}
 }
 
@@ -1022,7 +1011,6 @@ async function testGHConnection(){
       document.getElementById('adminBadge').className='badge success';
       document.getElementById('adminBadge').textContent='CONNECTED';
       toast('GitHub connected ✅','success');
-      document.getElementById('deployBtn').disabled=false;
     } else {
       dot.className='gh-dot error'; txt.textContent='Auth failed';
       toast('Connection failed: '+res.status,'error');
@@ -1034,310 +1022,23 @@ async function testGHConnection(){
 }
 
 /* ================================================================
-   BUILD UPDATED index.html
+   SYNC ALL — manually push everything to GitHub at once
 ================================================================ */
-function buildHTML(original){
-  // Collect latest DOM values
+async function syncAll(){
+  // Collect all DOM values into D first
   D.hero.title    = document.getElementById('heroTitle').value;
   D.hero.subtitle = document.getElementById('heroSub').value;
   D.hero.fb = document.getElementById('hFb').value;
   D.hero.ig = document.getElementById('hIg').value;
   D.hero.wa = document.getElementById('hWa').value;
   D.hero.yt = document.getElementById('hYt').value;
-  D.about.text    = document.getElementById('aboutText').value;
-  D.footer.org    = document.getElementById('fOrg').value;
-  D.footer.college= document.getElementById('fCollege').value;
-  D.footer.copy   = document.getElementById('fCopy').value;
-  D.footer.contacts[0]={name:document.getElementById('c1name').value,phone:document.getElementById('c1phone').value};
-  D.footer.contacts[1]={name:document.getElementById('c2name').value,phone:document.getElementById('c2phone').value};
-
-  let html = original;
-
-  // --- HERO TITLE ---
-  html = html.replace(
-    /(<h1[^>]*class="hero-title[^"]*"[^>]*>)([\s\S]*?)(<\/h1>)/,
-    `$1${D.hero.title}$3`
-  );
-  // --- HERO SUBTITLE ---
-  html = html.replace(
-    /(<p[^>]*class="hero-subtitle[^"]*"[^>]*>)([\s\S]*?)(<\/p>)/,
-    `$1${D.hero.subtitle}$3`
-  );
-  // --- SOCIAL LINKS ---
-  const socialBlock = `
-                <div class="social-glass inline-flex gap-4 items-center justify-center px-5 py-2.5 rounded-full">
-                        <a href="${D.hero.fb}" aria-label="Facebook" target="_blank" rel="noopener noreferrer"><img src="assets/icons/icon-facebook.png" alt="Facebook"></a>
-                        <a href="${D.hero.ig}" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><img src="assets/icons/icon-instagram.png" alt="Instagram"></a>
-                        <a href="${D.hero.wa}" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer"><img src="assets/icons/icon-whatsapp.png" alt="WhatsApp"></a>
-                        <a href="${D.hero.yt}" aria-label="YouTube" target="_blank" rel="noopener noreferrer"><img src="assets/icons/icon-youtube.png" alt="YouTube"></a>
-                </div>`;
-  html = html.replace(/<div class="social-glass inline-flex[\s\S]*?<\/div>/m, socialBlock);
-
-  // --- NAV LINKS ---
-  const navLinks = D.nav.map(n=>
-    `\n                <a href="#${n.href}" class="text-[13px] font-semibold text-white hover:opacity-80 transition-opacity">${n.label}</a>`
-  ).join('');
-  html = html.replace(
-    /(<nav[^>]*id="mainNav"[^>]*>)([\s\S]*?)(<\/nav>)/,
-    `$1${navLinks}\n            $3`
-  );
-
-  // --- ABOUT TEXT ---
-  html = html.replace(
-    /(<p[^>]*class="about-text[^"]*"[^>]*>)([\s\S]*?)(<div class="stats-row)/,
-    `$1${D.about.text}\n            $3`
-  );
-
-  // --- STATS ---
-  const statsHTML = D.about.stats.map(s=>`
-                <div class="stat-item flex flex-col items-center">
-                    <h3 class="stat-number font-bold count" data-target="${s.value}" data-suffix="${s.suffix}">0${s.suffix}</h3>
-                    <p class="stat-label font-medium uppercase">${s.label}</p>
-                </div>`).join('');
-  html = html.replace(
-    /(<div class="stats-row[^"]*"[^>]*>)([\s\S]*?)(<\/div>\s*<\/div>\s*<\/section>[\s\S]*?id="showcase")/,
-    `$1${statsHTML}\n            </div>$3`
-  );
-
-  // --- SERVICES ---
-  const servicesHTML = D.services.map(s=>`
-                <article class="service-card">
-                    <img src="${s.img}" alt="${s.title}">
-                    <div class="service-overlay">
-                        <h3>${s.title}</h3>
-                        <p>${s.desc}</p>
-                    </div>
-                </article>`).join('');
-  html = html.replace(
-    /(<div class="service-grid">)([\s\S]*?)(<\/div>\s*<\/div> <!-- end showcase-wrap -->)/,
-    `$1${servicesHTML}\n            $3`
-  );
-
-  // --- DESKTOP TEAM SLIDES ---
-  // Build slides of 3 (first slot = main card, rest = normal)
-  const buildDesktopSlides = ()=>{
-    let slides=''; let i=0;
-    while(i < D.team.length){
-      const chunk=D.team.slice(i, i+4);
-      if(i===0){
-        // first slide: first member is main card
-        slides+=`\n                    <div class="team-slide team-slide-main">`;
-        slides+=`\n                        <article class="team-card team-card-main">
-                            <img src="${chunk[0].img}" alt="${chunk[0].role}">
-                            <div class="team-overlay"><h3>${chunk[0].name}</h3><p>${chunk[0].role}</p></div>
-                        </article>`;
-        chunk.slice(1).forEach(m=>{
-          slides+=`\n                        <article class="team-card">
-                            <img src="${m.img}" alt="${m.role}">
-                            <div class="team-overlay"><h3>${m.name}</h3><p>${m.role}</p></div>
-                        </article>`;
-        });
-        slides+=`\n                    </div>`;
-      } else {
-        slides+=`\n                    <div class="team-slide">`;
-        chunk.forEach(m=>{
-          slides+=`\n                        <article class="team-card">
-                            <img src="${m.img}" alt="${m.role}">
-                            <div class="team-overlay"><h3>${m.name}</h3><p>${m.role}</p></div>
-                        </article>`;
-        });
-        slides+=`\n                    </div>`;
-      }
-      i+=i===0?4:4;
-    }
-    return slides;
-  };
-  html = html.replace(
-    /(<div class="team-carousel desktop-carousel">)([\s\S]*?)(<\/div>\s*<!-- MOBILE)/,
-    `$1${buildDesktopSlides()}\n                $3`
-  );
-
-  // --- MOBILE TEAM CARDS ---
-  const mobileCards = D.team.map((m,idx)=>{
-    const cls = idx<3 ? 'mobile-snap-card mobile-snap-officer' : 'mobile-snap-card mobile-snap-member';
-    return `\n                    <article class="${cls}" data-index="${idx}">
-                        <img src="${m.img}" alt="${m.role}">
-                        <div class="team-overlay"><h3>${m.name}</h3><p>${m.role}</p></div>
-                    </article>`;
-  }).join('');
-  html = html.replace(
-    /(<div class="mobile-snap-track" id="mobileSnapTrack">)([\s\S]*?)(<\/div>\s*<\/div>\s*<!-- Desktop dots)/,
-    `$1${mobileCards}\n                </div>\n            </div>\n            <!-- Desktop dots`
-  );
-
-  // --- DESKTOP DOTS ---
-  const slideCount = Math.ceil(D.team.length/4);
-  const dDots = Array.from({length:slideCount},(_,i)=>
-    `\n                <button class="dot${i===0?' active':''}" type="button" data-slide="${i}" aria-label="Show slide ${i+1}"></button>`
-  ).join('');
-  html = html.replace(
-    /(<div class="team-dots desktop-dots"[^>]*>)([\s\S]*?)(<\/div>\s*<!-- Mobile dots)/,
-    `$1${dDots}\n            </div>\n            <!-- Mobile dots`
-  );
-
-  // --- MOBILE DOTS ---
-  const mDots = D.team.map((_,i)=>
-    `\n                <button class="dot${i===0?' active':''}" type="button" data-card="${i}"></button>`
-  ).join('');
-  html = html.replace(
-    /(<div class="team-dots mobile-dots" id="mobileSnapDots"[^>]*>)([\s\S]*?)(<\/div>\s*<\/div> <!-- end team-inner-wrap -->)/,
-    `$1${mDots}\n            </div>\n            </div> <!-- end team-inner-wrap -->`
-  );
-
-  // --- FOOTER BRAND ---
-  html = html.replace(
-    /(<h3>)(.*?)(<\/h3>\s*<p>Maris)/,
-    `$1${D.footer.org}$3`
-  );
-  html = html.replace(
-    /(<div>\s*<h3>[^<]*<\/h3>\s*<p>)(.*?)(<\/p>\s*<\/div>\s*<div class="footer-creators">)/,
-    `$1${D.footer.college}$3`
-  );
-
-  // --- CREATORS ---
-  const creatorsHTML = D.footer.creators.map(c=>`
-                        <a class="creator-link" href="${c.ig}" target="_blank" rel="noopener noreferrer">
-                            <img src="assets/icons/icon-instagram.png" alt="Instagram">
-                            <span>${c.name}</span>
-                        </a>`).join('');
-  html = html.replace(
-    /(<div class="footer-creators">\s*<h4>Creators<\/h4>)([\s\S]*?)(<\/div>\s*<\/div>\s*<div class="footer-contact">)/,
-    `$1${creatorsHTML}\n                    </div>\n                </div>\n                <div class="footer-contact">`
-  );
-
-  // --- CONTACTS ---
-  const contactsHTML = D.footer.contacts.map(c=>`
-                        <a class="contact-item" href="https://wa.me/${c.phone}" target="_blank" rel="noopener noreferrer">
-                            <span>${c.name}</span>
-                            <img src="assets/icons/icon-whatsapp.png" alt="WhatsApp">
-                        </a>`).join('');
-  html = html.replace(
-    /(<div class="contact-list">)([\s\S]*?)(<\/div>\s*<\/div>\s*<\/div>\s*<\/div>\s*<\/div>\s*<\/footer>)/,
-    `$1${contactsHTML}\n                    </div>$3`
-  );
-
-  // --- FOOTER SOCIALS ---
-  html = html.replace(
-    /(<div class="footer-socials social-glass">)([\s\S]*?)(<\/div>\s*<h4>Contact Us<\/h4>)/,
-    `$1
-                        <a href="${D.hero.fb}" aria-label="Facebook"><img src="assets/icons/icon-facebook.png" alt="Facebook"></a>
-                        <a href="${D.hero.ig}" aria-label="Instagram"><img src="assets/icons/icon-instagram.png" alt="Instagram"></a>
-                        <a href="${D.hero.wa}" aria-label="WhatsApp"><img src="assets/icons/icon-whatsapp.png" alt="WhatsApp"></a>
-                        <a href="${D.hero.yt}" aria-label="YouTube"><img src="assets/icons/icon-youtube.png" alt="YouTube"></a>
-                    </div>
-                    <h4>Contact Us</h4>`
-  );
-
-  // --- COPYRIGHT ---
-  html = html.replace(
-    /(<p class="footer-copy">)([\s\S]*?)(<\/p>)/,
-    `$1${D.footer.copy}$3`
-  );
-
-  return html;
-}
-
-/* ================================================================
-   GITHUB DEPLOY
-================================================================ */
-async function deployToGitHub(){
-  if(!ghCfg.user||!ghCfg.repo||!ghCfg.token){
-    toast('Configure GitHub settings first','error');
-    nav('github', document.querySelector('[data-panel=github]')); return;
-  }
-
-  const progress = document.getElementById('deployProgress');
-  const bar      = document.getElementById('deployBar');
-  const msg      = document.getElementById('deployMsg');
-  const log      = document.getElementById('commitLog');
-  progress.style.display='block';
-
-  const step = (pct, text) => { bar.style.width=pct+'%'; msg.textContent=text; };
-  const ghH = {'Authorization':'Bearer '+ghCfg.token,'Accept':'application/vnd.github+json','Content-Type':'application/json'};
-  const noCacheH = {...ghH, 'Cache-Control':'no-cache','Pragma':'no-cache'};
-
-  const now = new Date().toLocaleString();
-  const commitMsg = `Admin update: content changes — ${now}`;
-
-  for(let attempt = 1; attempt <= 3; attempt++){
-    try{
-      step(10, attempt > 1 ? `Retrying (attempt ${attempt}/3)…` : 'Fetching current index.html from GitHub...');
-
-      // Always fetch fresh SHA with cache-busting
-      const getRes = await fetch(
-        `https://api.github.com/repos/${ghCfg.user}/${ghCfg.repo}/contents/index.html?ref=${ghCfg.branch}&_=${Date.now()}`,
-        { headers: noCacheH }
-      );
-      if(!getRes.ok) throw new Error('Cannot fetch index.html: '+getRes.status+' — check repo name and branch.');
-      const fileData = await getRes.json();
-      const sha = fileData.sha;
-      const originalHTML = atob(fileData.content.replace(/\n/g,''));
-
-      step(40,'Building updated HTML...');
-      const updatedHTML = buildHTML(originalHTML);
-
-      step(65,'Pushing to GitHub...');
-      const putRes = await fetch(
-        `https://api.github.com/repos/${ghCfg.user}/${ghCfg.repo}/contents/index.html`,
-        {
-          method:'PUT',
-          headers: ghH,
-          body: JSON.stringify({
-            message: commitMsg,
-            content: btoa(unescape(encodeURIComponent(updatedHTML))),
-            sha: sha,
-            branch: ghCfg.branch,
-          })
-        }
-      );
-
-      if(putRes.ok){
-        step(100,'Done!');
-        dirtyPanels.clear();
-        document.getElementById('fStatusHtml').textContent='Deployed';
-        document.getElementById('fStatusHtml').className='badge success';
-        document.getElementById('dDeployStatus').textContent = new Date().toLocaleTimeString();
-        document.getElementById('dDeployStatus').style.color = 'var(--success)';
-        document.getElementById('dDeployStatus').style.fontSize = '0.85rem';
-
-        const entry=document.createElement('div');
-        entry.className='commit-entry';
-        entry.innerHTML=`<span class="ct">${now}</span><span class="cm">✅ ${commitMsg}</span>`;
-        log.prepend(entry);
-
-        toast('Deployed to GitHub! 🚀','success');
-        setTimeout(()=>{ progress.style.display='none'; bar.style.width='0%'; },2000);
-        return; // success
-      }
-
-      const errData = await putRes.json().catch(()=>({}));
-      const errMsg  = errData.message || 'Push failed ('+putRes.status+')';
-
-      // SHA conflict — wait and retry with a freshly fetched SHA
-      if(putRes.status === 409 || (putRes.status === 422 && errMsg.toLowerCase().includes('sha'))){
-        if(attempt < 3){
-          step(0, `SHA conflict — retrying in ${attempt}s…`);
-          await new Promise(r => setTimeout(r, 1000 * attempt));
-          continue;
-        }
-        throw new Error('SHA conflict after 3 attempts. Wait a moment and try Deploy again.');
-      }
-
-      throw new Error(errMsg);
-
-    } catch(err){
-      if(attempt === 3){
-        step(0,'');
-        progress.style.display='none';
-        toast('Deploy failed: '+err.message,'error');
-        console.error(err);
-        const entry=document.createElement('div');
-        entry.className='commit-entry';
-        entry.innerHTML=`<span class="ct">${new Date().toLocaleTimeString()}</span><span class="cm" style="color:var(--danger)">❌ ${err.message}</span>`;
-        log.prepend(entry);
-      }
-    }
-  }
+  D.about.text     = document.getElementById('aboutText').value;
+  D.footer.org     = document.getElementById('fOrg').value;
+  D.footer.college = document.getElementById('fCollege').value;
+  D.footer.copy    = document.getElementById('fCopy').value;
+  D.footer.contacts[0] = { name: document.getElementById('c1name').value, phone: document.getElementById('c1phone').value };
+  D.footer.contacts[1] = { name: document.getElementById('c2name').value, phone: document.getElementById('c2phone').value };
+  await saveToGitHub('All sections');
 }
 </script>
 </body>
