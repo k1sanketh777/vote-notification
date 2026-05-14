@@ -355,23 +355,24 @@ document.addEventListener("DOMContentLoaded", () => {
   // Drives through the unified engine above —
   // works perfectly alongside wheel momentum.
   // =============================================
-  document.querySelectorAll('a[href^="#"]').forEach((link) => {
-    link.addEventListener('click', (e) => {
-      const id     = link.getAttribute('href').slice(1);
-      const target = document.getElementById(id);
-      if (!target) return;
-      e.preventDefault();
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href^="#"]');
+    if (!link) return;
 
-      if (mainNav)    mainNav.classList.remove('active');
-      if (menuToggle) menuToggle.classList.remove('active');
-      if (header) {
-        header.style.transform = 'translateY(0)';
-        header.style.opacity   = '1';
-      }
+    const id     = link.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if (!target) return;
+    e.preventDefault();
 
-      const headerHeight = header ? header.offsetHeight : 0;
-      smoothScrollTo(target.getBoundingClientRect().top + scroller.scrollTop - headerHeight);
-    });
+    if (mainNav)    mainNav.classList.remove('active');
+    if (menuToggle) menuToggle.classList.remove('active');
+    if (header) {
+      header.style.transform = 'translateY(0)';
+      header.style.opacity   = '1';
+    }
+
+    const headerHeight = header ? header.offsetHeight : 0;
+    smoothScrollTo(target.getBoundingClientRect().top + scroller.scrollTop - headerHeight);
   });
 
 
