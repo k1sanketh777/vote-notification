@@ -74,13 +74,13 @@
   "team": [
     {
       "name": "",
-      "role": "President",
-      "img": "assets/images/Team/1..png"
+      "role": "Secretary",
+      "img": "assets/images/Team/2..png"
     },
     {
       "name": "",
-      "role": "Secretary",
-      "img": "assets/images/Team/2..png"
+      "role": "President",
+      "img": "assets/images/Team/1..png"
     },
     {
       "name": "",
@@ -158,10 +158,6 @@
       {
         "name": "Sandila Fernando",
         "ig": "https://www.instagram.com/sandilafernando/"
-      },
-      {
-        "name": "K1 sanketh",
-        "ig": ""
       }
     ]
   }
