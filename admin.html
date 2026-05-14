@@ -262,58 +262,22 @@
 
       <!-- ===== GITHUB ===== -->
       <div class="panel" id="panel-github">
-        <div class="card" id="fileProtocolWarning" style="display:none;border:1px solid var(--danger,#e05c5c)">
-          <div class="card-header"><div><h2>⚠️ Opened as a Local File</h2><p>GitHub API is blocked when admin.html is opened directly from your computer.</p></div></div>
-          <div class="hint" style="border-color:var(--danger,#e05c5c);color:#ffaaaa">
-            You opened admin.html via <code style="background:rgba(255,0,0,0.15);padding:2px 5px;border-radius:3px">file://</code> — browsers block all external network requests from local files. This is why every save gives <strong>"Failed to fetch"</strong>.<br><br>
-            <strong>Your two options:</strong><br>
-            <strong>1. Host admin.html on your live GitHub Pages site</strong> (same domain as index.html) — then GitHub API calls work fine.<br>
-            <strong>2. Use the Download button below</strong> — make your edits, download the JSON, then drag-and-drop it onto your repo on github.com to commit it.
-          </div>
-          <button class="btn btn-primary" style="margin-top:4px" onclick="downloadJSON()">⬇️ Download site-data.json</button>
-        </div>
         <div class="card">
-          <div class="card-header"><div><h2>GitHub Repository Setup</h2><p>Fill in all fields then click Save Config. Settings are remembered in your browser.</p></div></div>
-          <div class="hint">🔑 Go to <a href="https://github.com/settings/tokens/new" target="_blank" style="color:var(--accent)">github.com/settings/tokens/new</a> → choose <strong>Classic token</strong> → tick <strong>repo</strong> scope → Generate → paste below.</div>
-          <div class="gh-field-row">
-            <div class="form-group"><label>GitHub Username</label>
-              <input type="text" id="ghUser" placeholder="e.g. k1sanketh777" oninput="ghCfgChanged()">
-            </div>
-            <div class="form-group"><label>Repository Name</label>
-              <input type="text" id="ghRepo" placeholder="e.g. emumscn" oninput="ghCfgChanged()">
-            </div>
+          <div class="card-header"><div><h2>GitHub Setup</h2><p>Repo is hardcoded: <strong>k1sanketh777/emumscn</strong>. Just paste your token below.</p></div></div>
+          <div class="hint">🔑 Go to <a href="https://github.com/settings/tokens/new" target="_blank" style="color:var(--accent)">github.com/settings/tokens/new</a> → pick <strong>Classic token</strong> → tick <strong>repo</strong> scope → Generate → paste below. Token is saved in your browser only.</div>
+          <div class="form-group" style="max-width:480px"><label>Personal Access Token</label>
+            <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
           </div>
-          <div class="form-row">
-            <div class="form-group"><label>Branch</label>
-              <input type="text" id="ghBranch" placeholder="main" value="main" oninput="ghCfgChanged()">
-            </div>
-            <div class="form-group"><label>Personal Access Token</label>
-              <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" oninput="ghCfgChanged()">
-            </div>
-          </div>
-          <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:4px;align-items:center">
-            <button class="btn btn-primary" onclick="saveGHConfig()">💾 Save Config</button>
+          <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:4px">
+            <button class="btn btn-primary" onclick="saveGHConfig()">💾 Save Token</button>
             <button class="btn btn-ghost" onclick="testGHConnection()">🔌 Test Connection</button>
-            <span id="ghSaveStatus" style="font-size:0.8rem;color:var(--text-muted)"></span>
+            <button class="btn btn-ghost" onclick="downloadJSON()">⬇️ Download JSON</button>
           </div>
         </div>
-
         <div class="card">
-          <div class="card-header"><div><h2>How Syncing Works</h2><p>Every Save button pushes directly to your repo.</p></div></div>
-          <div class="file-status-list">
-            <div class="file-status-row">
-              <div><div class="fs-name">📦 site-data.json</div><div class="fs-meta">Updated instantly on every 💾 Save</div></div>
-              <span class="badge success" id="fStatusJson">Auto-sync</span>
-            </div>
-            <div class="file-status-row">
-              <div><div class="fs-name">📄 index.html</div><div class="fs-meta">Reads site-data.json on every page load — no changes needed</div></div>
-              <span class="badge success">Untouched ✅</span>
-            </div>
-          </div>
-          <div class="hint success" style="margin-top:16px;margin-bottom:0">
-            ✅ <strong>That's it.</strong> When you click any 💾 Save button, the admin panel writes your changes to <code style="background:rgba(255,255,255,0.1);padding:2px 5px;border-radius:3px">site-data.json</code> in your GitHub repo as a new commit. Your live website fetches that file on every load and applies it — <strong>no deploy step needed</strong>.
-          </div>
-          <div class="commit-log" id="commitLog" style="margin-top:14px"></div>
+          <div class="card-header"><div><h2>How it works</h2></div></div>
+          <div class="hint success">Every 💾 Save button writes your changes directly to <strong>site-data.json</strong> in your GitHub repo. Your live site reads that file on every page load — no extra deploy step needed.</div>
+          <div class="hint">Last deploy: <span id="dDeployStatus2" style="color:var(--success)">—</span></div>
         </div>
       </div>
 
@@ -411,10 +375,18 @@
 
 <script>
 /* ================================================================
-   CONSTANTS & DATA
+   GITHUB — hardcoded repo, token stored in localStorage
 ================================================================ */
-const PASS = 'CARYO2024'; // ← Change this password!
+const GH_USER   = 'k1sanketh777';
+const GH_REPO   = 'emumscn';
+const GH_BRANCH = 'main';
+const GH_TOKEN_KEY = 'gh_token'; // localStorage key for the token
 
+const PASS = 'CARYO2024';
+
+/* ================================================================
+   DATA — defaults (overwritten by GitHub on load)
+================================================================ */
 const D = {
   nav: [
     { label: 'Home',     href: 'home' },
@@ -432,7 +404,7 @@ const D = {
     yt: 'https://www.youtube.com/@emumsc?sub_confirmation=1',
   },
   about: {
-    text: `The Educational Media Unit of Maris Stella College, Negombo is a dedicated platform that brings together creativity, innovation, and communication within the school community. It provides students with opportunities to explore and develop skills in photography, videography, graphic design, and digital media production. Through active involvement in covering school events and creating visual content, the unit plays an essential role in documenting and presenting the vibrant life of the college. Members work collaboratively, learning teamwork, responsibility, and professionalism while producing high quality media. The unit also encourages students to adapt to modern technology and media trends, preparing them for future creative fields. Beyond technical growth, it fosters leadership, discipline, and a strong sense of identity, making it an integral part of the Maris Stella College community and a vital cornerstone for nurturing the next generation of talented, visionary digital storytellers and media professionals`,
+    text: 'The Educational Media Unit of Maris Stella College, Negombo is a dedicated platform that brings together creativity, innovation, and communication within the school community. It provides students with opportunities to explore and develop skills in photography, videography, graphic design, and digital media production. Through active involvement in covering school events and creating visual content, the unit plays an essential role in documenting and presenting the vibrant life of the college. Members work collaboratively, learning teamwork, responsibility, and professionalism while producing high quality media. The unit also encourages students to adapt to modern technology and media trends, preparing them for future creative fields. Beyond technical growth, it fosters leadership, discipline, and a strong sense of identity, making it an integral part of the Maris Stella College community and a vital cornerstone for nurturing the next generation of talented, visionary digital storytellers and media professionals',
     stats: [
       { value: 20, suffix: '+',  label: 'Years of Excellence' },
       { value: 12, suffix: 'k+', label: 'Followers on Social Media' },
@@ -440,10 +412,10 @@ const D = {
     ]
   },
   services: [
-    { title: 'Photography / Videography', desc: 'Capturing school moments with creative visuals and storytelling.',          img: 'assets/images/photography.png' },
-    { title: 'Live Production',           desc: 'Live streaming and production support for events and ceremonies.',           img: 'assets/images/live.png' },
-    { title: 'Announcing',               desc: 'Professional announcing service for school events and ceremonies.',           img: 'assets/images/Announcing.png' },
-    { title: 'Technical',                desc: 'Audio visual setup and technical assistance for school activities.',          img: 'assets/images/technical.png' },
+    { title: 'Photography / Videography', desc: 'Capturing school moments with creative visuals and storytelling.',        img: 'assets/images/photography.png' },
+    { title: 'Live Production',           desc: 'Live streaming and production support for events and ceremonies.',         img: 'assets/images/live.png' },
+    { title: 'Announcing',               desc: 'Professional announcing service for school events and ceremonies.',         img: 'assets/images/Announcing.png' },
+    { title: 'Technical',                desc: 'Audio visual setup and technical assistance for school activities.',        img: 'assets/images/technical.png' },
   ],
   team: [
     { name: '', role: 'President',        img: 'assets/images/Team/1..png' },
@@ -475,214 +447,100 @@ const D = {
   }
 };
 
-let ghCfg = { user:'', repo:'', branch:'main', token:'' };
 let editMemberIdx  = -1;
 let editServiceIdx = -1;
 let editNavIdx     = -1;
-let dirtyPanels    = new Set();
 
 /* ================================================================
-   GITHUB JSON SYNC  —  site-data.json in the repo
+   TOKEN HELPERS
 ================================================================ */
-const DATA_FILE = 'site-data.json';
+function getToken(){ return localStorage.getItem(GH_TOKEN_KEY) || ''; }
 
 function ghHeaders(){
   return {
-    'Authorization': 'Bearer ' + ghCfg.token,
+    'Authorization': 'Bearer ' + getToken(),
     'Accept':        'application/vnd.github+json',
     'Content-Type':  'application/json'
   };
 }
 
-async function loadFromGitHub(){
-  ghCfgChanged();
-  if(!ghCfg.user || !ghCfg.repo){
-    toast('GitHub not configured — using defaults','warn');
+/* ================================================================
+   GITHUB SAVE
+================================================================ */
+async function saveToGitHub(section){
+  const token = getToken();
+  if(!token){
+    toast('No token set — go to GitHub Setup and enter your token','error');
     return;
   }
-  try{
-    toast('Loading latest site-data.json from GitHub\u2026','info');
 
-    let saved = null;
+  toast('Saving ' + section + '...', 'info');
 
-    // 1. Try public raw URL first (works for public repos, no token, no rate limit)
-    const rawUrl = 'https://raw.githubusercontent.com/'
-      + ghCfg.user + '/' + ghCfg.repo + '/' + ghCfg.branch + '/' + DATA_FILE
-      + '?_=' + Date.now();
-    const rawRes = await fetch(rawUrl, { cache: 'no-store' });
-    if(rawRes.ok){
-      saved = await rawRes.json();
-    } else if(ghCfg.token){
-      // 2. Private repo fallback — use API with token
-      const apiRes = await fetch(
-        'https://api.github.com/repos/' + ghCfg.user + '/' + ghCfg.repo
-        + '/contents/' + DATA_FILE + '?ref=' + ghCfg.branch + '&_=' + Date.now(),
-        { headers: Object.assign({}, ghHeaders(), {'Cache-Control':'no-cache','Pragma':'no-cache'}) }
-      );
-      if(apiRes.status === 404){ toast('No site-data.json found in repo yet','warn'); return; }
-      if(!apiRes.ok) throw new Error('HTTP ' + apiRes.status);
-      const file = await apiRes.json();
-      saved = JSON.parse(atob(file.content.replace(/\n/g,'')));
+  try {
+    // 1. Get current SHA of the file
+    let sha = null;
+    const getRes = await fetch(
+      'https://api.github.com/repos/' + GH_USER + '/' + GH_REPO + '/contents/site-data.json?ref=' + GH_BRANCH,
+      { headers: ghHeaders() }
+    );
+
+    if(getRes.ok){
+      const fileData = await getRes.json();
+      sha = fileData.sha;
+    } else if(getRes.status === 401){
+      toast('Token rejected — generate a new token with repo scope', 'error'); return;
+    } else if(getRes.status === 404){
+      // file doesn't exist yet, will create it
     } else {
-      toast('Could not fetch site-data.json \u2014 make sure your repo is public or add a token','warn');
-      return;
+      toast('Could not read file: HTTP ' + getRes.status, 'error'); return;
     }
 
-    mergeIntoD(saved);
-    populateDOMFromD();
-    initAll();
-    toast('Loaded live data from GitHub \u2705','success');
-  } catch(e){
-    toast('Could not load GitHub data: ' + e.message,'error');
+    // 2. Encode content
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(D, null, 2))));
+
+    // 3. Push
+    const body = { message: 'Admin: update ' + section, content: content, branch: GH_BRANCH };
+    if(sha) body.sha = sha;
+
+    const putRes = await fetch(
+      'https://api.github.com/repos/' + GH_USER + '/' + GH_REPO + '/contents/site-data.json',
+      { method: 'PUT', headers: ghHeaders(), body: JSON.stringify(body) }
+    );
+
+    if(putRes.ok){
+      toast(section + ' saved to GitHub ✅', 'success');
+      document.getElementById('dDeployStatus').textContent = new Date().toLocaleTimeString();
+    } else {
+      const err = await putRes.json().catch(()=>({}));
+      toast('Save failed: ' + (err.message || 'HTTP ' + putRes.status), 'error');
+    }
+
+  } catch(e) {
+    toast('Error: ' + e.message, 'error');
     console.error(e);
   }
 }
 
 /* ================================================================
-   GITHUB CONFIG  — single source of truth: localStorage key 'gh'
+   GITHUB LOAD — pull site-data.json from repo on startup
 ================================================================ */
-const GH_KEY = 'msc_gh_cfg';
-
-function ghCfgChanged(){
-  // Live-read from fields into ghCfg so saves always use latest values
-  ghCfg.user   = (document.getElementById('ghUser').value   || '').trim();
-  ghCfg.repo   = (document.getElementById('ghRepo').value   || '').trim();
-  ghCfg.branch = (document.getElementById('ghBranch').value || 'main').trim();
-  ghCfg.token  = (document.getElementById('ghToken').value  || '').trim();
-}
-
-function saveGHConfig(){
-  ghCfgChanged();
-  if(!ghCfg.user || !ghCfg.repo || !ghCfg.token){
-    toast('Fill in Username, Repo and Token first','error'); return;
-  }
-  localStorage.setItem(GH_KEY, JSON.stringify(ghCfg));
-  document.getElementById('ghSaveStatus').textContent = '✅ Saved!';
-  setTimeout(()=>{ document.getElementById('ghSaveStatus').textContent=''; }, 3000);
-  toast('GitHub config saved 💾','success');
-}
-
-function loadGHConfig(){
-  try{
-    const raw = localStorage.getItem(GH_KEY);
-    if(!raw) return;
-    const cfg = JSON.parse(raw);
-    ghCfg = cfg;
-    if(cfg.user)   document.getElementById('ghUser').value   = cfg.user;
-    if(cfg.repo)   document.getElementById('ghRepo').value   = cfg.repo;
-    if(cfg.branch) document.getElementById('ghBranch').value = cfg.branch;
-    if(cfg.token)  document.getElementById('ghToken').value  = cfg.token;
-  } catch(e){ console.warn('loadGHConfig error:', e); }
-}
-
-/* Download site-data.json to disk as a fallback */
-function downloadJSON(){
-  const jsonStr = JSON.stringify(D, null, 2);
-  const blob = new Blob([jsonStr], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'site-data.json';
-  document.body.appendChild(a); a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  toast('Downloaded site-data.json \u2014 upload it to your repo to apply changes \u2705','success');
-}
-
-async function saveToGitHub(section){
-  ghCfgChanged(); // always pull latest values from the form fields
-  // ── Detect file:// protocol — GitHub API is blocked by browsers in this context
-  if(location.protocol === 'file:'){
-    toast('\u26a0\ufe0f Opened as a local file \u2014 GitHub API is blocked. Use \u201cDownload JSON\u201d below instead.','error');
-    downloadJSON();
-    return;
-  }
-
-  if(!ghCfg.token || !ghCfg.user || !ghCfg.repo){
-    toast(section + ' \u2014 GitHub not configured. Downloading JSON instead\u2026','warn');
-    downloadJSON();
-    return;
-  }
-
-  for(let attempt = 1; attempt <= 3; attempt++){
-    try{
-      // Always fetch a fresh SHA with cache-busting
-      let sha = null;
-      const getRes = await fetch(
-        'https://api.github.com/repos/' + ghCfg.user + '/' + ghCfg.repo
-        + '/contents/' + DATA_FILE + '?ref=' + ghCfg.branch + '&_=' + Date.now(),
-        { headers: Object.assign({}, ghHeaders(), {'Cache-Control':'no-cache','Pragma':'no-cache'}) }
-      );
-      if(getRes.ok){ const f = await getRes.json(); sha = f.sha; }
-      else if(getRes.status === 401){ throw new Error('Token rejected (401) \u2014 check your GitHub token has repo scope'); }
-      else if(getRes.status === 403){ throw new Error('Forbidden (403) \u2014 token may be expired or lacks repo scope'); }
-      else if(getRes.status !== 404){ throw new Error('Could not read file: HTTP ' + getRes.status); }
-
-      const jsonStr = JSON.stringify(D, null, 2);
-      const b64 = btoa(encodeURIComponent(jsonStr).replace(/%([0-9A-F]{2})/g, function(_,p1){ return String.fromCharCode('0x'+p1); }));
-
-      const body = {
-        message: 'Admin: saved ' + section + ' \u2014 ' + new Date().toLocaleString(),
-        content: b64,
-        branch:  ghCfg.branch,
-      };
-      if(sha) body.sha = sha;
-
-      const putRes = await fetch(
-        'https://api.github.com/repos/' + ghCfg.user + '/' + ghCfg.repo + '/contents/' + DATA_FILE,
-        { method:'PUT', headers: ghHeaders(), body: JSON.stringify(body) }
-      );
-
-      if(putRes.ok){
-        toast(section + ' saved & synced to GitHub \u2705', 'success');
-        const ds = document.getElementById('dDeployStatus');
-        if(ds){ ds.textContent = new Date().toLocaleTimeString(); ds.style.color='var(--success)'; ds.style.fontSize='0.82rem'; }
-        const log = document.getElementById('commitLog');
-        if(log){
-          const entry = document.createElement('div');
-          entry.className = 'commit-entry';
-          entry.innerHTML = '<span class="ct">' + new Date().toLocaleString() + '</span>'
-            + '<span class="cm">\u2705 Admin: saved ' + section + '</span>';
-          log.prepend(entry);
-        }
-        return;
-      }
-
-      const errData = await putRes.json().catch(function(){ return {}; });
-      const msg = errData.message || 'Push failed (' + putRes.status + ')';
-
-      if(putRes.status === 401){ throw new Error('Token rejected \u2014 check your GitHub token'); }
-      if(putRes.status === 403){ throw new Error('Forbidden \u2014 token may lack repo write scope'); }
-
-      if(putRes.status === 409 || (putRes.status === 422 && msg.toLowerCase().includes('sha'))){
-        if(attempt < 3){
-          toast('Retrying save (attempt ' + (attempt+1) + '/3)\u2026', 'warn');
-          await new Promise(function(r){ setTimeout(r, 800 * attempt); });
-          continue;
-        }
-        throw new Error('SHA conflict after 3 attempts \u2014 please try saving again.');
-      }
-
-      throw new Error(msg);
-
-    } catch(e){
-      // On final attempt, show error AND offer download fallback
-      if(attempt === 3 || e.message.includes('401') || e.message.includes('403') || e.message.includes('Token')){
-        toast(section + ' save failed: ' + e.message, 'error');
-        // Wait a beat then offer the download fallback
-        setTimeout(function(){
-          if(confirm('GitHub save failed.\n\nDownload site-data.json instead?\n(You can then upload it directly to your repo on GitHub.com)')){
-            downloadJSON();
-          }
-        }, 400);
-        console.error(e);
-        return;
-      }
-    }
+async function loadFromGitHub(){
+  try {
+    const url = 'https://raw.githubusercontent.com/' + GH_USER + '/' + GH_REPO + '/' + GH_BRANCH + '/site-data.json?_=' + Date.now();
+    const res = await fetch(url, { cache: 'no-store' });
+    if(!res.ok){ console.warn('Could not load site-data.json:', res.status); return; }
+    const saved = await res.json();
+    mergeIntoD(saved);
+    populateDOMFromD();
+    initAll();
+    toast('Loaded latest data from GitHub ✅', 'success');
+  } catch(e){
+    console.warn('loadFromGitHub failed:', e.message);
   }
 }
 
 function mergeIntoD(saved){
-  if(saved.nav)      D.nav      = saved.nav;
+  if(saved.nav)      D.nav = saved.nav;
   if(saved.hero)     Object.assign(D.hero, saved.hero);
   if(saved.about){
     if(saved.about.text  !== undefined) D.about.text  = saved.about.text;
@@ -700,6 +558,16 @@ function mergeIntoD(saved){
 }
 
 /* ================================================================
+   DOWNLOAD FALLBACK
+================================================================ */
+function downloadJSON(){
+  const blob = new Blob([JSON.stringify(D, null, 2)], {type:'application/json'});
+  const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: 'site-data.json' });
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  toast('Downloaded site-data.json ✅', 'success');
+}
+
+/* ================================================================
    LOCK / UNLOCK
 ================================================================ */
 document.getElementById('lockBtn').addEventListener('click', tryUnlock);
@@ -709,44 +577,89 @@ function tryUnlock(){
   const v = document.getElementById('lockPwd').value;
   if(v === PASS){
     document.getElementById('adminLock').classList.add('hidden');
-    const app = document.getElementById('adminApp');
-    app.classList.add('visible');
-    loadGHConfig();
-    // Show UI with defaults immediately, then fetch from GitHub
+    document.getElementById('adminApp').classList.add('visible');
+    // Load saved token into field
+    const t = getToken();
+    if(t) document.getElementById('ghToken').value = t;
+    // Update status badge
+    if(t){ updateGHStatus('ready'); } else { updateGHStatus('no-token'); }
     populateDOMFromD();
     initAll();
-    loadFromGitHub(); // async — will re-render if data found
-    toast('Welcome back! 👋','success');
+    loadFromGitHub();
+    toast('Welcome back! 👋', 'success');
   } else {
     const err = document.getElementById('lockErr');
     err.textContent = 'Incorrect password.';
     document.getElementById('lockPwd').value = '';
     document.getElementById('lockPwd').focus();
-    setTimeout(()=>{ err.textContent=''; },2500);
+    setTimeout(()=>{ err.textContent=''; }, 2500);
   }
 }
+
 function lockPanel(){
   document.getElementById('adminApp').classList.remove('visible');
-  document.getElementById('lockPwd').value='';
+  document.getElementById('lockPwd').value = '';
   document.getElementById('adminLock').classList.remove('hidden');
 }
 
-// Show file:// protocol warning if needed
-(function(){
-  if(location.protocol === 'file:'){
-    const w = document.getElementById('fileProtocolWarning');
-    if(w) w.style.display = '';
-    const w2 = document.getElementById('fileProtocolDashWarn');
-    if(w2) w2.style.display = '';
+function updateGHStatus(state){
+  const dot = document.getElementById('ghDot');
+  const txt = document.getElementById('ghStatusText');
+  const badge = document.getElementById('adminBadge');
+  if(state === 'ready'){
+    dot.className = 'gh-dot connected';
+    txt.textContent = GH_USER + '/' + GH_REPO;
+    badge.className = 'badge success';
+    badge.textContent = 'CONNECTED';
+  } else {
+    dot.className = 'gh-dot error';
+    txt.textContent = 'No token — go to GitHub Setup';
+    badge.className = 'badge';
+    badge.textContent = 'ADMIN';
   }
-})();
+}
+
+/* ================================================================
+   SAVE TOKEN (GitHub Setup panel)
+================================================================ */
+function saveGHConfig(){
+  const token = document.getElementById('ghToken').value.trim();
+  if(!token){ toast('Paste your token first', 'error'); return; }
+  localStorage.setItem(GH_TOKEN_KEY, token);
+  updateGHStatus('ready');
+  toast('Token saved ✅ — try saving any section now', 'success');
+}
+
+async function testGHConnection(){
+  const token = document.getElementById('ghToken').value.trim();
+  if(!token){ toast('Enter your token first', 'error'); return; }
+  localStorage.setItem(GH_TOKEN_KEY, token); // auto-save on test
+  const dot = document.getElementById('ghDot');
+  const txt = document.getElementById('ghStatusText');
+  dot.className = 'gh-dot loading'; txt.textContent = 'Testing...';
+  try {
+    const res = await fetch('https://api.github.com/repos/' + GH_USER + '/' + GH_REPO, {
+      headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }
+    });
+    if(res.ok){
+      updateGHStatus('ready');
+      toast('Connected to ' + GH_USER + '/' + GH_REPO + ' ✅', 'success');
+    } else {
+      dot.className = 'gh-dot error'; txt.textContent = 'Failed: HTTP ' + res.status;
+      toast('Connection failed: HTTP ' + res.status + ' — check your token', 'error');
+    }
+  } catch(e){
+    dot.className = 'gh-dot error'; txt.textContent = 'Network error';
+    toast('Network error: ' + e.message, 'error');
+  }
+}
 
 /* ================================================================
    NAVIGATION
 ================================================================ */
 const titles = { dashboard:'Dashboard', navbar:'Navigation Bar', hero:'Hero / Banner',
   about:'About & Stats', services:'Services', team:'Team Members',
-  footer:'Footer & Contact', github:'GitHub Deploy' };
+  footer:'Footer & Contact', github:'GitHub Setup' };
 
 function nav(id, btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
@@ -763,12 +676,72 @@ function closeSidebar()  { document.getElementById('sidebar').classList.remove('
    INIT
 ================================================================ */
 function initAll(){
-  renderNav();
-  renderMembers();
-  renderServices();
-  renderStats();
-  renderCreators();
-  updateDash();
+  renderNav(); renderMembers(); renderServices(); renderStats(); renderCreators(); updateDash();
+}
+
+/* ================================================================
+   MARK DIRTY + COLLECT DOM → D
+================================================================ */
+function markDirty(section){
+  if(section==='Hero'){
+    D.hero.title    = document.getElementById('heroTitle').value;
+    D.hero.subtitle = document.getElementById('heroSub').value;
+    D.hero.fb = document.getElementById('hFb').value;
+    D.hero.ig = document.getElementById('hIg').value;
+    D.hero.wa = document.getElementById('hWa').value;
+    D.hero.yt = document.getElementById('hYt').value;
+  }
+  if(section==='About'||section==='Stats'){
+    D.about.text = document.getElementById('aboutText').value;
+  }
+  if(section==='Footer'){
+    D.footer.org     = document.getElementById('fOrg').value;
+    D.footer.college = document.getElementById('fCollege').value;
+    D.footer.copy    = document.getElementById('fCopy').value;
+    D.footer.contacts[0] = { name: document.getElementById('c1name').value, phone: document.getElementById('c1phone').value };
+    D.footer.contacts[1] = { name: document.getElementById('c2name').value, phone: document.getElementById('c2phone').value };
+  }
+  saveToGitHub(section);
+}
+
+async function syncAll(){
+  D.hero.title    = document.getElementById('heroTitle').value;
+  D.hero.subtitle = document.getElementById('heroSub').value;
+  D.hero.fb = document.getElementById('hFb').value;
+  D.hero.ig = document.getElementById('hIg').value;
+  D.hero.wa = document.getElementById('hWa').value;
+  D.hero.yt = document.getElementById('hYt').value;
+  D.about.text     = document.getElementById('aboutText').value;
+  D.footer.org     = document.getElementById('fOrg').value;
+  D.footer.college = document.getElementById('fCollege').value;
+  D.footer.copy    = document.getElementById('fCopy').value;
+  D.footer.contacts[0] = { name: document.getElementById('c1name').value, phone: document.getElementById('c1phone').value };
+  D.footer.contacts[1] = { name: document.getElementById('c2name').value, phone: document.getElementById('c2phone').value };
+  await saveToGitHub('All sections');
+}
+
+/* ================================================================
+   POPULATE DOM FROM D
+================================================================ */
+function populateDOMFromD(){
+  document.getElementById('heroTitle').value = D.hero.title    || '';
+  document.getElementById('heroSub').value   = D.hero.subtitle || '';
+  document.getElementById('hFb').value = D.hero.fb || '';
+  document.getElementById('hIg').value = D.hero.ig || '';
+  document.getElementById('hWa').value = D.hero.wa || '';
+  document.getElementById('hYt').value = D.hero.yt || '';
+  document.getElementById('aboutText').value = D.about.text || '';
+  document.getElementById('fOrg').value    = D.footer.org     || '';
+  document.getElementById('fCollege').value= D.footer.college || '';
+  document.getElementById('fCopy').value   = D.footer.copy    || '';
+  if(D.footer.contacts[0]){
+    document.getElementById('c1name').value  = D.footer.contacts[0].name  || '';
+    document.getElementById('c1phone').value = D.footer.contacts[0].phone || '';
+  }
+  if(D.footer.contacts[1]){
+    document.getElementById('c2name').value  = D.footer.contacts[1].name  || '';
+    document.getElementById('c2phone').value = D.footer.contacts[1].phone || '';
+  }
 }
 
 /* ================================================================
@@ -783,12 +756,10 @@ function renderNav(){
       ondrop="dragDrop(event,${i},'nav')" ondragleave="dragLeave(event,'nav-edit-row','navEditList')">
       <span style="color:var(--text-muted);cursor:grab;font-size:17px;user-select:none">⠿</span>
       <div style="flex:1;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-        <input type="text" value="${n.label}" placeholder="Label" style="flex:1;min-width:80px"
-          oninput="D.nav[${i}].label=this.value">
+        <input type="text" value="${n.label}" placeholder="Label" style="flex:1;min-width:80px" oninput="D.nav[${i}].label=this.value">
         <div style="display:flex;align-items:center;gap:4px">
           <span style="color:var(--text-muted);font-size:0.8rem">#</span>
-          <input type="text" value="${n.href}" placeholder="anchor" style="width:110px"
-            oninput="D.nav[${i}].href=this.value">
+          <input type="text" value="${n.href}" placeholder="anchor" style="width:110px" oninput="D.nav[${i}].href=this.value">
         </div>
       </div>
       <div style="display:flex;gap:6px">
@@ -826,9 +797,7 @@ function renderMembers(){
       ondragstart="dragStart(event,${i},'team')" ondragover="dragOver(event,${i},'member-row','memberList')"
       ondrop="dragDrop(event,${i},'team')" ondragleave="dragLeave(event,'member-row','memberList')">
       <span class="drag-handle">⠿</span>
-      <div class="member-avatar">
-        ${m.img ? `<img src="${m.img}" alt="" onerror="this.style.display='none'">` : '👤'}
-      </div>
+      <div class="member-avatar">${m.img?`<img src="${m.img}" alt="" onerror="this.style.display='none'">`:'👤'}</div>
       <div class="member-info">
         <strong>${m.name||'<em style="opacity:.4;font-style:normal">No name</em>'}</strong>
         <span>${m.role}</span>
@@ -853,18 +822,13 @@ function openMemberModal(i){
   openModal('memberModal');
 }
 function saveMember(){
-  const e={
-    name: document.getElementById('mName').value.trim(),
-    role: document.getElementById('mRole').value.trim()||'Member',
-    img:  document.getElementById('mImgPath').value.trim(),
-  };
-  if(editMemberIdx<0) D.team.push(e);
-  else D.team[editMemberIdx]=e;
+  const e={ name:document.getElementById('mName').value.trim(), role:document.getElementById('mRole').value.trim()||'Member', img:document.getElementById('mImgPath').value.trim() };
+  if(editMemberIdx<0) D.team.push(e); else D.team[editMemberIdx]=e;
   closeModal('memberModal'); renderMembers(); markDirty('Team');
   toast(editMemberIdx<0?'Member added ✅':'Member updated ✅','success');
 }
 function deleteMember(i){
-  if(!confirm(`Remove "${D.team[i].role}" from the team?`)) return;
+  if(!confirm('Remove "'+D.team[i].role+'" from the team?')) return;
   D.team.splice(i,1); renderMembers(); markDirty('Team'); toast('Member removed','info');
 }
 
@@ -893,27 +857,19 @@ function openServiceModal(i){
   editServiceIdx=i;
   document.getElementById('sModalTitle').textContent = i<0?'Add Service':'Edit Service';
   const s=i<0?{title:'',desc:'',img:''}:D.services[i];
-  document.getElementById('sTitle').value   = s.title;
-  document.getElementById('sDesc').value    = s.desc;
-  document.getElementById('sImgPath').value = s.img;
-  document.getElementById('sImgPreview').style.display='none';
-  document.getElementById('sImgFile').value='';
+  document.getElementById('sTitle').value=s.title; document.getElementById('sDesc').value=s.desc; document.getElementById('sImgPath').value=s.img;
+  document.getElementById('sImgPreview').style.display='none'; document.getElementById('sImgFile').value='';
   openModal('serviceModal');
 }
 function saveService(){
-  const e={
-    title: document.getElementById('sTitle').value.trim(),
-    desc:  document.getElementById('sDesc').value.trim(),
-    img:   document.getElementById('sImgPath').value.trim(),
-  };
+  const e={ title:document.getElementById('sTitle').value.trim(), desc:document.getElementById('sDesc').value.trim(), img:document.getElementById('sImgPath').value.trim() };
   if(!e.title){ toast('Title required','error'); return; }
-  if(editServiceIdx<0) D.services.push(e);
-  else D.services[editServiceIdx]=e;
+  if(editServiceIdx<0) D.services.push(e); else D.services[editServiceIdx]=e;
   closeModal('serviceModal'); renderServices(); markDirty('Services');
   toast(editServiceIdx<0?'Service added ✅':'Service updated ✅','success');
 }
 function deleteService(i){
-  if(!confirm(`Delete "${D.services[i].title}"?`)) return;
+  if(!confirm('Remove "'+D.services[i].title+'"?')) return;
   D.services.splice(i,1); renderServices(); markDirty('Services'); toast('Service removed','info');
 }
 
@@ -923,27 +879,21 @@ function deleteService(i){
 function renderStats(){
   const el=document.getElementById('statRows');
   el.innerHTML = D.about.stats.map((s,i)=>`
-    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:14px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <span style="font-size:0.8rem;font-weight:700;color:rgba(255,255,255,0.6)">Stat ${i+1}</span>
-        ${D.about.stats.length>1?`<button class="btn btn-danger btn-xs" onclick="removeStat(${i})">✕</button>`:''}
+    <div class="form-row" style="align-items:center">
+      <div class="form-group" style="flex:2"><label>Label</label>
+        <input type="text" value="${s.label}" oninput="D.about.stats[${i}].label=this.value">
       </div>
-      <div class="form-row-3">
-        <div class="form-group" style="margin:0"><label>Value</label>
-          <input type="number" value="${s.value}" oninput="D.about.stats[${i}].value=+this.value">
-        </div>
-        <div class="form-group" style="margin:0"><label>Suffix</label>
-          <input type="text" value="${s.suffix}" placeholder="+ or k+" oninput="D.about.stats[${i}].suffix=this.value">
-        </div>
-        <div class="form-group" style="margin:0"><label>Label</label>
-          <input type="text" value="${s.label}" oninput="D.about.stats[${i}].label=this.value">
-        </div>
+      <div class="form-group" style="flex:1"><label>Value</label>
+        <input type="number" value="${s.value}" oninput="D.about.stats[${i}].value=+this.value">
       </div>
+      <div class="form-group" style="flex:1"><label>Suffix</label>
+        <input type="text" value="${s.suffix}" oninput="D.about.stats[${i}].suffix=this.value">
+      </div>
+      <button class="btn btn-danger btn-sm" style="margin-top:18px" onclick="D.about.stats.splice(${i},1);renderStats()">✕</button>
     </div>
   `).join('');
 }
 function addStatRow(){ D.about.stats.push({value:0,suffix:'+',label:'New Stat'}); renderStats(); }
-function removeStat(i){ D.about.stats.splice(i,1); renderStats(); }
 
 /* ================================================================
    CREATORS
@@ -951,17 +901,18 @@ function removeStat(i){ D.about.stats.splice(i,1); renderStats(); }
 function renderCreators(){
   const el=document.getElementById('creatorList');
   el.innerHTML = D.footer.creators.map((c,i)=>`
-    <div style="display:flex;gap:9px;align-items:center">
-      <input type="text" value="${c.name}" placeholder="Creator name" style="flex:1"
-        oninput="D.footer.creators[${i}].name=this.value">
-      <input type="url" value="${c.ig}" placeholder="Instagram URL" style="flex:1.5"
-        oninput="D.footer.creators[${i}].ig=this.value">
-      <button class="btn btn-danger btn-xs btn-icon" onclick="removeCreator(${i})">✕</button>
+    <div class="form-row" style="align-items:center">
+      <div class="form-group" style="flex:1"><label>Name</label>
+        <input type="text" value="${c.name}" oninput="D.footer.creators[${i}].name=this.value">
+      </div>
+      <div class="form-group" style="flex:2"><label>Instagram URL</label>
+        <input type="url" value="${c.ig}" oninput="D.footer.creators[${i}].ig=this.value">
+      </div>
+      <button class="btn btn-danger btn-sm" style="margin-top:18px" onclick="D.footer.creators.splice(${i},1);renderCreators()">✕</button>
     </div>
   `).join('');
 }
 function addCreator(){ D.footer.creators.push({name:'',ig:''}); renderCreators(); }
-function removeCreator(i){ D.footer.creators.splice(i,1); renderCreators(); toast('Creator removed','info'); }
 
 /* ================================================================
    DASHBOARD
@@ -973,58 +924,7 @@ function updateDash(){
 }
 
 /* ================================================================
-   DIRTY / SAVE (collects from DOM inputs)
-================================================================ */
-function populateDOMFromD(){
-  // Hero
-  document.getElementById('heroTitle').value = D.hero.title    || '';
-  document.getElementById('heroSub').value   = D.hero.subtitle || '';
-  document.getElementById('hFb').value = D.hero.fb || '';
-  document.getElementById('hIg').value = D.hero.ig || '';
-  document.getElementById('hWa').value = D.hero.wa || '';
-  document.getElementById('hYt').value = D.hero.yt || '';
-  // About
-  document.getElementById('aboutText').value = D.about.text || '';
-  // Footer
-  document.getElementById('fOrg').value    = D.footer.org    || '';
-  document.getElementById('fCollege').value= D.footer.college|| '';
-  document.getElementById('fCopy').value   = D.footer.copy   || '';
-  if(D.footer.contacts[0]){
-    document.getElementById('c1name').value  = D.footer.contacts[0].name  || '';
-    document.getElementById('c1phone').value = D.footer.contacts[0].phone || '';
-  }
-  if(D.footer.contacts[1]){
-    document.getElementById('c2name').value  = D.footer.contacts[1].name  || '';
-    document.getElementById('c2phone').value = D.footer.contacts[1].phone || '';
-  }
-}
-
-function markDirty(section){
-  // Collect values from DOM into D at save time
-  if(section==='Hero'){
-    D.hero.title    = document.getElementById('heroTitle').value;
-    D.hero.subtitle = document.getElementById('heroSub').value;
-    D.hero.fb = document.getElementById('hFb').value;
-    D.hero.ig = document.getElementById('hIg').value;
-    D.hero.wa = document.getElementById('hWa').value;
-    D.hero.yt = document.getElementById('hYt').value;
-  }
-  if(section==='About'||section==='Stats'){
-    D.about.text = document.getElementById('aboutText').value;
-  }
-  if(section==='Footer'){
-    D.footer.org     = document.getElementById('fOrg').value;
-    D.footer.college = document.getElementById('fCollege').value;
-    D.footer.copy    = document.getElementById('fCopy').value;
-    D.footer.contacts[0]={name:document.getElementById('c1name').value,phone:document.getElementById('c1phone').value};
-    D.footer.contacts[1]={name:document.getElementById('c2name').value,phone:document.getElementById('c2phone').value};
-  }
-  dirtyPanels.add(section);
-  saveToGitHub(section); // async — pushes D as site-data.json to GitHub
-}
-
-/* ================================================================
-   IMAGE UPLOAD PREVIEW
+   IMAGE PREVIEW
 ================================================================ */
 function previewImg(input, previewId, pathInputId){
   const f=input.files[0]; if(!f) return;
@@ -1039,7 +939,7 @@ function previewImg(input, previewId, pathInputId){
 }
 
 /* ================================================================
-   DRAG-AND-DROP REORDER (generic)
+   DRAG AND DROP
 ================================================================ */
 let dragSrcIdx=-1;
 function dragStart(e,i,type){ dragSrcIdx=i; e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('type',type); }
@@ -1048,13 +948,11 @@ function dragOver(e,i,cls,listId){
   document.querySelectorAll('#'+listId+' .'+cls).forEach(r=>r.classList.remove('drag-over'));
   e.currentTarget.classList.add('drag-over');
 }
-function dragLeave(e,cls,listId){
-  document.querySelectorAll('#'+listId+' .'+cls).forEach(r=>r.classList.remove('drag-over'));
-}
+function dragLeave(e,cls,listId){ document.querySelectorAll('#'+listId+' .'+cls).forEach(r=>r.classList.remove('drag-over')); }
 function dragDrop(e,i,type){
   e.preventDefault();
   if(dragSrcIdx===i||dragSrcIdx<0) return;
-  const arr = type==='team'?D.team : type==='service'?D.services : D.nav;
+  const arr = type==='team'?D.team:type==='service'?D.services:D.nav;
   const [moved]=arr.splice(dragSrcIdx,1);
   arr.splice(i,0,moved);
   dragSrcIdx=-1;
@@ -1079,60 +977,10 @@ document.querySelectorAll('.modal-overlay').forEach(o=>{
 function toast(msg,type='info'){
   const icons={success:'✅',error:'❌',info:'ℹ️',warn:'⚠️'};
   const el=document.createElement('div');
-  el.className=`toast ${type}`;
-  el.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
+  el.className='toast '+type;
+  el.innerHTML='<span>'+icons[type]+'</span><span>'+msg+'</span>';
   document.getElementById('toastWrap').appendChild(el);
-  setTimeout(()=>{
-    el.classList.add('out');
-    el.addEventListener('animationend',()=>el.remove());
-  },3200);
-}
-
-async function testGHConnection(){
-  ghCfgChanged(); // always read latest field values first
-  if(!ghCfg.user || !ghCfg.repo || !ghCfg.token){ toast('Fill in all fields first','error'); return; }
-  const dot = document.getElementById('ghDot');
-  const txt = document.getElementById('ghStatusText');
-  dot.className='gh-dot loading'; txt.textContent='Testing...';
-  try{
-    const res = await fetch('https://api.github.com/repos/'+ghCfg.user+'/'+ghCfg.repo, {
-      headers:{ 'Authorization':'Bearer '+ghCfg.token, 'Accept':'application/vnd.github+json' }
-    });
-    if(res.ok){
-      const data = await res.json();
-      dot.className='gh-dot connected';
-      txt.textContent = data.full_name;
-      document.getElementById('adminBadge').className='badge success';
-      document.getElementById('adminBadge').textContent='CONNECTED';
-      toast('GitHub connected ✅  — now click 💾 Save Config to remember these settings','success');
-    } else {
-      dot.className='gh-dot error'; txt.textContent='Auth failed ('+res.status+')';
-      toast('Connection failed: HTTP '+res.status+' — check your token and repo name','error');
-    }
-  } catch(err){
-    dot.className='gh-dot error'; txt.textContent='Network error';
-    toast('Network error: '+err.message,'error');
-  }
-}
-
-/* ================================================================
-   SYNC ALL — manually push everything to GitHub at once
-================================================================ */
-async function syncAll(){
-  // Collect all DOM values into D first
-  D.hero.title    = document.getElementById('heroTitle').value;
-  D.hero.subtitle = document.getElementById('heroSub').value;
-  D.hero.fb = document.getElementById('hFb').value;
-  D.hero.ig = document.getElementById('hIg').value;
-  D.hero.wa = document.getElementById('hWa').value;
-  D.hero.yt = document.getElementById('hYt').value;
-  D.about.text     = document.getElementById('aboutText').value;
-  D.footer.org     = document.getElementById('fOrg').value;
-  D.footer.college = document.getElementById('fCollege').value;
-  D.footer.copy    = document.getElementById('fCopy').value;
-  D.footer.contacts[0] = { name: document.getElementById('c1name').value, phone: document.getElementById('c1phone').value };
-  D.footer.contacts[1] = { name: document.getElementById('c2name').value, phone: document.getElementById('c2phone').value };
-  await saveToGitHub('All sections');
+  setTimeout(()=>{ el.classList.add('out'); el.addEventListener('animationend',()=>el.remove()); },3200);
 }
 </script>
 </body>
