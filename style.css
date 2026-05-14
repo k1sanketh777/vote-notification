@@ -1052,7 +1052,7 @@ nav a,
     width: 100%;
     margin-top: 52px;
     padding-top: 52px;
-    padding-bottom: 0;
+    padding-bottom: 1rem;
     margin-bottom: 0;
 }
 
@@ -1061,18 +1061,6 @@ nav a,
     position: absolute;
     inset: 0;
     background: rgba(6, 27, 49, 0.6);
-    pointer-events: none;
-    z-index: 0;
-}
-
-.team-bg-section::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 80px;
-    background: linear-gradient(to bottom, transparent, #0D0D0D);
     pointer-events: none;
     z-index: 0;
 }
