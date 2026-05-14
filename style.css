@@ -235,7 +235,7 @@ nav a,
 }
 
 .stats-row {
-    margin-top: 2.8rem;
+    margin-top: 2.2rem;
 }
 
 .stat-number {
@@ -1052,7 +1052,7 @@ nav a,
     width: 100%;
     margin-top: 52px;
     padding-top: 52px;
-    padding-bottom: 1rem;
+    padding-bottom: 0;
     margin-bottom: 0;
 }
 
@@ -1061,6 +1061,18 @@ nav a,
     position: absolute;
     inset: 0;
     background: rgba(6, 27, 49, 0.6);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.team-bg-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: linear-gradient(to bottom, transparent, #0D0D0D);
     pointer-events: none;
     z-index: 0;
 }
@@ -1079,7 +1091,7 @@ nav a,
 .site-footer {
     background: #0D0D0D;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 0rem 0 0;
+    padding: 2.25rem 0 0;
     margin-bottom: 0;
     position: relative;
 }
