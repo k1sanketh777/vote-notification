@@ -45,7 +45,7 @@ html {
     overflow: hidden;
 }
 
-.hero-image {
+.hero-image {ee
     display: block;
     will-change: transform;
 }
@@ -1052,7 +1052,7 @@ nav a,
     width: 100%;
     margin-top: 52px;
     padding-top: 52px;
-    padding-bottom: 1rem;
+    padding-bottom: 0rem;
     margin-bottom: 0;
 }
 
