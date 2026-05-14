@@ -273,27 +273,28 @@
           <button class="btn btn-primary" style="margin-top:4px" onclick="downloadJSON()">⬇️ Download site-data.json</button>
         </div>
         <div class="card">
-          <div class="card-header"><div><h2>GitHub Repository Setup</h2><p>Connect your repo to enable direct file deployment.</p></div></div>
-          <div class="hint">🔑 Create a <strong>Personal Access Token</strong> at <a href="https://github.com/settings/tokens" target="_blank" style="color:var(--accent)">github.com/settings/tokens</a> with <code style="background:rgba(255,255,255,0.1);padding:2px 5px;border-radius:3px">repo</code> scope. It is stored only in your browser's localStorage.</div>
+          <div class="card-header"><div><h2>GitHub Repository Setup</h2><p>Fill in all fields then click Save Config. Settings are remembered in your browser.</p></div></div>
+          <div class="hint">🔑 Go to <a href="https://github.com/settings/tokens/new" target="_blank" style="color:var(--accent)">github.com/settings/tokens/new</a> → choose <strong>Classic token</strong> → tick <strong>repo</strong> scope → Generate → paste below.</div>
           <div class="gh-field-row">
             <div class="form-group"><label>GitHub Username</label>
-              <input type="text" id="ghUser" placeholder="e.g. msc-mediaunit">
+              <input type="text" id="ghUser" placeholder="e.g. k1sanketh777" oninput="ghCfgChanged()">
             </div>
             <div class="form-group"><label>Repository Name</label>
-              <input type="text" id="ghRepo" placeholder="e.g. msc-website">
+              <input type="text" id="ghRepo" placeholder="e.g. emumscn" oninput="ghCfgChanged()">
             </div>
           </div>
           <div class="form-row">
             <div class="form-group"><label>Branch</label>
-              <input type="text" id="ghBranch" placeholder="main" value="main">
+              <input type="text" id="ghBranch" placeholder="main" value="main" oninput="ghCfgChanged()">
             </div>
             <div class="form-group"><label>Personal Access Token</label>
-              <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+              <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" oninput="ghCfgChanged()">
             </div>
           </div>
-          <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:4px">
+          <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:4px;align-items:center">
             <button class="btn btn-primary" onclick="saveGHConfig()">💾 Save Config</button>
             <button class="btn btn-ghost" onclick="testGHConnection()">🔌 Test Connection</button>
+            <span id="ghSaveStatus" style="font-size:0.8rem;color:var(--text-muted)"></span>
           </div>
         </div>
 
@@ -494,6 +495,7 @@ function ghHeaders(){
 }
 
 async function loadFromGitHub(){
+  ghCfgChanged();
   if(!ghCfg.user || !ghCfg.repo){
     toast('GitHub not configured — using defaults','warn');
     return;
@@ -536,6 +538,43 @@ async function loadFromGitHub(){
   }
 }
 
+/* ================================================================
+   GITHUB CONFIG  — single source of truth: localStorage key 'gh'
+================================================================ */
+const GH_KEY = 'msc_gh_cfg';
+
+function ghCfgChanged(){
+  // Live-read from fields into ghCfg so saves always use latest values
+  ghCfg.user   = (document.getElementById('ghUser').value   || '').trim();
+  ghCfg.repo   = (document.getElementById('ghRepo').value   || '').trim();
+  ghCfg.branch = (document.getElementById('ghBranch').value || 'main').trim();
+  ghCfg.token  = (document.getElementById('ghToken').value  || '').trim();
+}
+
+function saveGHConfig(){
+  ghCfgChanged();
+  if(!ghCfg.user || !ghCfg.repo || !ghCfg.token){
+    toast('Fill in Username, Repo and Token first','error'); return;
+  }
+  localStorage.setItem(GH_KEY, JSON.stringify(ghCfg));
+  document.getElementById('ghSaveStatus').textContent = '✅ Saved!';
+  setTimeout(()=>{ document.getElementById('ghSaveStatus').textContent=''; }, 3000);
+  toast('GitHub config saved 💾','success');
+}
+
+function loadGHConfig(){
+  try{
+    const raw = localStorage.getItem(GH_KEY);
+    if(!raw) return;
+    const cfg = JSON.parse(raw);
+    ghCfg = cfg;
+    if(cfg.user)   document.getElementById('ghUser').value   = cfg.user;
+    if(cfg.repo)   document.getElementById('ghRepo').value   = cfg.repo;
+    if(cfg.branch) document.getElementById('ghBranch').value = cfg.branch;
+    if(cfg.token)  document.getElementById('ghToken').value  = cfg.token;
+  } catch(e){ console.warn('loadGHConfig error:', e); }
+}
+
 /* Download site-data.json to disk as a fallback */
 function downloadJSON(){
   const jsonStr = JSON.stringify(D, null, 2);
@@ -550,6 +589,7 @@ function downloadJSON(){
 }
 
 async function saveToGitHub(section){
+  ghCfgChanged(); // always pull latest values from the form fields
   // ── Detect file:// protocol — GitHub API is blocked by browsers in this context
   if(location.protocol === 'file:'){
     toast('\u26a0\ufe0f Opened as a local file \u2014 GitHub API is blocked. Use \u201cDownload JSON\u201d below instead.','error');
@@ -1048,52 +1088,30 @@ function toast(msg,type='info'){
   },3200);
 }
 
-/* ================================================================
-   GITHUB CONFIG
-================================================================ */
-function saveGHConfig(){
-  ghCfg.user   = document.getElementById('ghUser').value.trim();
-  ghCfg.repo   = document.getElementById('ghRepo').value.trim();
-  ghCfg.branch = document.getElementById('ghBranch').value.trim()||'main';
-  ghCfg.token  = document.getElementById('ghToken').value.trim();
-  localStorage.setItem('msc_admin_gh', JSON.stringify(ghCfg));
-  toast('GitHub config saved 💾','success');
-}
-function loadGHConfig(){
-  const stored=localStorage.getItem('msc_admin_gh');
-  if(!stored) return;
-  try{
-    ghCfg=JSON.parse(stored);
-    if(ghCfg.user)   document.getElementById('ghUser').value   = ghCfg.user;
-    if(ghCfg.repo)   document.getElementById('ghRepo').value   = ghCfg.repo;
-    if(ghCfg.branch) document.getElementById('ghBranch').value = ghCfg.branch;
-    if(ghCfg.token)  document.getElementById('ghToken').value  = ghCfg.token;
-  }catch(e){}
-}
-
 async function testGHConnection(){
-  if(!ghCfg.user||!ghCfg.token){ toast('Fill in username & token first','error'); return; }
-  const dot=document.getElementById('ghDot');
-  const txt=document.getElementById('ghStatusText');
+  ghCfgChanged(); // always read latest field values first
+  if(!ghCfg.user || !ghCfg.repo || !ghCfg.token){ toast('Fill in all fields first','error'); return; }
+  const dot = document.getElementById('ghDot');
+  const txt = document.getElementById('ghStatusText');
   dot.className='gh-dot loading'; txt.textContent='Testing...';
   try{
-    const res=await fetch(`https://api.github.com/repos/${ghCfg.user}/${ghCfg.repo}`,{
-      headers:{'Authorization':'Bearer '+ghCfg.token,'Accept':'application/vnd.github+json'}
+    const res = await fetch('https://api.github.com/repos/'+ghCfg.user+'/'+ghCfg.repo, {
+      headers:{ 'Authorization':'Bearer '+ghCfg.token, 'Accept':'application/vnd.github+json' }
     });
     if(res.ok){
-      const data=await res.json();
+      const data = await res.json();
       dot.className='gh-dot connected';
-      txt.textContent=data.full_name;
+      txt.textContent = data.full_name;
       document.getElementById('adminBadge').className='badge success';
       document.getElementById('adminBadge').textContent='CONNECTED';
-      toast('GitHub connected ✅','success');
+      toast('GitHub connected ✅  — now click 💾 Save Config to remember these settings','success');
     } else {
-      dot.className='gh-dot error'; txt.textContent='Auth failed';
-      toast('Connection failed: '+res.status,'error');
+      dot.className='gh-dot error'; txt.textContent='Auth failed ('+res.status+')';
+      toast('Connection failed: HTTP '+res.status+' — check your token and repo name','error');
     }
   } catch(err){
     dot.className='gh-dot error'; txt.textContent='Network error';
-    toast('Network error','error');
+    toast('Network error: '+err.message,'error');
   }
 }
 
