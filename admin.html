@@ -469,55 +469,50 @@ function ghHeaders(){
 ================================================================ */
 async function saveToGitHub(section){
   const token = getToken();
-  if(!token){
-    toast('No token set — go to GitHub Setup and enter your token','error');
-    return;
-  }
+  if(!token){ toast('No token — go to GitHub Setup','error'); return; }
+  toast('Saving ' + section + '…', 'info');
 
-  toast('Saving ' + section + '...', 'info');
+  for(let attempt = 1; attempt <= 4; attempt++){
+    try{
+      // Always fetch a FRESH SHA with cache busting so it never goes stale
+      let sha = null;
+      const getRes = await fetch(
+        'https://api.github.com/repos/' + GH_USER + '/' + GH_REPO
+        + '/contents/site-data.json?ref=' + GH_BRANCH + '&t=' + Date.now(),
+        { cache: 'no-store', headers: ghHeaders() }
+      );
+      if(getRes.ok){
+        sha = (await getRes.json()).sha;
+      } else if(getRes.status === 401){
+        toast('Token rejected — regenerate with repo scope','error'); return;
+      } else if(getRes.status !== 404){
+        toast('Could not read file: HTTP ' + getRes.status,'error'); return;
+      }
 
-  try {
-    // 1. Get current SHA of the file
-    let sha = null;
-    const getRes = await fetch(
-      'https://api.github.com/repos/' + GH_USER + '/' + GH_REPO + '/contents/site-data.json?ref=' + GH_BRANCH,
-      { headers: ghHeaders() }
-    );
+      const content = btoa(unescape(encodeURIComponent(JSON.stringify(D, null, 2))));
+      const body = { message: 'Admin: update ' + section, content, branch: GH_BRANCH };
+      if(sha) body.sha = sha;
 
-    if(getRes.ok){
-      const fileData = await getRes.json();
-      sha = fileData.sha;
-    } else if(getRes.status === 401){
-      toast('Token rejected — generate a new token with repo scope', 'error'); return;
-    } else if(getRes.status === 404){
-      // file doesn't exist yet, will create it
-    } else {
-      toast('Could not read file: HTTP ' + getRes.status, 'error'); return;
-    }
+      const putRes = await fetch(
+        'https://api.github.com/repos/' + GH_USER + '/' + GH_REPO + '/contents/site-data.json',
+        { method: 'PUT', headers: ghHeaders(), body: JSON.stringify(body) }
+      );
 
-    // 2. Encode content
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(D, null, 2))));
+      if(putRes.ok){
+        toast(section + ' saved ✅', 'success');
+        document.getElementById('dDeployStatus').textContent = new Date().toLocaleTimeString();
+        return;
+      }
 
-    // 3. Push
-    const body = { message: 'Admin: update ' + section, content: content, branch: GH_BRANCH };
-    if(sha) body.sha = sha;
-
-    const putRes = await fetch(
-      'https://api.github.com/repos/' + GH_USER + '/' + GH_REPO + '/contents/site-data.json',
-      { method: 'PUT', headers: ghHeaders(), body: JSON.stringify(body) }
-    );
-
-    if(putRes.ok){
-      toast(section + ' saved to GitHub ✅', 'success');
-      document.getElementById('dDeployStatus').textContent = new Date().toLocaleTimeString();
-    } else {
       const err = await putRes.json().catch(()=>({}));
-      toast('Save failed: ' + (err.message || 'HTTP ' + putRes.status), 'error');
-    }
+      // SHA conflict — loop back, fetch fresh SHA and retry
+      if(putRes.status === 409 || putRes.status === 422){
+        if(attempt < 4){ toast('Conflict, retrying (' + attempt + '/3)…','warn'); await new Promise(r=>setTimeout(r,600*attempt)); continue; }
+        toast('Failed after retries — try again','error'); return;
+      }
+      toast('Save failed: ' + (err.message || 'HTTP ' + putRes.status),'error'); return;
 
-  } catch(e) {
-    toast('Error: ' + e.message, 'error');
-    console.error(e);
+    } catch(e){ toast('Error: ' + e.message,'error'); console.error(e); return; }
   }
 }
 
