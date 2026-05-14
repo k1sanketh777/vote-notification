@@ -1079,7 +1079,7 @@ nav a,
 .site-footer {
     background: #0D0D0D;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 2.25rem 0 0;
+    padding: 0rem 0 0;
     margin-bottom: 0;
     position: relative;
 }
