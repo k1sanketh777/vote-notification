@@ -1046,6 +1046,7 @@ nav a,
 .team-bg-section {
     position: relative;
     background-image: url('assets/images/teambg.png');
+    scale: 1.8;
     background-size: cover;
     background-position: center 30%;
     background-repeat: no-repeat;
