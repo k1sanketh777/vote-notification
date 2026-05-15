@@ -225,7 +225,7 @@ nav a,
     letter-spacing: 0.06em;
     margin-bottom: 1rem;
     color: transparent;                    
-    -webkit-text-stroke: 0.5px white; 
+    -webkit-text-stroke: 0.25px white; 
 }
 
 .about-text {
@@ -403,7 +403,7 @@ nav a,
 .team-heading {
     margin-top: 2.8rem;
     color: transparent;                    
-    -webkit-text-stroke: 0.5px white; 
+    -webkit-text-stroke: 0.25px white; 
 }
 
 .team-card {
