@@ -817,7 +817,7 @@ function openMemberModal(i){
   openModal('memberModal');
 }
 function saveMember(){
-  const e={ name:document.getElementById('mName').value.trim(), role:document.getElementById('mRole').value.trim()||'Member', img:document.getElementById('mImgPath').value.trim() };
+  const e={ name:document.getElementById('mName').value.trim(), role:document.getElementById('mRole').value.trim(), img:document.getElementById('mImgPath').value.trim() };
   if(editMemberIdx<0) D.team.push(e); else D.team[editMemberIdx]=e;
   closeModal('memberModal'); renderMembers(); markDirty('Team');
   toast(editMemberIdx<0?'Member added ✅':'Member updated ✅','success');
