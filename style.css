@@ -224,6 +224,8 @@ nav a,
     font-size: clamp(2.2rem, 3.25vw, 2.8rem);
     letter-spacing: 0.06em;
     margin-bottom: 1rem;
+    color: transparent;                    
+    -webkit-text-stroke: 2px white; 
 }
 
 .about-text {
