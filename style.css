@@ -225,7 +225,7 @@ nav a,
     letter-spacing: 0.06em;
     margin-bottom: 1rem;
     color: transparent;                    
-    -webkit-text-stroke: 0.8px white; 
+    -webkit-text-stroke: 0.5px white; 
 }
 
 .about-text {
